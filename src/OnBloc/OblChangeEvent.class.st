@@ -1,5 +1,5 @@
 Class {
-	#name : #OblChangeEvent,
+	#name : #OBlChangeEvent,
 	#superclass : #BlEvent,
 	#category : #'OnBloc-Events'
 }

@@ -1,6 +1,6 @@
 Class {
-	#name : #OblViewModel,
-	#superclass : #OblElementCompanion,
+	#name : #OBlViewModel,
+	#superclass : #OBlElementCompanion,
 	#traits : 'TBlEventTarget',
 	#classTraits : 'TBlEventTarget classTrait',
 	#instVars : [
@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : #'event management accessing' }
-OblViewModel >> eventDispatcher [
+OBlViewModel >> eventDispatcher [
 	"Return an object responsible for event dispatching"
 	<return: #BlDirectEventDispatcher>
 
@@ -18,7 +18,7 @@ OblViewModel >> eventDispatcher [
 ]
 
 { #category : #'api - hooks' }
-OblViewModel >> onInstalledIn: anElement [
+OBlViewModel >> onInstalledIn: anElement [
 	"Is sent when I am added to an element (or to the other actor which is added to the element)"
 	super onInstalledIn: anElement.
 	eventDispatcher := anElement eventDispatcher.	
@@ -27,14 +27,14 @@ OblViewModel >> onInstalledIn: anElement [
 ]
 
 { #category : #'api - hooks' }
-OblViewModel >> onUninstalledIn: anElement [
+OBlViewModel >> onUninstalledIn: anElement [
 	"Is sent when I am removed from an element (or from the other actor which was part of the element)"
 	super onUninstalledIn: anElement.
 	eventDispatcher := nil
 ]
 
 { #category : #'event management' }
-OblViewModel >> request: aRequest [
+OBlViewModel >> request: aRequest [
 
 	self dispatchEvent: aRequest.
 
@@ -42,7 +42,7 @@ OblViewModel >> request: aRequest [
 ]
 
 { #category : #'event management' }
-OblViewModel >> when: aRequestClass reply: aBlock [
+OBlViewModel >> when: aRequestClass reply: aBlock [
 	self when: aRequestClass do: [ :aRequest |
 		| aReplyEvent |
 		

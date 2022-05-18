@@ -1,22 +1,22 @@
 Class {
-	#name : #OblStencilExecutor,
+	#name : #OBlStencilExecutor,
 	#superclass : #Object,
 	#category : #'OnBloc-Stencil'
 }
 
 { #category : #'api - running' }
-OblStencilExecutor >> execute [
+OBlStencilExecutor >> execute [
 	<return: #BlElement>
 
 	self subclassResponsibility
 ]
 
 { #category : #'api - arguments' }
-OblStencilExecutor >> push: anArgumentObject [
+OBlStencilExecutor >> push: anArgumentObject [
 	self subclassResponsibility
 ]
 
 { #category : #'api - arguments' }
-OblStencilExecutor >> resetArguments [
+OBlStencilExecutor >> resetArguments [
 	self subclassResponsibility
 ]

@@ -1,5 +1,5 @@
 Class {
-	#name : #OblRequest,
+	#name : #OBlRequest,
 	#superclass : #BlEvent,
 	#instVars : [
 		'response',
@@ -9,20 +9,20 @@ Class {
 }
 
 { #category : #'instance creation' }
-OblRequest class >> oneWay [
+OBlRequest class >> oneWay [
 	^ self new oneWay
 ]
 
 { #category : #testing }
-OblRequest >> canRespond [
+OBlRequest >> canRespond [
 	"Not all requests support responses, return true if I am one of them"
 	<return: #Boolean>
 
-	^ self responseClass = OblNoResponse
+	^ self responseClass = OBlNoResponse
 ]
 
 { #category : #initialization }
-OblRequest >> initialize [
+OBlRequest >> initialize [
 	super initialize.
 	
 	response := self responseClass new.
@@ -31,33 +31,33 @@ OblRequest >> initialize [
 ]
 
 { #category : #testing }
-OblRequest >> isOneWay [
+OBlRequest >> isOneWay [
 	^ isOneWay
 ]
 
 { #category : #accessing }
-OblRequest >> oneWay [
+OBlRequest >> oneWay [
 	isOneWay := true
 ]
 
 { #category : #accessing }
-OblRequest >> response [
+OBlRequest >> response [
 	^ response
 ]
 
 { #category : #accessing }
-OblRequest >> response: anObject [
+OBlRequest >> response: anObject [
 	response := anObject
 ]
 
 { #category : #initialization }
-OblRequest >> responseClass [
+OBlRequest >> responseClass [
 	<return: #'AlbResponse class'>
 
-	^ OblNoResponse
+	^ OBlNoResponse
 ]
 
 { #category : #accessing }
-OblRequest >> responseFor: aWidgetModel [
+OBlRequest >> responseFor: aWidgetModel [
 	^ self response
 ]

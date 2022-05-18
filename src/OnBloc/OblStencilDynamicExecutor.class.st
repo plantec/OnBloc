@@ -1,6 +1,6 @@
 Class {
-	#name : #OblStencilDynamicExecutor,
-	#superclass : #OblStencilExecutor,
+	#name : #OBlStencilDynamicExecutor,
+	#superclass : #OBlStencilExecutor,
 	#instVars : [
 		'valuable'
 	],
@@ -8,6 +8,6 @@ Class {
 }
 
 { #category : #running }
-OblStencilDynamicExecutor >> execute: aCollectionOfArguments [
+OBlStencilDynamicExecutor >> execute: aCollectionOfArguments [
 	self subclassResponsibility
 ]

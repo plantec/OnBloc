@@ -1,5 +1,5 @@
 Class {
-	#name : #OblNullDresser,
-	#superclass : #OblElementCompanion,
+	#name : #OBlNullDresser,
+	#superclass : #OBlElementCompanion,
 	#category : #'OnBloc-element compagnion'
 }

@@ -1,5 +1,5 @@
 Class {
-	#name : #OblThemeElementProperty,
+	#name : #OBlThemeElementProperty,
 	#superclass : #BlElementProperty,
 	#instVars : [
 		'theme'
@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-OblThemeElementProperty >> = anObject [
+OBlThemeElementProperty >> = anObject [
 	self == anObject
 		ifTrue: [ ^ true ].
 	self class = anObject class
@@ -17,26 +17,26 @@ OblThemeElementProperty >> = anObject [
 ]
 
 { #category : #accessing }
-OblThemeElementProperty >> applyOnElement: anElement [
-	anElement userData at: #OblTheme put: theme.	
+OBlThemeElementProperty >> applyOnElement: anElement [
+	anElement userData at: #OBlTheme put: theme.	
 ]
 
 { #category : #accessing }
-OblThemeElementProperty >> canPropagateToChildren [
+OBlThemeElementProperty >> canPropagateToChildren [
 	^ true
 ]
 
 { #category : #accessing }
-OblThemeElementProperty >> hash [
+OBlThemeElementProperty >> hash [
 	^ theme hash
 ]
 
 { #category : #accessing }
-OblThemeElementProperty >> theme [
+OBlThemeElementProperty >> theme [
 	^ theme
 ]
 
 { #category : #accessing }
-OblThemeElementProperty >> theme: aTheme [
+OBlThemeElementProperty >> theme: aTheme [
 	theme := aTheme
 ]

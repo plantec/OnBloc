@@ -1,6 +1,6 @@
 Class {
-	#name : #OblDefaultButtonTheme,
-	#superclass : #OblTheme,
+	#name : #OBlDefaultButtonTheme,
+	#superclass : #OBlTheme,
 	#instVars : [
 		'disabledBackgroundColor',
 		'disabledTextColor',
@@ -18,129 +18,129 @@ Class {
 }
 
 { #category : #accessing }
-OblDefaultButtonTheme >> defaultBackgroundColor [
+OBlDefaultButtonTheme >> defaultBackgroundColor [
 	^ defaultBackgroundColor
 ]
 
 { #category : #accessing }
-OblDefaultButtonTheme >> defaultBackgroundColor: anObject [
+OBlDefaultButtonTheme >> defaultBackgroundColor: anObject [
 	defaultBackgroundColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultButtonTheme >> defaultBorderColor [
+OBlDefaultButtonTheme >> defaultBorderColor [
 	^ defaultBorderColor
 ]
 
 { #category : #accessing }
-OblDefaultButtonTheme >> defaultBorderColor: anObject [
+OBlDefaultButtonTheme >> defaultBorderColor: anObject [
 	defaultBorderColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultButtonTheme >> defaultTextColor [
+OBlDefaultButtonTheme >> defaultTextColor [
 	^ defaultTextColor
 ]
 
 { #category : #accessing }
-OblDefaultButtonTheme >> defaultTextColor: anObject [
+OBlDefaultButtonTheme >> defaultTextColor: anObject [
 	defaultTextColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultButtonTheme >> disabledBackgroundColor [
+OBlDefaultButtonTheme >> disabledBackgroundColor [
 	^ disabledBackgroundColor
 ]
 
 { #category : #accessing }
-OblDefaultButtonTheme >> disabledBackgroundColor: anObject [
+OBlDefaultButtonTheme >> disabledBackgroundColor: anObject [
 	disabledBackgroundColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultButtonTheme >> disabledBorderColor [
+OBlDefaultButtonTheme >> disabledBorderColor [
 	^ disabledBorderColor
 ]
 
 { #category : #accessing }
-OblDefaultButtonTheme >> disabledBorderColor: anObject [
+OBlDefaultButtonTheme >> disabledBorderColor: anObject [
 	disabledBorderColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultButtonTheme >> disabledTextColor [
+OBlDefaultButtonTheme >> disabledTextColor [
 	^ disabledTextColor
 ]
 
 { #category : #accessing }
-OblDefaultButtonTheme >> disabledTextColor: anObject [
+OBlDefaultButtonTheme >> disabledTextColor: anObject [
 	disabledTextColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultButtonTheme >> hoveredBorderColor [
+OBlDefaultButtonTheme >> hoveredBorderColor [
 	^ hoveredBorderColor
 ]
 
 { #category : #accessing }
-OblDefaultButtonTheme >> hoveredBorderColor: anObject [
+OBlDefaultButtonTheme >> hoveredBorderColor: anObject [
 	hoveredBorderColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultButtonTheme >> hoveredTextColor [
+OBlDefaultButtonTheme >> hoveredTextColor [
 	^ hoveredTextColor
 ]
 
 { #category : #accessing }
-OblDefaultButtonTheme >> hoveredTextColor: anObject [
+OBlDefaultButtonTheme >> hoveredTextColor: anObject [
 	hoveredTextColor := anObject
 ]
 
 { #category : #initialization }
-OblDefaultButtonTheme >> initialize [
+OBlDefaultButtonTheme >> initialize [
 	super initialize.
-	disabledBackgroundColor := OblDefaultColors
+	disabledBackgroundColor := OBlDefaultColors
 		disabledButtonBackgroundColor.
-	disabledTextColor := OblDefaultColors disabledButtonTextColor.
-	disabledBorderColor := OblDefaultColors disabledButtonBorderColor.
-	pressedBorderColor := OblDefaultColors pressedButtonBorderColor.
-	defaultBorderColor := OblDefaultColors defaultButtonBorderColor.
-	defaultTextColor := OblDefaultColors defaultButtonTextColor.
-	hoveredBorderColor := OblDefaultColors hoveredButtonBorderColor.
-	pressedTextColor := OblDefaultColors pressedButtonTextColor.
-	defaultBackgroundColor := OblDefaultColors
+	disabledTextColor := OBlDefaultColors disabledButtonTextColor.
+	disabledBorderColor := OBlDefaultColors disabledButtonBorderColor.
+	pressedBorderColor := OBlDefaultColors pressedButtonBorderColor.
+	defaultBorderColor := OBlDefaultColors defaultButtonBorderColor.
+	defaultTextColor := OBlDefaultColors defaultButtonTextColor.
+	hoveredBorderColor := OBlDefaultColors hoveredButtonBorderColor.
+	pressedTextColor := OBlDefaultColors pressedButtonTextColor.
+	defaultBackgroundColor := OBlDefaultColors
 		defaultButtonBackgroundColor.
-	hoveredTextColor := OblDefaultColors hoveredButtonTextColor.
-	textHighlightColor := OblDefaultColors textHighlightColor
+	hoveredTextColor := OBlDefaultColors hoveredButtonTextColor.
+	textHighlightColor := OBlDefaultColors textHighlightColor
 ]
 
 { #category : #accessing }
-OblDefaultButtonTheme >> pressedBorderColor [
+OBlDefaultButtonTheme >> pressedBorderColor [
 	^ pressedBorderColor
 ]
 
 { #category : #accessing }
-OblDefaultButtonTheme >> pressedBorderColor: anObject [
+OBlDefaultButtonTheme >> pressedBorderColor: anObject [
 	pressedBorderColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultButtonTheme >> pressedTextColor [
+OBlDefaultButtonTheme >> pressedTextColor [
 	^ pressedTextColor
 ]
 
 { #category : #accessing }
-OblDefaultButtonTheme >> pressedTextColor: anObject [
+OBlDefaultButtonTheme >> pressedTextColor: anObject [
 	pressedTextColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultButtonTheme >> textHighlightColor [
+OBlDefaultButtonTheme >> textHighlightColor [
 	^ textHighlightColor
 ]
 
 { #category : #accessing }
-OblDefaultButtonTheme >> textHighlightColor: anObject [
+OBlDefaultButtonTheme >> textHighlightColor: anObject [
 	textHighlightColor := anObject
 ]

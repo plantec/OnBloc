@@ -1,5 +1,5 @@
 Class {
-	#name : #OblWish,
+	#name : #OBlWish,
 	#superclass : #BlEvent,
 	#category : #'OnBloc-Events'
 }

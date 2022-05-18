@@ -1,5 +1,5 @@
 Class {
-	#name : #OblDefaultColors,
+	#name : #OBlDefaultColors,
 	#superclass : #SharedPool,
 	#classVars : [
 		'ActiveColor',
@@ -47,117 +47,117 @@ Class {
 }
 
 { #category : #accessing }
-OblDefaultColors class >> backdropColor [
+OBlDefaultColors class >> backdropColor [
 	^ BackdropColor
 ]
 
 { #category : #accessing }
-OblDefaultColors class >> darkBorderColor [
+OBlDefaultColors class >> darkBorderColor [
 	^ DarkBorderColor
 ]
 
 { #category : #accessing }
-OblDefaultColors class >> darkBorderColor: anObject [
+OBlDefaultColors class >> darkBorderColor: anObject [
 	DarkBorderColor := anObject
 ]
 
 { #category : #'button - background' }
-OblDefaultColors class >> defaultButtonBackgroundColor [
+OBlDefaultColors class >> defaultButtonBackgroundColor [
 	^ ButtonBackgroundColor
 ]
 
 { #category : #'button - background' }
-OblDefaultColors class >> defaultButtonBackgroundColor: anObject [
+OBlDefaultColors class >> defaultButtonBackgroundColor: anObject [
 	ButtonBackgroundColor := anObject
 ]
 
 { #category : #'button - border' }
-OblDefaultColors class >> defaultButtonBorderColor [
+OBlDefaultColors class >> defaultButtonBorderColor [
 	^ ButtonBorderColor
 ]
 
 { #category : #'button - border' }
-OblDefaultColors class >> defaultButtonBorderColor: anObject [
+OBlDefaultColors class >> defaultButtonBorderColor: anObject [
 	ButtonBorderColor := anObject
 ]
 
 { #category : #'button - text' }
-OblDefaultColors class >> defaultButtonTextColor [
+OBlDefaultColors class >> defaultButtonTextColor [
 	^ ButtonTextColor
 ]
 
 { #category : #'button - text' }
-OblDefaultColors class >> defaultButtonTextColor: anObject [
+OBlDefaultColors class >> defaultButtonTextColor: anObject [
 	ButtonTextColor := anObject
 ]
 
 { #category : #'header - background' }
-OblDefaultColors class >> defaultHeaderBackgroundColor [
+OBlDefaultColors class >> defaultHeaderBackgroundColor [
 	^ HeaderBackgroundColor
 ]
 
 { #category : #'header - text' }
-OblDefaultColors class >> defaultHeaderTextColor [
+OBlDefaultColors class >> defaultHeaderTextColor [
 	^ HeaderTextColor
 ]
 
 { #category : #'list and tree items - background' }
-OblDefaultColors class >> defaultListItemColor [
+OBlDefaultColors class >> defaultListItemColor [
 	^ self deselectedListItemColor
 ]
 
 { #category : #accessing }
-OblDefaultColors class >> defaultShadowColor [
+OBlDefaultColors class >> defaultShadowColor [
 	^ ShadowColor
 ]
 
 { #category : #'list and tree items - background' }
-OblDefaultColors class >> deselectedListItemColor [
+OBlDefaultColors class >> deselectedListItemColor [
 	^ DeselectedListItemBackgroundColor
 ]
 
 { #category : #'list and tree items - background' }
-OblDefaultColors class >> deselectedtListItemColor: aColor [
+OBlDefaultColors class >> deselectedtListItemColor: aColor [
 	DeselectedListItemBackgroundColor := aColor
 ]
 
 { #category : #'button - background' }
-OblDefaultColors class >> disabledButtonBackgroundColor [
+OBlDefaultColors class >> disabledButtonBackgroundColor [
 	^ DisabledButtonBackgroundColor
 ]
 
 { #category : #'button - background' }
-OblDefaultColors class >> disabledButtonBackgroundColor: anObject [
+OBlDefaultColors class >> disabledButtonBackgroundColor: anObject [
 	DisabledButtonBackgroundColor := anObject
 ]
 
 { #category : #'button - border' }
-OblDefaultColors class >> disabledButtonBorderColor [
+OBlDefaultColors class >> disabledButtonBorderColor [
 	^ DisabledButtonBorderColor
 ]
 
 { #category : #'button - border' }
-OblDefaultColors class >> disabledButtonBorderColor: anObject [
+OBlDefaultColors class >> disabledButtonBorderColor: anObject [
 	DisabledButtonBorderColor := anObject
 ]
 
 { #category : #'button - text' }
-OblDefaultColors class >> disabledButtonTextColor [
+OBlDefaultColors class >> disabledButtonTextColor [
 	^ DisabledButtonTextColor
 ]
 
 { #category : #'button - text' }
-OblDefaultColors class >> disabledButtonTextColor: anObject [
+OBlDefaultColors class >> disabledButtonTextColor: anObject [
 	DisabledButtonTextColor := anObject
 ]
 
 { #category : #'header - text' }
-OblDefaultColors class >> disabledHeaderTextColor [
+OBlDefaultColors class >> disabledHeaderTextColor [
 	^ DisabledHeaderTextColor
 ]
 
 { #category : #accessing }
-OblDefaultColors class >> distinctTenLightColors [
+OBlDefaultColors class >> distinctTenLightColors [
 	"This is a list of 10 light colors that can be distinguished b
 	the typical human eye even when seen together in the same picture.
 	They complement the distinctTenStrongColors.
@@ -218,7 +218,7 @@ OblDefaultColors class >> distinctTenLightColors [
 ]
 
 { #category : #accessing }
-OblDefaultColors class >> distinctTenStrongColors [
+OBlDefaultColors class >> distinctTenStrongColors [
 	"This is a list of 10 light colors that can be distinguished b
 	the typical human eye even when seen together in the same picture.
 	They complement the distinctTenLightColors.
@@ -239,102 +239,102 @@ OblDefaultColors class >> distinctTenStrongColors [
 ]
 
 { #category : #'editor - border' }
-OblDefaultColors class >> editorBorderColor [
+OBlDefaultColors class >> editorBorderColor [
 	^ EditorBorderColor
 ]
 
 { #category : #'editor - border' }
-OblDefaultColors class >> editorBorderColor: anObject [
+OBlDefaultColors class >> editorBorderColor: anObject [
 	EditorBorderColor := anObject
 ]
 
 { #category : #'status - background' }
-OblDefaultColors class >> errorBackgroundColor [
+OBlDefaultColors class >> errorBackgroundColor [
 	^ ErrorBackgroundColor
 ]
 
 { #category : #'status - background' }
-OblDefaultColors class >> errorBackgroundColor: aColor [
+OBlDefaultColors class >> errorBackgroundColor: aColor [
 	ErrorBackgroundColor := aColor
 ]
 
 { #category : #'status - border' }
-OblDefaultColors class >> errorBorderColor [
+OBlDefaultColors class >> errorBorderColor [
 	^ ErrorBorderColor
 ]
 
 { #category : #'list and tree items - background' }
-OblDefaultColors class >> expandCollapseTriangleBackgroundColor [
+OBlDefaultColors class >> expandCollapseTriangleBackgroundColor [
 	^ ExpandCollapseTriangleBackgroundColor
 ]
 
 { #category : #'list and tree items - background' }
-OblDefaultColors class >> expandCollapseTriangleBackgroundColor: aColor [
+OBlDefaultColors class >> expandCollapseTriangleBackgroundColor: aColor [
 	ExpandCollapseTriangleBackgroundColor := aColor
 ]
 
 { #category : #'status - background' }
-OblDefaultColors class >> failureBackgroundColor [
+OBlDefaultColors class >> failureBackgroundColor [
 	^ FailureBackgroundColor
 ]
 
 { #category : #'status - background' }
-OblDefaultColors class >> failureBackgroundColor: aColor [
+OBlDefaultColors class >> failureBackgroundColor: aColor [
 	FailureBackgroundColor := aColor
 ]
 
 { #category : #'status - border' }
-OblDefaultColors class >> failureBorderColor [
+OBlDefaultColors class >> failureBorderColor [
 	^ FailureBorderColor
 ]
 
 { #category : #'editor - border' }
-OblDefaultColors class >> focusedEditorBorderColor [
+OBlDefaultColors class >> focusedEditorBorderColor [
 	^ FocusedEditorBorderColor
 ]
 
 { #category : #'editor - border' }
-OblDefaultColors class >> focusedEditorBorderColor: anObject [
+OBlDefaultColors class >> focusedEditorBorderColor: anObject [
 	FocusedEditorBorderColor := anObject
 ]
 
 { #category : #'list and tree items - border' }
-OblDefaultColors class >> focusedListItemBorder [
+OBlDefaultColors class >> focusedListItemBorder [
 	^ self primaryBorderColor
 ]
 
 { #category : #'button - border' }
-OblDefaultColors class >> hoveredButtonBorderColor [
+OBlDefaultColors class >> hoveredButtonBorderColor [
 	^ HoveredButtonBorderColor
 ]
 
 { #category : #'button - border' }
-OblDefaultColors class >> hoveredButtonBorderColor: anObject [
+OBlDefaultColors class >> hoveredButtonBorderColor: anObject [
 	HoveredButtonBorderColor := anObject
 ]
 
 { #category : #'button - text' }
-OblDefaultColors class >> hoveredButtonTextColor [
+OBlDefaultColors class >> hoveredButtonTextColor [
 	^ HoveredButtonTextColor
 ]
 
 { #category : #'button - text' }
-OblDefaultColors class >> hoveredButtonTextColor: anObject [
+OBlDefaultColors class >> hoveredButtonTextColor: anObject [
 	HoveredButtonTextColor := anObject
 ]
 
 { #category : #'list and tree items - background' }
-OblDefaultColors class >> hoveredListItemColor [
+OBlDefaultColors class >> hoveredListItemColor [
 	^ HoveredListItemBackgroundColor
 ]
 
 { #category : #'list and tree items - background' }
-OblDefaultColors class >> hoveredListItemColor: aColor [
+OBlDefaultColors class >> hoveredListItemColor: aColor [
 	HoveredListItemBackgroundColor := aColor
 ]
 
 { #category : #initialization }
-OblDefaultColors class >> initialize [
+OBlDefaultColors class >> initialize [
 	LightBorderColor := Color fromHexString: #d9d9d9.
 	DarkBorderColor := Color darkGray.
 	PrimaryBorderColor := Color fromHexString: #'45abfe'.
@@ -402,126 +402,126 @@ OblDefaultColors class >> initialize [
 ]
 
 { #category : #accessing }
-OblDefaultColors class >> lightBorderColor [
+OBlDefaultColors class >> lightBorderColor [
 	^ LightBorderColor
 ]
 
 { #category : #accessing }
-OblDefaultColors class >> lightBorderColor: anObject [
+OBlDefaultColors class >> lightBorderColor: anObject [
 	LightBorderColor := anObject
 ]
 
 { #category : #links }
-OblDefaultColors class >> linkColor [
+OBlDefaultColors class >> linkColor [
 	^ LinkColor
 ]
 
 { #category : #links }
-OblDefaultColors class >> linkWithErrorColor [
+OBlDefaultColors class >> linkWithErrorColor [
 	^ LinkWithErrorColor
 ]
 
 { #category : #'status - background' }
-OblDefaultColors class >> neutralBackgroundColor [
+OBlDefaultColors class >> neutralBackgroundColor [
 	^ NeutralBackgroundColor
 ]
 
 { #category : #accessing }
-OblDefaultColors class >> newsBackgroundColor [
+OBlDefaultColors class >> newsBackgroundColor [
 	^ NewsBackgroundColor
 ]
 
 { #category : #'status - background' }
-OblDefaultColors class >> paleErrorBackgroundColor [
+OBlDefaultColors class >> paleErrorBackgroundColor [
 	^ PaleErrorBackgroundColor
 ]
 
 { #category : #'button - border' }
-OblDefaultColors class >> pressedButtonBorderColor [
+OBlDefaultColors class >> pressedButtonBorderColor [
 	^ PressedButtonBorderColor
 ]
 
 { #category : #'button - border' }
-OblDefaultColors class >> pressedButtonBorderColor: anObject [
+OBlDefaultColors class >> pressedButtonBorderColor: anObject [
 	PressedButtonBorderColor := anObject
 ]
 
 { #category : #'button - text' }
-OblDefaultColors class >> pressedButtonTextColor [
+OBlDefaultColors class >> pressedButtonTextColor [
 	^ PressedButtonTextColor
 ]
 
 { #category : #'button - text' }
-OblDefaultColors class >> pressedButtonTextColor: anObject [
+OBlDefaultColors class >> pressedButtonTextColor: anObject [
 	PressedButtonTextColor := anObject
 ]
 
 { #category : #'list and tree items - background' }
-OblDefaultColors class >> pressedListItemColor [
+OBlDefaultColors class >> pressedListItemColor [
 	^ PressedListItemBackgroundColor 
 ]
 
 { #category : #'list and tree items - background' }
-OblDefaultColors class >> pressedListItemColor: aColor [
+OBlDefaultColors class >> pressedListItemColor: aColor [
 	PressedListItemBackgroundColor := aColor
 ]
 
 { #category : #accessing }
-OblDefaultColors class >> primaryBorderColor [
+OBlDefaultColors class >> primaryBorderColor [
 	^ PrimaryBorderColor
 ]
 
 { #category : #accessing }
-OblDefaultColors class >> primaryBorderColor: anObject [
+OBlDefaultColors class >> primaryBorderColor: anObject [
 	PrimaryBorderColor := anObject
 ]
 
 { #category : #'header - background' }
-OblDefaultColors class >> secondaryHeaderBackgroundColor [
+OBlDefaultColors class >> secondaryHeaderBackgroundColor [
 	^ SecondaryHeaderBackgroundColor
 ]
 
 { #category : #'list and tree items - background' }
-OblDefaultColors class >> selectedListItemColor [
+OBlDefaultColors class >> selectedListItemColor [
 	^ SelectedListItemBackgroundColor
 ]
 
 { #category : #'list and tree items - background' }
-OblDefaultColors class >> selectedListItemColor: aColor [
+OBlDefaultColors class >> selectedListItemColor: aColor [
 	SelectedListItemBackgroundColor := aColor
 ]
 
 { #category : #accessing }
-OblDefaultColors class >> shadowColor [
+OBlDefaultColors class >> shadowColor [
 	^ ShadowColor
 ]
 
 { #category : #'status - background' }
-OblDefaultColors class >> successBackgroundColor [
+OBlDefaultColors class >> successBackgroundColor [
 	^ SuccessBackgroundColor
 ]
 
 { #category : #'status - background' }
-OblDefaultColors class >> successBackgroundColor: aColor [
+OBlDefaultColors class >> successBackgroundColor: aColor [
 	SuccessBackgroundColor := aColor
 ]
 
 { #category : #'status - border' }
-OblDefaultColors class >> successBorderColor [
+OBlDefaultColors class >> successBorderColor [
 	^ SuccessBorderColor
 ]
 
 { #category : #'button - border' }
-OblDefaultColors class >> textHighlightColor [
+OBlDefaultColors class >> textHighlightColor [
 	^ TextHighlightColor
 ]
 
 { #category : #'button - border' }
-OblDefaultColors class >> textHighlightColor: anObject [
+OBlDefaultColors class >> textHighlightColor: anObject [
 	TextHighlightColor := anObject
 ]
 
 { #category : #'header - text' }
-OblDefaultColors class >> textMarkupColor [
+OBlDefaultColors class >> textMarkupColor [
 	^ TextMarkupColor
 ]

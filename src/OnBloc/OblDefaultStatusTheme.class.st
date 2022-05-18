@@ -1,6 +1,6 @@
 Class {
-	#name : #OblDefaultStatusTheme,
-	#superclass : #OblTheme,
+	#name : #OBlDefaultStatusTheme,
+	#superclass : #OBlTheme,
 	#instVars : [
 		'successBackgroundColor',
 		'successBorderColor',
@@ -15,95 +15,95 @@ Class {
 }
 
 { #category : #accessing }
-OblDefaultStatusTheme >> errorBackgroundColor [
+OBlDefaultStatusTheme >> errorBackgroundColor [
 	^ errorBackgroundColor
 ]
 
 { #category : #accessing }
-OblDefaultStatusTheme >> errorBackgroundColor: anObject [
+OBlDefaultStatusTheme >> errorBackgroundColor: anObject [
 	errorBackgroundColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultStatusTheme >> errorBorderColor [
+OBlDefaultStatusTheme >> errorBorderColor [
 	^ errorBorderColor
 ]
 
 { #category : #accessing }
-OblDefaultStatusTheme >> errorBorderColor: anObject [
+OBlDefaultStatusTheme >> errorBorderColor: anObject [
 	errorBorderColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultStatusTheme >> failureBackgroundColor [
+OBlDefaultStatusTheme >> failureBackgroundColor [
 	^ failureBackgroundColor
 ]
 
 { #category : #accessing }
-OblDefaultStatusTheme >> failureBackgroundColor: anObject [
+OBlDefaultStatusTheme >> failureBackgroundColor: anObject [
 	failureBackgroundColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultStatusTheme >> failureBorderColor [
+OBlDefaultStatusTheme >> failureBorderColor [
 	^ failureBorderColor
 ]
 
 { #category : #accessing }
-OblDefaultStatusTheme >> failureBorderColor: anObject [
+OBlDefaultStatusTheme >> failureBorderColor: anObject [
 	failureBorderColor := anObject
 ]
 
 { #category : #initialization }
-OblDefaultStatusTheme >> initialize [
+OBlDefaultStatusTheme >> initialize [
 	super initialize.
-	successBackgroundColor := OblDefaultColors successBackgroundColor.
-	successBorderColor := OblDefaultColors successBorderColor.
-	neutralBackgroundColor := OblDefaultColors neutralBackgroundColor.
-	errorBorderColor := OblDefaultColors errorBorderColor.
-	errorBackgroundColor := OblDefaultColors errorBackgroundColor.
-	failureBorderColor := OblDefaultColors failureBorderColor.
-	paleErrorBackgroundColor := OblDefaultColors
+	successBackgroundColor := OBlDefaultColors successBackgroundColor.
+	successBorderColor := OBlDefaultColors successBorderColor.
+	neutralBackgroundColor := OBlDefaultColors neutralBackgroundColor.
+	errorBorderColor := OBlDefaultColors errorBorderColor.
+	errorBackgroundColor := OBlDefaultColors errorBackgroundColor.
+	failureBorderColor := OBlDefaultColors failureBorderColor.
+	paleErrorBackgroundColor := OBlDefaultColors
 		paleErrorBackgroundColor.
-	failureBackgroundColor := OblDefaultColors failureBackgroundColor
+	failureBackgroundColor := OBlDefaultColors failureBackgroundColor
 ]
 
 { #category : #accessing }
-OblDefaultStatusTheme >> neutralBackgroundColor [
+OBlDefaultStatusTheme >> neutralBackgroundColor [
 	^ neutralBackgroundColor
 ]
 
 { #category : #accessing }
-OblDefaultStatusTheme >> neutralBackgroundColor: anObject [
+OBlDefaultStatusTheme >> neutralBackgroundColor: anObject [
 	neutralBackgroundColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultStatusTheme >> paleErrorBackgroundColor [
+OBlDefaultStatusTheme >> paleErrorBackgroundColor [
 	^ paleErrorBackgroundColor
 ]
 
 { #category : #accessing }
-OblDefaultStatusTheme >> paleErrorBackgroundColor: anObject [
+OBlDefaultStatusTheme >> paleErrorBackgroundColor: anObject [
 	paleErrorBackgroundColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultStatusTheme >> successBackgroundColor [
+OBlDefaultStatusTheme >> successBackgroundColor [
 	^ successBackgroundColor
 ]
 
 { #category : #accessing }
-OblDefaultStatusTheme >> successBackgroundColor: anObject [
+OBlDefaultStatusTheme >> successBackgroundColor: anObject [
 	successBackgroundColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultStatusTheme >> successBorderColor [
+OBlDefaultStatusTheme >> successBorderColor [
 	^ successBorderColor
 ]
 
 { #category : #accessing }
-OblDefaultStatusTheme >> successBorderColor: anObject [
+OBlDefaultStatusTheme >> successBorderColor: anObject [
 	successBorderColor := anObject
 ]

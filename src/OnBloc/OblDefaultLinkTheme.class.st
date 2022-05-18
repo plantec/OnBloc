@@ -1,6 +1,6 @@
 Class {
-	#name : #OblDefaultLinkTheme,
-	#superclass : #OblTheme,
+	#name : #OBlDefaultLinkTheme,
+	#superclass : #OBlTheme,
 	#instVars : [
 		'color',
 		'errorColor'
@@ -9,28 +9,28 @@ Class {
 }
 
 { #category : #accessing }
-OblDefaultLinkTheme >> color [
+OBlDefaultLinkTheme >> color [
 	^ color
 ]
 
 { #category : #accessing }
-OblDefaultLinkTheme >> color: anObject [
+OBlDefaultLinkTheme >> color: anObject [
 	color := anObject
 ]
 
 { #category : #accessing }
-OblDefaultLinkTheme >> errorColor [
+OBlDefaultLinkTheme >> errorColor [
 	^ errorColor
 ]
 
 { #category : #accessing }
-OblDefaultLinkTheme >> errorColor: anObject [
+OBlDefaultLinkTheme >> errorColor: anObject [
 	errorColor := anObject
 ]
 
 { #category : #initialization }
-OblDefaultLinkTheme >> initialize [
+OBlDefaultLinkTheme >> initialize [
 	super initialize.
-	color := OblDefaultColors linkColor.
-	errorColor := OblDefaultColors linkWithErrorColor
+	color := OBlDefaultColors linkColor.
+	errorColor := OBlDefaultColors linkWithErrorColor
 ]

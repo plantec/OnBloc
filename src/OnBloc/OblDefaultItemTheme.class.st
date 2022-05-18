@@ -1,6 +1,6 @@
 Class {
-	#name : #OblDefaultItemTheme,
-	#superclass : #OblTheme,
+	#name : #OBlDefaultItemTheme,
+	#superclass : #OBlTheme,
 	#instVars : [
 		'selectedColor',
 		'deselectedColor',
@@ -13,72 +13,72 @@ Class {
 }
 
 { #category : #accessing }
-OblDefaultItemTheme >> defaultColor [
+OBlDefaultItemTheme >> defaultColor [
 	^ defaultColor
 ]
 
 { #category : #accessing }
-OblDefaultItemTheme >> defaultColor: anObject [
+OBlDefaultItemTheme >> defaultColor: anObject [
 	defaultColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultItemTheme >> deselectedColor [
+OBlDefaultItemTheme >> deselectedColor [
 	^ deselectedColor
 ]
 
 { #category : #accessing }
-OblDefaultItemTheme >> deselectedColor: anObject [
+OBlDefaultItemTheme >> deselectedColor: anObject [
 	deselectedColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultItemTheme >> focusedBorderColor [
+OBlDefaultItemTheme >> focusedBorderColor [
 	^ focusedBorderColor
 ]
 
 { #category : #accessing }
-OblDefaultItemTheme >> focusedBorderColor: anObject [
+OBlDefaultItemTheme >> focusedBorderColor: anObject [
 	focusedBorderColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultItemTheme >> hoveredColor [
+OBlDefaultItemTheme >> hoveredColor [
 	^ hoveredColor
 ]
 
 { #category : #accessing }
-OblDefaultItemTheme >> hoveredColor: anObject [
+OBlDefaultItemTheme >> hoveredColor: anObject [
 	hoveredColor := anObject
 ]
 
 { #category : #initialization }
-OblDefaultItemTheme >> initialize [
+OBlDefaultItemTheme >> initialize [
 	super initialize.
-	selectedColor := OblDefaultColors selectedListItemColor.
-	deselectedColor := OblDefaultColors deselectedListItemColor.
-	hoveredColor := OblDefaultColors hoveredListItemColor.
-	defaultColor := OblDefaultColors defaultListItemColor.
-	focusedBorderColor := OblDefaultColors focusedListItemBorder.
-	pressedColor := OblDefaultColors pressedListItemColor
+	selectedColor := OBlDefaultColors selectedListItemColor.
+	deselectedColor := OBlDefaultColors deselectedListItemColor.
+	hoveredColor := OBlDefaultColors hoveredListItemColor.
+	defaultColor := OBlDefaultColors defaultListItemColor.
+	focusedBorderColor := OBlDefaultColors focusedListItemBorder.
+	pressedColor := OBlDefaultColors pressedListItemColor
 ]
 
 { #category : #accessing }
-OblDefaultItemTheme >> pressedColor [
+OBlDefaultItemTheme >> pressedColor [
 	^ pressedColor
 ]
 
 { #category : #accessing }
-OblDefaultItemTheme >> pressedColor: anObject [
+OBlDefaultItemTheme >> pressedColor: anObject [
 	pressedColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultItemTheme >> selectedColor [
+OBlDefaultItemTheme >> selectedColor [
 	^ selectedColor
 ]
 
 { #category : #accessing }
-OblDefaultItemTheme >> selectedColor: anObject [
+OBlDefaultItemTheme >> selectedColor: anObject [
 	selectedColor := anObject
 ]

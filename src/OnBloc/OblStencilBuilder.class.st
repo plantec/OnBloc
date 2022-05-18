@@ -1,5 +1,5 @@
 Class {
-	#name : #OblStencilBuilder,
+	#name : #OBlStencilBuilder,
 	#superclass : #Object,
 	#traits : 'TBlDebug',
 	#classTraits : 'TBlDebug classTrait',
@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : #'api - converting' }
-OblStencilBuilder >> asElement [
+OBlStencilBuilder >> asElement [
 	"Build a corresponding stencil and ask it to create and return a new element"
 	<return: #BlElement>
 	
@@ -18,22 +18,22 @@ OblStencilBuilder >> asElement [
 ]
 
 { #category : #'api - converting' }
-OblStencilBuilder >> asStencilBuilder [
-	<return: #OblStencilBuilder>
+OBlStencilBuilder >> asStencilBuilder [
+	<return: #OBlStencilBuilder>
 
 	^ self
 ]
 
 { #category : #'api - converting' }
-OblStencilBuilder >> asStencilBuilder: aStencilBuilderClass [
-	<return: #OblStencilBuilder>
+OBlStencilBuilder >> asStencilBuilder: aStencilBuilderClass [
+	<return: #OBlStencilBuilder>
 
 	^ self
 ]
 
 { #category : #building }
-OblStencilBuilder >> build [
-	<return: #OblStencil>
+OBlStencilBuilder >> build [
+	<return: #OBlStencil>
 	| anExecutor aResult |
 	
 	anExecutor := executor.
@@ -47,14 +47,14 @@ OblStencilBuilder >> build [
 ]
 
 { #category : #'api - instantiation' }
-OblStencilBuilder >> buildDefault [
-	<return: #OblStencil or: #BlElement>
+OBlStencilBuilder >> buildDefault [
+	<return: #OBlStencil or: #BlElement>
 
 	^ self subclassResponsibility
 ]
 
 { #category : #accessing }
-OblStencilBuilder >> executor: aBrStencilExecutor [
+OBlStencilBuilder >> executor: aBrStencilExecutor [
 	self
 		assert: [ aBrStencilExecutor isNotNil ]
 		description: [ 'Executor must not be nil' ].
@@ -63,24 +63,24 @@ OblStencilBuilder >> executor: aBrStencilExecutor [
 ]
 
 { #category : #initialization }
-OblStencilBuilder >> initialize [
+OBlStencilBuilder >> initialize [
 	super initialize.
 	
-	executor := OblStencilDefaultExecutor new stencil: self
+	executor := OBlStencilDefaultExecutor new stencil: self
 ]
 
 { #category : #'api - instantiation' }
-OblStencilBuilder >> paramsOn: aStencilExecutor [
+OBlStencilBuilder >> paramsOn: aStencilExecutor [
 ]
 
 { #category : #initialization }
-OblStencilBuilder >> reset [
+OBlStencilBuilder >> reset [
 	"Is called after the #build to de-reference dynamic parameters passed
 	by the called of the build"
 ]
 
 { #category : #printing }
-OblStencilBuilder >> storeOn: aStream [
+OBlStencilBuilder >> storeOn: aStream [
 	aStream store: executor.
 	aStream space.
 	aStream nextPutAll: #asStencilBuilder: asString.

@@ -1,6 +1,6 @@
 Class {
-	#name : #OblStencilValuableExecutor,
-	#superclass : #OblStencilExecutor,
+	#name : #OBlStencilValuableExecutor,
+	#superclass : #OBlStencilExecutor,
 	#instVars : [
 		'valuable',
 		'arguments'
@@ -9,56 +9,56 @@ Class {
 }
 
 { #category : #'instance creation' }
-OblStencilValuableExecutor class >> from: aValuable [
-	<return: #OblStencilValuableExecutor>
+OBlStencilValuableExecutor class >> from: aValuable [
+	<return: #OBlStencilValuableExecutor>
 
 	^ self new valuable: aValuable
 ]
 
 { #category : #accessing }
-OblStencilValuableExecutor >> arguments [
+OBlStencilValuableExecutor >> arguments [
 	<return: #Collection of: #Object>
 
 	^ arguments
 ]
 
 { #category : #'api - running' }
-OblStencilValuableExecutor >> execute [
+OBlStencilValuableExecutor >> execute [
 	<return: #BlElement>
 
 	^ self valuable glamourValueWithArgs: self arguments
 ]
 
 { #category : #initialization }
-OblStencilValuableExecutor >> initialize [
+OBlStencilValuableExecutor >> initialize [
 	super initialize.
 	
 	arguments := LinkedList new
 ]
 
 { #category : #'api - arguments' }
-OblStencilValuableExecutor >> push: anArgumentObject [
+OBlStencilValuableExecutor >> push: anArgumentObject [
 	arguments add: anArgumentObject
 ]
 
 { #category : #'api - arguments' }
-OblStencilValuableExecutor >> resetArguments [
+OBlStencilValuableExecutor >> resetArguments [
 	arguments removeAll
 ]
 
 { #category : #printing }
-OblStencilValuableExecutor >> storeOn: aStream [
+OBlStencilValuableExecutor >> storeOn: aStream [
 	valuable isBlock
 		ifTrue: [ aStream nextPutAll: valuable asString ]
 		ifFalse: [ aStream nextPutAll: '[  ]' ]
 ]
 
 { #category : #accessing }
-OblStencilValuableExecutor >> valuable [
+OBlStencilValuableExecutor >> valuable [
 	^ valuable
 ]
 
 { #category : #accessing }
-OblStencilValuableExecutor >> valuable: anObject [
+OBlStencilValuableExecutor >> valuable: anObject [
 	valuable := anObject
 ]

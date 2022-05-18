@@ -1,6 +1,6 @@
 Class {
-	#name : #OblDefaultEditorTheme,
-	#superclass : #OblTheme,
+	#name : #OBlDefaultEditorTheme,
+	#superclass : #OBlTheme,
 	#instVars : [
 		'borderColor',
 		'focusedBorderColor'
@@ -9,28 +9,28 @@ Class {
 }
 
 { #category : #accessing }
-OblDefaultEditorTheme >> borderColor [
+OBlDefaultEditorTheme >> borderColor [
 	^ borderColor
 ]
 
 { #category : #accessing }
-OblDefaultEditorTheme >> borderColor: anObject [
+OBlDefaultEditorTheme >> borderColor: anObject [
 	borderColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultEditorTheme >> focusedBorderColor [
+OBlDefaultEditorTheme >> focusedBorderColor [
 	^ focusedBorderColor
 ]
 
 { #category : #accessing }
-OblDefaultEditorTheme >> focusedBorderColor: anObject [
+OBlDefaultEditorTheme >> focusedBorderColor: anObject [
 	focusedBorderColor := anObject
 ]
 
 { #category : #initialization }
-OblDefaultEditorTheme >> initialize [
+OBlDefaultEditorTheme >> initialize [
 	super initialize.
-	borderColor := OblDefaultColors editorBorderColor.
-	focusedBorderColor := OblDefaultColors focusedEditorBorderColor
+	borderColor := OBlDefaultColors editorBorderColor.
+	focusedBorderColor := OBlDefaultColors focusedEditorBorderColor
 ]

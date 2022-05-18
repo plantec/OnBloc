@@ -1,5 +1,5 @@
 Class {
-	#name : #OblNoResponse,
-	#superclass : #OblResponse,
+	#name : #OBlNoResponse,
+	#superclass : #OBlResponse,
 	#category : #'OnBloc-Events'
 }

@@ -20,7 +20,7 @@ TODO add element extensions, theme, themeStrategy
 
 "
 Class {
-	#name : #OblTheme,
+	#name : #OBlTheme,
 	#superclass : #Object,
 	#classInstVars : [
 		'default'
@@ -29,16 +29,16 @@ Class {
 }
 
 { #category : #initialization }
-OblTheme class >> default [
-	^ default ifNil: [ default := OblDefaultTheme new ]
+OBlTheme class >> default [
+	^ default ifNil: [ default := OBlDefaultTheme new ]
 ]
 
 { #category : #initialization }
-OblTheme class >> default: aTheme [
+OBlTheme class >> default: aTheme [
 	default := aTheme
 ]
 
 { #category : #accessing }
-OblTheme class >> resetDefault [
+OBlTheme class >> resetDefault [
 	default := nil.
 ]

@@ -1,6 +1,6 @@
 Class {
-	#name : #OblStencilDefaultExecutor,
-	#superclass : #OblStencilExecutor,
+	#name : #OBlStencilDefaultExecutor,
+	#superclass : #OBlStencilExecutor,
 	#instVars : [
 		'stencil'
 	],
@@ -8,26 +8,26 @@ Class {
 }
 
 { #category : #'api - running' }
-OblStencilDefaultExecutor >> execute [
+OBlStencilDefaultExecutor >> execute [
 	<return: #BlElement>
 
 	^ self stencil buildDefault
 ]
 
 { #category : #'api - arguments' }
-OblStencilDefaultExecutor >> push: anArgumentObject [
+OBlStencilDefaultExecutor >> push: anArgumentObject [
 ]
 
 { #category : #'api - arguments' }
-OblStencilDefaultExecutor >> resetArguments [
+OBlStencilDefaultExecutor >> resetArguments [
 ]
 
 { #category : #accessing }
-OblStencilDefaultExecutor >> stencil [
+OBlStencilDefaultExecutor >> stencil [
 	^ stencil
 ]
 
 { #category : #accessing }
-OblStencilDefaultExecutor >> stencil: anObject [
+OBlStencilDefaultExecutor >> stencil: anObject [
 	stencil := anObject
 ]

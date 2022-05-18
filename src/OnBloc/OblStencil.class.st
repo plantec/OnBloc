@@ -35,7 +35,7 @@ anElement := aStencil create.
 
 "
 Class {
-	#name : #OblStencil,
+	#name : #OBlStencil,
 	#superclass : #Object,
 	#traits : 'TBlDebug',
 	#classTraits : 'TBlDebug classTrait',
@@ -43,28 +43,28 @@ Class {
 }
 
 { #category : #'instance creation' }
-OblStencil class >> asStencil [
-	<return: #OblStencil>
+OBlStencil class >> asStencil [
+	<return: #OBlStencil>
 
 	^ self new
 ]
 
 { #category : #converting }
-OblStencil >> asElement [
+OBlStencil >> asElement [
 	<return: #BlElement>
 
 	^ self create asElement
 ]
 
 { #category : #converting }
-OblStencil >> asStencil [
-	<return: #OblStencil>
+OBlStencil >> asStencil [
+	<return: #OBlStencil>
 
 	^ self
 ]
 
 { #category : #'api - instantiation' }
-OblStencil >> create [
+OBlStencil >> create [
 	<return: #Object>
 
 	^ self subclassResponsibility

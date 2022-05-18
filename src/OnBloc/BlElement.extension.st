@@ -38,7 +38,7 @@ BlElement >> dresserDo: aBlock [
 BlElement >> openInOblSpace [
 	"Add self to a new BlSpace and show it. Answer such space."
 	
-	^ OblSpace new
+	^ OBlSpace new
 		  addChild: self;
 		  show;
 		  yourself
@@ -47,18 +47,18 @@ BlElement >> openInOblSpace [
 { #category : #'*OnBloc' }
 BlElement >> theme [
 	^ self userData
-		at: #OblTheme
+		at: #OBlTheme
 		ifAbsent: [ self hasParent
 				ifTrue: [ self parent theme ]
-				ifFalse: [ OblTheme default ] ]
+				ifFalse: [ OBlTheme default ] ]
 ]
 
 { #category : #'*OnBloc' }
 BlElement >> theme: aTheme [
-	self userData at: #OblTheme put: aTheme.
+	self userData at: #OBlTheme put: aTheme.
 	self properties
 		addProperty:
-			(OblThemeElementProperty new
+			(OBlThemeElementProperty new
 				theme: aTheme;
 				yourself)
 ]

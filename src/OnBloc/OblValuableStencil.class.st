@@ -5,8 +5,8 @@ To get a Statefull version of the Stencil users can provide a collection of `=#a
 
 "
 Class {
-	#name : #OblValuableStencil,
-	#superclass : #OblStencil,
+	#name : #OBlValuableStencil,
+	#superclass : #OBlStencil,
 	#instVars : [
 		'valuable',
 		'arguments'
@@ -15,37 +15,37 @@ Class {
 }
 
 { #category : #'instance creation' }
-OblValuableStencil class >> from: aValuable [
-	<return: #OblStencil>
+OBlValuableStencil class >> from: aValuable [
+	<return: #OBlStencil>
 
 	^ self new valuable: aValuable
 ]
 
 { #category : #accessing }
-OblValuableStencil >> arguments [
+OBlValuableStencil >> arguments [
 	<return: #Collection of: #Object>
 
 	^ arguments
 ]
 
 { #category : #accessing }
-OblValuableStencil >> arguments: aCollectionOfObjects [
+OBlValuableStencil >> arguments: aCollectionOfObjects [
 	arguments := aCollectionOfObjects
 ]
 
 { #category : #'api - instantiation' }
-OblValuableStencil >> create [
+OBlValuableStencil >> create [
 	<return: #Object>
 	
 	^ self valuable glamourValueWithArgs: self arguments
 ]
 
 { #category : #accessing }
-OblValuableStencil >> valuable [
+OBlValuableStencil >> valuable [
 	^ valuable
 ]
 
 { #category : #accessing }
-OblValuableStencil >> valuable: anObject [
+OBlValuableStencil >> valuable: anObject [
 	valuable := anObject
 ]

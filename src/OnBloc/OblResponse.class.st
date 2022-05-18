@@ -1,10 +1,10 @@
 Class {
-	#name : #OblResponse,
+	#name : #OBlResponse,
 	#superclass : #BlEvent,
 	#category : #'OnBloc-Events'
 }
 
 { #category : #initialization }
-OblResponse >> reply: anObject [
+OBlResponse >> reply: anObject [
 	self subclassResponsibility
 ]

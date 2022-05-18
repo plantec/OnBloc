@@ -4,10 +4,10 @@ Extension { #name : #BlockClosure }
 BlockClosure >> asStencil [
 	<return: #BrStencil>
 
-	^ OblValuableStencil from: self
+	^ OBlValuableStencil from: self
 ]
 
 { #category : #'*OnBloc' }
 BlockClosure >> asStencil: aStencilClass [
-	^ aStencilClass new executor: (OblStencilValuableExecutor from: self)
+	^ aStencilClass new executor: (OBlStencilValuableExecutor from: self)
 ]

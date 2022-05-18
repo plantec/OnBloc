@@ -1,6 +1,6 @@
 Class {
-	#name : #OblDefaultHeaderTheme,
-	#superclass : #OblTheme,
+	#name : #OBlDefaultHeaderTheme,
+	#superclass : #OBlTheme,
 	#instVars : [
 		'textMarkupColor',
 		'defaultBackgroundColor',
@@ -12,63 +12,63 @@ Class {
 }
 
 { #category : #accessing }
-OblDefaultHeaderTheme >> defaultBackgroundColor [
+OBlDefaultHeaderTheme >> defaultBackgroundColor [
 	^ defaultBackgroundColor
 ]
 
 { #category : #accessing }
-OblDefaultHeaderTheme >> defaultBackgroundColor: anObject [
+OBlDefaultHeaderTheme >> defaultBackgroundColor: anObject [
 	defaultBackgroundColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultHeaderTheme >> defaultTextColor [
+OBlDefaultHeaderTheme >> defaultTextColor [
 	^ defaultTextColor
 ]
 
 { #category : #accessing }
-OblDefaultHeaderTheme >> defaultTextColor: anObject [
+OBlDefaultHeaderTheme >> defaultTextColor: anObject [
 	defaultTextColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultHeaderTheme >> disabledTextColor [
+OBlDefaultHeaderTheme >> disabledTextColor [
 	^ disabledTextColor
 ]
 
 { #category : #accessing }
-OblDefaultHeaderTheme >> disabledTextColor: anObject [
+OBlDefaultHeaderTheme >> disabledTextColor: anObject [
 	disabledTextColor := anObject
 ]
 
 { #category : #initialization }
-OblDefaultHeaderTheme >> initialize [
+OBlDefaultHeaderTheme >> initialize [
 	super initialize.
-	textMarkupColor := OblDefaultColors textMarkupColor.
-	defaultBackgroundColor := OblDefaultColors
+	textMarkupColor := OBlDefaultColors textMarkupColor.
+	defaultBackgroundColor := OBlDefaultColors
 		defaultHeaderBackgroundColor.
-	disabledTextColor := OblDefaultColors disabledHeaderTextColor.
-	defaultTextColor := OblDefaultColors defaultHeaderTextColor.
-	secondaryBackgroundColor := OblDefaultColors
+	disabledTextColor := OBlDefaultColors disabledHeaderTextColor.
+	defaultTextColor := OBlDefaultColors defaultHeaderTextColor.
+	secondaryBackgroundColor := OBlDefaultColors
 		secondaryHeaderBackgroundColor
 ]
 
 { #category : #accessing }
-OblDefaultHeaderTheme >> secondaryBackgroundColor [
+OBlDefaultHeaderTheme >> secondaryBackgroundColor [
 	^ secondaryBackgroundColor
 ]
 
 { #category : #accessing }
-OblDefaultHeaderTheme >> secondaryBackgroundColor: anObject [
+OBlDefaultHeaderTheme >> secondaryBackgroundColor: anObject [
 	secondaryBackgroundColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultHeaderTheme >> textMarkupColor [
+OBlDefaultHeaderTheme >> textMarkupColor [
 	^ textMarkupColor
 ]
 
 { #category : #accessing }
-OblDefaultHeaderTheme >> textMarkupColor: anObject [
+OBlDefaultHeaderTheme >> textMarkupColor: anObject [
 	textMarkupColor := anObject
 ]

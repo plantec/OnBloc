@@ -1,6 +1,6 @@
 Class {
-	#name : #OblDefaultDefaultTheme,
-	#superclass : #OblTheme,
+	#name : #OBlDefaultDefaultTheme,
+	#superclass : #OBlTheme,
 	#instVars : [
 		'defaultShadowColor',
 		'backdropColor',
@@ -18,128 +18,128 @@ Class {
 }
 
 { #category : #accessing }
-OblDefaultDefaultTheme >> backdropColor [
+OBlDefaultDefaultTheme >> backdropColor [
 	^ backdropColor
 ]
 
 { #category : #accessing }
-OblDefaultDefaultTheme >> backdropColor: anObject [
+OBlDefaultDefaultTheme >> backdropColor: anObject [
 	backdropColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultDefaultTheme >> contentBackgroundColor [
+OBlDefaultDefaultTheme >> contentBackgroundColor [
 	^ contentBackgroundColor
 ]
 
 { #category : #accessing }
-OblDefaultDefaultTheme >> contentBackgroundColor: aColor [
+OBlDefaultDefaultTheme >> contentBackgroundColor: aColor [
 	contentBackgroundColor := aColor
 ]
 
 { #category : #accessing }
-OblDefaultDefaultTheme >> darkBorderColor [
+OBlDefaultDefaultTheme >> darkBorderColor [
 	^ darkBorderColor
 ]
 
 { #category : #accessing }
-OblDefaultDefaultTheme >> darkBorderColor: anObject [
+OBlDefaultDefaultTheme >> darkBorderColor: anObject [
 	darkBorderColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultDefaultTheme >> defaultShadowColor [
+OBlDefaultDefaultTheme >> defaultShadowColor [
 	^ defaultShadowColor
 ]
 
 { #category : #accessing }
-OblDefaultDefaultTheme >> defaultShadowColor: anObject [
+OBlDefaultDefaultTheme >> defaultShadowColor: anObject [
 	defaultShadowColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultDefaultTheme >> distinctTenLightColors [
+OBlDefaultDefaultTheme >> distinctTenLightColors [
 	^ distinctTenLightColors
 ]
 
 { #category : #accessing }
-OblDefaultDefaultTheme >> distinctTenLightColors: anObject [
+OBlDefaultDefaultTheme >> distinctTenLightColors: anObject [
 	distinctTenLightColors := anObject
 ]
 
 { #category : #accessing }
-OblDefaultDefaultTheme >> distinctTenStrongColors [
+OBlDefaultDefaultTheme >> distinctTenStrongColors [
 	^ distinctTenStrongColors
 ]
 
 { #category : #accessing }
-OblDefaultDefaultTheme >> distinctTenStrongColors: anObject [
+OBlDefaultDefaultTheme >> distinctTenStrongColors: anObject [
 	distinctTenStrongColors := anObject
 ]
 
 { #category : #accessing }
-OblDefaultDefaultTheme >> expandCollapseTriangleBackgroundColor [
+OBlDefaultDefaultTheme >> expandCollapseTriangleBackgroundColor [
 	^ expandCollapseTriangleBackgroundColor
 ]
 
 { #category : #accessing }
-OblDefaultDefaultTheme >> expandCollapseTriangleBackgroundColor: anObject [
+OBlDefaultDefaultTheme >> expandCollapseTriangleBackgroundColor: anObject [
 	expandCollapseTriangleBackgroundColor := anObject
 ]
 
 { #category : #initialization }
-OblDefaultDefaultTheme >> initialize [
+OBlDefaultDefaultTheme >> initialize [
 	super initialize.
 	contentBackgroundColor := Color white.
-	defaultShadowColor := OblDefaultColors defaultShadowColor.
-	backdropColor := OblDefaultColors backdropColor.
-	primaryBorderColor := OblDefaultColors primaryBorderColor.
-	darkBorderColor := OblDefaultColors darkBorderColor.
-	distinctTenStrongColors := OblDefaultColors distinctTenStrongColors.
-	newsBackgroundColor := OblDefaultColors newsBackgroundColor.
-	lightBorderColor := OblDefaultColors lightBorderColor.
-	expandCollapseTriangleBackgroundColor := OblDefaultColors
+	defaultShadowColor := OBlDefaultColors defaultShadowColor.
+	backdropColor := OBlDefaultColors backdropColor.
+	primaryBorderColor := OBlDefaultColors primaryBorderColor.
+	darkBorderColor := OBlDefaultColors darkBorderColor.
+	distinctTenStrongColors := OBlDefaultColors distinctTenStrongColors.
+	newsBackgroundColor := OBlDefaultColors newsBackgroundColor.
+	lightBorderColor := OBlDefaultColors lightBorderColor.
+	expandCollapseTriangleBackgroundColor := OBlDefaultColors
 		expandCollapseTriangleBackgroundColor.
-	shadowColor := OblDefaultColors shadowColor.
-	distinctTenLightColors := OblDefaultColors distinctTenLightColors
+	shadowColor := OBlDefaultColors shadowColor.
+	distinctTenLightColors := OBlDefaultColors distinctTenLightColors
 ]
 
 { #category : #accessing }
-OblDefaultDefaultTheme >> lightBorderColor [
+OBlDefaultDefaultTheme >> lightBorderColor [
 	^ lightBorderColor
 ]
 
 { #category : #accessing }
-OblDefaultDefaultTheme >> lightBorderColor: anObject [
+OBlDefaultDefaultTheme >> lightBorderColor: anObject [
 	lightBorderColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultDefaultTheme >> newsBackgroundColor [
+OBlDefaultDefaultTheme >> newsBackgroundColor [
 	^ newsBackgroundColor
 ]
 
 { #category : #accessing }
-OblDefaultDefaultTheme >> newsBackgroundColor: anObject [
+OBlDefaultDefaultTheme >> newsBackgroundColor: anObject [
 	newsBackgroundColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultDefaultTheme >> primaryBorderColor [
+OBlDefaultDefaultTheme >> primaryBorderColor [
 	^ primaryBorderColor
 ]
 
 { #category : #accessing }
-OblDefaultDefaultTheme >> primaryBorderColor: anObject [
+OBlDefaultDefaultTheme >> primaryBorderColor: anObject [
 	primaryBorderColor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultDefaultTheme >> shadowColor [
+OBlDefaultDefaultTheme >> shadowColor [
 	^ shadowColor
 ]
 
 { #category : #accessing }
-OblDefaultDefaultTheme >> shadowColor: anObject [
+OBlDefaultDefaultTheme >> shadowColor: anObject [
 	shadowColor := anObject
 ]

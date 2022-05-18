@@ -1,6 +1,6 @@
 Class {
-	#name : #OblDefaultTheme,
-	#superclass : #OblTheme,
+	#name : #OBlDefaultTheme,
+	#superclass : #OBlTheme,
 	#instVars : [
 		'link',
 		'status',
@@ -14,83 +14,83 @@ Class {
 }
 
 { #category : #accessing }
-OblDefaultTheme >> button [
+OBlDefaultTheme >> button [
 	^ button
 ]
 
 { #category : #accessing }
-OblDefaultTheme >> button: anObject [
+OBlDefaultTheme >> button: anObject [
 	button := anObject
 ]
 
 { #category : #accessing }
-OblDefaultTheme >> default [
+OBlDefaultTheme >> default [
 	^ default
 ]
 
 { #category : #accessing }
-OblDefaultTheme >> default: anObject [
+OBlDefaultTheme >> default: anObject [
 	default := anObject
 ]
 
 { #category : #accessing }
-OblDefaultTheme >> editor [
+OBlDefaultTheme >> editor [
 	^ editor
 ]
 
 { #category : #accessing }
-OblDefaultTheme >> editor: anObject [
+OBlDefaultTheme >> editor: anObject [
 	editor := anObject
 ]
 
 { #category : #accessing }
-OblDefaultTheme >> header [
+OBlDefaultTheme >> header [
 	^ header
 ]
 
 { #category : #accessing }
-OblDefaultTheme >> header: anObject [
+OBlDefaultTheme >> header: anObject [
 	header := anObject
 ]
 
 { #category : #initialization }
-OblDefaultTheme >> initialize [
+OBlDefaultTheme >> initialize [
 	super initialize.
-	link := OblDefaultLinkTheme new.
-	status := OblDefaultStatusTheme new.
-	default := OblDefaultDefaultTheme new.
-	editor := OblDefaultEditorTheme new.
-	button := OblDefaultButtonTheme new.
-	item := OblDefaultItemTheme new.
-	header := OblDefaultHeaderTheme new
+	link := OBlDefaultLinkTheme new.
+	status := OBlDefaultStatusTheme new.
+	default := OBlDefaultDefaultTheme new.
+	editor := OBlDefaultEditorTheme new.
+	button := OBlDefaultButtonTheme new.
+	item := OBlDefaultItemTheme new.
+	header := OBlDefaultHeaderTheme new
 ]
 
 { #category : #accessing }
-OblDefaultTheme >> item [
+OBlDefaultTheme >> item [
 	^ item
 ]
 
 { #category : #accessing }
-OblDefaultTheme >> item: anObject [
+OBlDefaultTheme >> item: anObject [
 	item := anObject
 ]
 
 { #category : #accessing }
-OblDefaultTheme >> link [
+OBlDefaultTheme >> link [
 	^ link
 ]
 
 { #category : #accessing }
-OblDefaultTheme >> link: anObject [
+OBlDefaultTheme >> link: anObject [
 	link := anObject
 ]
 
 { #category : #accessing }
-OblDefaultTheme >> status [
+OBlDefaultTheme >> status [
 	^ status
 ]
 
 { #category : #accessing }
-OblDefaultTheme >> status: anObject [
+OBlDefaultTheme >> status: anObject [
 	status := anObject
 ]
