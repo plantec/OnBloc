@@ -15,13 +15,13 @@ Class {
 		'userCache',
 		'eventDispatcher'
 	],
-	#category : #'OnBloc-Infinite-! Core'
+	#category : #'OnBloc-Infinite-Recycler'
 }
 
 { #category : #private }
 OBlInfiniteRecycler >> addHolderToRecyclerPool: anElementHolder [
 
-	"self dispatchElementRecycled: anElementHolder."
+	self dispatchElementRecycled: anElementHolder.
 	anElementHolder detachInfiniteElement.
 	self pool put: anElementHolder
 ]
@@ -107,6 +107,7 @@ OBlInfiniteRecycler >> controller: aBlInfiniteRecyclerController [
 OBlInfiniteRecycler >> dataSourceChangedFrom: anOldDataSource to: aNewDataSource isCompatible: aBoolean [
 	
 	self clear.
+	
 	self pool dataSourceChangedFrom: anOldDataSource to: aNewDataSource isCompatible: aBoolean
 ]
 
@@ -124,12 +125,19 @@ OBlInfiniteRecycler >> defaultEventDispatcher [
 
 { #category : #initialization }
 OBlInfiniteRecycler >> defaultFetcher [
-	^ BlInfiniteRecyclerChangedScrapFetcher instance
+	self flag: 'was ^ BlInfiniteRecyclerChangedScrapFetcher instance'.
+	"^ OBlInfiniteRecyclerDataSourceFetcher instance"
+	"^ OBlInfiniteRecyclerPoolFetcher instance"
+	"^ OBlInfiniteRecyclerUserCacheFetcher instance"
+	"^ OBlInfiniteRecyclerStableScrapFetcher instance"
+	"^ OBlInfiniteRecyclerPositionScrapFetcher instance"
+	^ OBlInfiniteRecyclerChangedScrapFetcher instance
+	
 ]
 
 { #category : #initialization }
 OBlInfiniteRecycler >> defaultRecyclerPool [
-	^ BlInfiniteRecyclerPool new
+	^ OBlInfiniteRecyclerPool new
 ]
 
 { #category : #'event dispatching' }
@@ -150,10 +158,7 @@ OBlInfiniteRecycler >> elementFor: aPosition [
 	a scrap element that was previously initialized for that data without rebinding."
 	<return: #BlElement>
 
-	| e |
-	self halt.
-	e := self elementFor: aPosition dryRun: false.
-	^ e
+	^ self elementFor: aPosition dryRun: false
 ]
 
 { #category : #private }
@@ -409,7 +414,6 @@ OBlInfiniteRecycler >> recycleElement: anElement [
 
 	Notice: I try to make element recycle-able since layout intended to recycle this element (e.g. even if it is in scrap or change cache)"
 	| anElementHolder |
-	true ifTrue: [ ^ self ].
 	
 	anElementHolder := self controller elementHolderOf: anElement.
 	anElementHolder isTmpDetached

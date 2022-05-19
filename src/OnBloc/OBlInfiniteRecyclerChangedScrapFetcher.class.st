@@ -6,6 +6,7 @@ Class {
 
 { #category : #private }
 OBlInfiniteRecyclerChangedScrapFetcher >> changedScrapFor: aPosition dryRun: dryRun controller: aRecyclerController [
+
 	(aRecyclerController hasChangedScrap)
 		ifFalse: [ ^ nil ].
 	
@@ -15,25 +16,22 @@ OBlInfiniteRecyclerChangedScrapFetcher >> changedScrapFor: aPosition dryRun: dry
 
 { #category : #initialization }
 OBlInfiniteRecyclerChangedScrapFetcher >> defaultNext [
-	^ nil
+	^ OBlInfiniteRecyclerPositionScrapFetcher instance
+
 ]
 
 { #category : #'element fetching' }
 OBlInfiniteRecyclerChangedScrapFetcher >> elementFor: aPosition dryRun: dryRun controller: aRecyclerController [
-
-	| holder |
-	^ (aRecyclerController isPreLayout and: [ 
-		   (holder := self
-			              changedScrapFor: aPosition
-			              dryRun: dryRun
-			              controller: aRecyclerController) isNotNil ])
-		  ifTrue: [ holder -> true ]
-		  ifFalse: [ 
-			  self nextDo: [ :next | 
-				  next
-					  elementFor: aPosition
-					  dryRun: dryRun
-					  controller: aRecyclerController ] ]
+	
+	^ aRecyclerController infiniteElement telemetry
+		timeSync: [ 'Fetch element from changed scrap at {1}' format: { aPosition } ]
+		during: [
+			| holder |
+			
+			(aRecyclerController isPreLayout and: [ 
+				(holder := (self changedScrapFor: aPosition dryRun: dryRun controller: aRecyclerController)) isNotNil ])
+					ifTrue: [ holder -> true ]
+					ifFalse: [ self nextDo: [ :next | next elementFor: aPosition dryRun: dryRun controller: aRecyclerController ] ] ]
 ]
 
 { #category : #private }

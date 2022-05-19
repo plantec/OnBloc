@@ -13,22 +13,16 @@ Class {
 
 { #category : #recycling }
 OBlInfiniteRecyclerPool >> at: anIntemType [
-	<return: #BlInfiniteHolder or: nil>
 
-	^ scrap at: anIntemType
-		ifPresent: [ :aScrapHeap |
-			aScrapHeap
-				ifEmpty: [ nil ]
-				ifNotEmpty: [ 
-					| anIndex anElementHolder |
-					anIndex := aScrapHeap size.
-					anElementHolder := aScrapHeap at: anIndex.
-					aScrapHeap removeAt: anIndex.
-					anElementHolder ] ]
-		ifAbsent: [ nil ]
+	<return: #BlInfiniteHolder or: nil>
+	^ scrap
+		  at: anIntemType
+		  ifPresent: [ :aScrapHeap | 
+			  aScrapHeap ifEmpty: [ nil ] ifNotEmpty: [ aScrapHeap removeLast ] ]
+		  ifAbsent: [ nil ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'attach - detach' }
 OBlInfiniteRecyclerPool >> attach [
 	attachCount := attachCount + 1
 ]
@@ -45,10 +39,10 @@ OBlInfiniteRecyclerPool >> dataSourceChangedFrom: anOldDataSource to: aNewDataSo
 
 { #category : #initialization }
 OBlInfiniteRecyclerPool >> defaultMaxScrap [
-	^ 5
+	^ 10
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'attach - detach' }
 OBlInfiniteRecyclerPool >> detach [
 	attachCount := attachCount - 1
 ]
@@ -105,7 +99,7 @@ OBlInfiniteRecyclerPool >> put: anElementHolder [
 		description: [ 'Scrap element already exists!' ].
 	
 	anElementHolder reset.
-	aScrapHeap add: anElementHolder
+	aScrapHeap add: anElementHolder.
 ]
 
 { #category : #accessing }
