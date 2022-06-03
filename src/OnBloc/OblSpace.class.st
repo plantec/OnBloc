@@ -1353,18 +1353,6 @@ OBlSpace >> knowsPosition [
 ]
 
 { #category : #'focus managing' }
-OBlSpace >> looseFocusFor: anElement [
-			
-	self
-		deprecated: 'Please use loseFocusFor: instead.'
-		transformWith:
-			'`@receiver looseFocusFor: `@statements1'
-				-> '`@receiver loseFocusFor: `@statements1'.
-				
-	self loseFocusFor: anElement
-]
-
-{ #category : #'focus managing' }
 OBlSpace >> loseFocusFor: anElement [
 	self focusProcessor loseFor: anElement
 ]
