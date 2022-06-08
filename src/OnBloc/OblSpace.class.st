@@ -1396,6 +1396,19 @@ OBlSpace >> maximized [
 	^ false
 ]
 
+{ #category : #dispatch }
+OBlSpace >> measureTextParagraph: aBlTextParagraph [
+
+	self
+		hostSpaceDo: [ :aHostSpace | 
+			aHostSpace renderer isValid ifTrue: [
+				^ aHostSpace renderer measureTextParagraph: aBlTextParagraph ] ]
+		ifAbsent: [ ].
+
+	"TODO"
+	host offscreenMeasureTextParagraph: aBlTextParagraph
+]
+
 { #category : #pulse }
 OBlSpace >> measureTextParagraph: aBlTextParagraph ifNotAvailable: aBlock [
 	self
