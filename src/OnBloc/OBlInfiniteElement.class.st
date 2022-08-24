@@ -521,7 +521,7 @@ OBlInfiniteElement >> defaultRecycler [
 
 { #category : #initialization }
 OBlInfiniteElement >> defaultRecyclerController [
-	^ BlInfiniteRecyclerController new
+	^ AlbRecyclerController new
 ]
 
 { #category : #initialization }
