@@ -573,18 +573,15 @@ OBlInfiniteElement >> dispatchLayout [
 
 	self state isMeasuring: false.
 	self state isStartStep
-		ifTrue: [
+		ifTrue: [ 
 			self dispatchLayoutFirstStep.
 			self layout exactMeasurementSpecFrom: self.
 			self dispatchLayoutSecondStep ]
 		ifFalse: [ 
-			(dataSourceManager hasCommands or: [
-				layout width ~= self width or: [ 
-					layout height ~= self height ] ])
-				ifTrue: [
-					self layout exactMeasurementSpecFrom: self.
-					self dispatchLayoutSecondStep ]
-				ifFalse: [ self layout exactMeasurementSpecFrom: self ] ].
+			self layout exactMeasurementSpecFrom: self.
+			(dataSourceManager hasCommands or: [ 
+				 layout width ~= self width or: [ layout height ~= self height ] ]) 
+				ifTrue: [ self dispatchLayoutSecondStep ] ].
 	self dispatchLayoutThirdStep
 ]
 
@@ -1686,21 +1683,6 @@ OBlInfiniteElement >> recycler [
 	<return: #BlInfiniteRecycler>
 
 	^ recycler
-]
-
-{ #category : #'accessing - pool' }
-OBlInfiniteElement >> recyclerPool [
-	<return: #BlInfiniteRecyclerPool>
-	
-	^ self recycler pool
-]
-
-{ #category : #'accessing - pool' }
-OBlInfiniteElement >> recyclerPool: aBlInfiniteRecyclerPool [
-	"Infinite recycler pools allow multiple InfiniteElements to share a common pool of scrap elements.
-	This can be useful if you have multiple InfiniteElements with data sources that use the same element types."
-
-	self recycler pool: aBlInfiniteRecyclerPool
 ]
 
 { #category : #'children - add/remove' }
