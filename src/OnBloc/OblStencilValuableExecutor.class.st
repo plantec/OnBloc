@@ -26,7 +26,7 @@ OBlStencilValuableExecutor >> arguments [
 OBlStencilValuableExecutor >> execute [
 	<return: #BlElement>
 
-	^ self valuable glamourValueWithArgs: self arguments
+	^ self valuable valueWithPossibleArgs: self arguments
 ]
 
 { #category : #initialization }
