@@ -469,12 +469,12 @@ OBlInfiniteElement >> defaultDataSource [
 
 { #category : #initialization }
 OBlInfiniteElement >> defaultDataSourceController [
-	^ BlInfiniteDefaultDataSourceController new
+	^ OBlInfiniteDefaultDataSourceController new
 ]
 
 { #category : #initialization }
 OBlInfiniteElement >> defaultDataSourceManager [
-	^ BlInfiniteDataSourceManager new
+	^ OBlInfiniteDataSourceManager new
 ]
 
 { #category : #initialization }
@@ -516,7 +516,7 @@ OBlInfiniteElement >> defaultOverScrollMode [
 
 { #category : #initialization }
 OBlInfiniteElement >> defaultRecycler [
-	^ BlInfiniteRecycler new
+	^ AlbRecycler new
 ]
 
 { #category : #initialization }
@@ -1118,15 +1118,6 @@ OBlInfiniteElement >> invalidateItemDecorations [
 ]
 
 { #category : #testing }
-OBlInfiniteElement >> isAnimating [
-	"Return true if InfiniteElement is currently running some animations, false otherwise"
-	<return: #Boolean>
-
-	^ itemAnimator supportsAnimations
-		and: [ itemAnimator isRunning ]
-]
-
-{ #category : #testing }
 OBlInfiniteElement >> isAttached [
 	"Return true if I am attached to window, false otherwise"
 	<return: #Boolean>
@@ -1607,6 +1598,8 @@ OBlInfiniteElement >> processDataSourceCommandsAndSetAnimationFlags [
 	
 	"Simple animations are a subset of advanced animations (which will cause a pre-layout step)
 	If layout supports predictive animations, pre-process to decide if we want to run them"
+	
+	self flag: 'APL: predictiveItemAnimationsEnabled is alway false'.
 	self predictiveItemAnimationsEnabled
 		ifTrue: [ dataSourceManager preProcessCommands ]
 		ifFalse: [ dataSourceManager consumeCommandsInOnePass ].
