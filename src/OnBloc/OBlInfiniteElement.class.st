@@ -284,7 +284,7 @@ OBlInfiniteElement >> consumePendingDataSourceCommands [
 				self hasUpdatedChild
 					ifTrue: [ self dispatchLayout ]
 					"no need to layout, clean state"
-					ifFalse: [ dataSourceManager consumePostponedCommands ] ].
+					ifFalse: [ dataSourceManager consumePostponedCommandsIn: self ] ].
 			self resumeRequestLayout: true ]
 		ifFalse: [
 			 dataSourceManager hasPendingCommands
@@ -642,7 +642,7 @@ OBlInfiniteElement >> dispatchLayoutSecondStep [
 		assertLayoutStep: BlInfiniteLayoutStepFlags Layout
 		or: BlInfiniteLayoutStepFlags Animations.
 	
-	dataSourceManager consumeCommandsInOnePass.
+	dataSourceManager consumeCommandsInOnePassIn: self.
 	self state itemCount: dataSource itemCount.
 	self state deletedInvisibleItemCountSincePreviousLayout: 0.
 	
@@ -1423,7 +1423,7 @@ OBlInfiniteElement >> onMeasureCustom: anExtentMeasurementSpec [
 		self state willRunPredictiveAnimations
 			ifTrue: [ self state isPreLayout: true ]
 			ifFalse: [ 
-				dataSourceManager consumeCommandsInOnePass.
+				dataSourceManager consumeCommandsInOnePassIn: self.
 				self state isPreLayout: false ].
 		dataSourceChangeDuringMeasure := false.
 		self resumeRequestLayout: false ].
@@ -1516,7 +1516,7 @@ OBlInfiniteElement >> processDataSourceCommandsAndSetAnimationFlags [
 	self flag: 'APL: predictiveItemAnimationsEnabled is alway false'.
 	self predictiveItemAnimationsEnabled
 		ifTrue: [ dataSourceManager preProcessCommands ]
-		ifFalse: [ dataSourceManager consumeCommandsInOnePass ].
+		ifFalse: [ dataSourceManager consumeCommandsInOnePassIn: self ].
 
 	animationTypeSupported := itemsAddedOrRemoved or: [ itemsChanged ].
 	self state runSimpleAnimations: (firstLayoutComplete and: [

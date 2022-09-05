@@ -1,87 +1,22 @@
+"
+I am a default implementation of communication interface between data source manager and infinite element.
+It is enough to use me in most cases.
+
+"
 Class {
 	#name : #OBlInfiniteDefaultDataSourceController,
-	#superclass : #OBlInfiniteAbstractDataSourceController,
+	#superclass : #Object,
+	#traits : 'TBlDebug',
+	#classTraits : 'TBlDebug classTrait',
 	#instVars : [
-		'dataSourceManager',
 		'infiniteElement'
 	],
 	#category : #'OnBloc-Infinite-DataSource-Support'
 }
 
-{ #category : #'element -> manager' }
-OBlInfiniteDefaultDataSourceController >> applyPendingCommandsOnPosition: aPosition [
-	^ self dataSourceManager applyPendingCommandsOnPosition: aPosition
-]
-
-{ #category : #'element -> manager' }
-OBlInfiniteDefaultDataSourceController >> computePositionOffset: aPosition [
-	^ self dataSourceManager computePositionOffset: aPosition
-]
-
-{ #category : #'element -> manager' }
-OBlInfiniteDefaultDataSourceController >> consumeCommandsInOnePass [
-	^ self dataSourceManager consumeCommandsInOnePass
-]
-
-{ #category : #'element -> manager' }
-OBlInfiniteDefaultDataSourceController >> consumePostponedCommands [
-	self dataSourceManager consumePostponedCommands
-]
-
-{ #category : #private }
-OBlInfiniteDefaultDataSourceController >> createAddCommand: startPosition itemCount: itemCount [
-
-	^ self dataSourceManager
-		createCommand: BlInfiniteDataSourceCommandTypeAdd instance
-		positionStart: startPosition
-		itemCount: itemCount
-		payload: nil
-]
-
-{ #category : #private }
-OBlInfiniteDefaultDataSourceController >> createMoveCommand: fromPosition itemCount: toPosition [
-
-	^ self dataSourceManager
-		createCommand: BlInfiniteDataSourceCommandTypeMove instance
-		positionStart: fromPosition
-		itemCount: toPosition
-		payload: nil
-]
-
-{ #category : #private }
-OBlInfiniteDefaultDataSourceController >> createRemoveCommand: startPosition itemCount: itemCount [
-
-	^ self dataSourceManager
-		createCommand: BlInfiniteDataSourceCommandTypeRemove instance
-		positionStart: startPosition
-		itemCount: itemCount
-		payload: nil
-]
-
-{ #category : #private }
-OBlInfiniteDefaultDataSourceController >> createUpdateCommand: startPosition itemCount: itemCount payload: anObject [
-
-	^ self dataSourceManager
-		createCommand: BlInfiniteDataSourceCommandTypeUpdate instance
-		positionStart: startPosition
-		itemCount: itemCount
-		payload: anObject
-]
-
-{ #category : #accessing }
-OBlInfiniteDefaultDataSourceController >> dataSourceManager [
-	"Return data source manager used in communication with infinite element.
-	dataSourceManager can not be nil"
-	<return: #OBlInfiniteDataSourceManager>
-	self assert: dataSourceManager isNotNil.
-	
-	^ dataSourceManager
-]
-
 { #category : #accessing }
 OBlInfiniteDefaultDataSourceController >> dataSourceManager: aDataSourceManager [
-	dataSourceManager := aDataSourceManager.
-	dataSourceManager controller: self
+	aDataSourceManager controller: self
 ]
 
 { #category : #private }
@@ -90,17 +25,7 @@ OBlInfiniteDefaultDataSourceController >> dispatchCommand: aCommand [
 	in this case to infinite element's layout.
 	aCommand must not be nil"
 	
-	aCommand dispatchToLayout: self element layout
-]
-
-{ #category : #accessing }
-OBlInfiniteDefaultDataSourceController >> element [
-	"Return infinite element used in communication with data source manager.
-	element can not be nil"
-	<return: #BlInfiniteElement>
-	self assert: infiniteElement isNotNil.
-	
-	^ infiniteElement
+	aCommand dispatchToLayout: infiniteElement layout
 ]
 
 { #category : #accessing }
@@ -113,16 +38,6 @@ OBlInfiniteDefaultDataSourceController >> elementHolderAt: aPosition [
 	<return: #BlElement or: nil>
 
 	^ infiniteElement findElementHolderForPosition: aPosition checkNew: true
-]
-
-{ #category : #'element -> manager' }
-OBlInfiniteDefaultDataSourceController >> hasCommands [
-	^ self dataSourceManager hasCommands
-]
-
-{ #category : #'element -> manager' }
-OBlInfiniteDefaultDataSourceController >> hasPendingCommands [
-	^ self dataSourceManager hasPendingCommands
 ]
 
 { #category : #'manager -> element' }
@@ -190,24 +105,4 @@ OBlInfiniteDefaultDataSourceController >> onDispatchFirstPass: aCommand [
 { #category : #'manager -> element' }
 OBlInfiniteDefaultDataSourceController >> onDispatchSecondPass: aCommand [
 	self dispatchCommand: aCommand
-]
-
-{ #category : #'element -> manager' }
-OBlInfiniteDefaultDataSourceController >> onItemRangeChanged: aStartPosition itemCount: anItemCount payload: aPayloadObject [
-	^ self dataSourceManager onItemRangeChanged: aStartPosition itemCount: anItemCount payload: aPayloadObject
-]
-
-{ #category : #'element -> manager' }
-OBlInfiniteDefaultDataSourceController >> onItemRangeInserted: startPosition itemCount: anItemCount [
-	^ self dataSourceManager onItemRangeInserted: startPosition itemCount: anItemCount
-]
-
-{ #category : #'element -> manager' }
-OBlInfiniteDefaultDataSourceController >> preProcessCommands [
-	self dataSourceManager preProcessCommands
-]
-
-{ #category : #'element -> manager' }
-OBlInfiniteDefaultDataSourceController >> resetCommands [
-	self dataSourceManager resetCommands
 ]

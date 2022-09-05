@@ -1,3 +1,31 @@
+"
+I manage data source update commands.
+
+I control their order and optimize commands queue.
+For example if there are two sequential commands: add and remove at the same position, I annihilate them and do nothing.
+
+My onItemRange* methods are triggered directly or indirectly by data source when it is changed.
+
+Public API and Key Messages
+
+- onItemRangeChanged: itemCount: payload: - is sent by data source when content or value of items was changed
+- message two 
+- (for bonus points) how to create instances.
+
+   One simple example is simply gorgeous.
+ 
+Internal Representation and Key Implementation Points.
+
+    Instance Variables
+	commandsReorderer:		<Object>
+	controller:		<Object>
+	pendingCommands:		<Object>
+	postponedCommands:		<Object>
+
+
+    Implementation Points
+
+"
 Class {
 	#name : #OBlInfiniteDataSourceManager,
 	#superclass : #Object,
@@ -7,8 +35,6 @@ Class {
 		'pendingCommands',
 		'postponedCommands',
 		'controller',
-		'shouldRecycle',
-		'commandsPool',
 		'commandsReorderer',
 		'existingCommandTypes'
 	],
@@ -85,17 +111,17 @@ OBlInfiniteDataSourceManager >> computePositionOffset: aPosition firstPostponedI
 ]
 
 { #category : #'element -> manager' }
-OBlInfiniteDataSourceManager >> consumeCommandsInOnePass [
+OBlInfiniteDataSourceManager >> consumeCommandsInOnePassIn: anInfiniteElement [
 	"Skip pre-processing and perform all pending commands in one pass."
 
 	"we still consume postponed updates (if there is) in case there was a pre-process call
 	w/o a matching consumePostponedUpdates."
 		
-	self consumePostponedCommands.
+	self consumePostponedCommandsIn: anInfiniteElement.
 
 	pendingCommands do: [ :command |
-		self controller onDispatchSecondPass: command.
-		command offsetPositionsOn: self controller.
+		self dispatchCommand: command to: anInfiniteElement.
+		command offsetPositionsOn: controller.
 		self onCommandProcessed: command ].
 
 	self recycleCommandsAndClearList: pendingCommands.
@@ -103,21 +129,13 @@ OBlInfiniteDataSourceManager >> consumeCommandsInOnePass [
 ]
 
 { #category : #'commands processing' }
-OBlInfiniteDataSourceManager >> consumePostponedCommands [
+OBlInfiniteDataSourceManager >> consumePostponedCommandsIn: anInfiniteElement [
 	
 	postponedCommands do: [ :command |
-		self controller onDispatchSecondPass: command ].
+		self dispatchCommand: command to: anInfiniteElement].
 
 	self recycleCommandsAndClearList: postponedCommands.
 	existingCommandTypes clear
-]
-
-{ #category : #accessing }
-OBlInfiniteDataSourceManager >> controller [
-	<return: #BlInfiniteAbstractDataSourceController>
-	self assert: controller isNotNil.
-
-	^ controller
 ]
 
 { #category : #accessing }
@@ -127,47 +145,19 @@ OBlInfiniteDataSourceManager >> controller: aController [
 
 { #category : #'commands recycling' }
 OBlInfiniteDataSourceManager >> createCommand: type positionStart: positionStart itemCount: itemCount payload: payload [
-	"Return a data source command with specified parameters.
-	As performance optimisation I use commands pool to reduce amount
-	of created objects and reduce garbage collector's work.
-	I am also used by BlInfiniteDataSourceCommandsReorderer when it merges multiple commands in one"
+	"Return a data source command with specified parameters"
 	<return: #BlInfiniteDataSourceCommand>
-	| command |
 	
-	command := commandsPool acquire.
-	command
-		ifNil: [ command := BlInfiniteDataSourceCommand new
+	^ BlInfiniteDataSourceCommand new
 			type: type;
 			positionStart: positionStart;
 			itemCount: itemCount;
-			payload: payload ]
-		ifNotNil: [ 
-			command
-				type: type;
-				positionStart: positionStart;
-				itemCount: itemCount;
-				payload: payload ].
-	^ command
-]
-
-{ #category : #initialization }
-OBlInfiniteDataSourceManager >> defaultCommandsPool [
-	^ BlInfiniteSimplePool new: self defaultPoolSize.
+			payload: payload
 ]
 
 { #category : #initialization }
 OBlInfiniteDataSourceManager >> defaultCommandsReorderer [
 	^ BlInfiniteDataSourceCommandsReorderer new
-]
-
-{ #category : #initialization }
-OBlInfiniteDataSourceManager >> defaultPoolSize [
-	^ 30
-]
-
-{ #category : #initialization }
-OBlInfiniteDataSourceManager >> defaultShouldRecycle [
-	^ true
 ]
 
 { #category : #private }
@@ -212,10 +202,19 @@ OBlInfiniteDataSourceManager >> dispatchAndUpdateElementHolders: aCommand [
 		self recycleCommand: tmpCommand ].
 ]
 
+{ #category : #initialization }
+OBlInfiniteDataSourceManager >> dispatchCommand: aCommand to: anInfiniteElement [
+	"Dispatche data source update command to all interested objects,
+	in this case to infinite element's layout.
+	aCommand must not be nil"
+	
+	aCommand dispatchToLayout: anInfiniteElement layout
+]
+
 { #category : #helper }
 OBlInfiniteDataSourceManager >> dispatchFirstPassAndUpdateElementHolders: aCommand offset: offsetStart [
 
-	self controller onDispatchFirstPass: aCommand.
+	controller onDispatchFirstPass: aCommand.
 	aCommand updateElementHoldersOn: self offset: offsetStart
 ]
 
@@ -295,8 +294,6 @@ OBlInfiniteDataSourceManager >> initialize [
 	
 	postponedCommands := OrderedCollection new.
 	pendingCommands := OrderedCollection new.
-	commandsPool := self defaultCommandsPool.
-	shouldRecycle := self defaultShouldRecycle.
 	commandsReorderer := self defaultCommandsReorderer dataSourceManager: self.
 	existingCommandTypes := BlInfiniteDataSourceCommandTypeFlags new
 ]
@@ -414,18 +411,8 @@ OBlInfiniteDataSourceManager >> preProcessCommands [
 
 { #category : #'commands recycling' }
 OBlInfiniteDataSourceManager >> recycleCommand: aCommand [
-	"Recycle aCommand removing any payload and if recycling enabled
-	put in commands pool to allow manager to reuse objects for 
-	performance reasons.
-	I am also used by BlInfiniteDataSourceCommandsReorderer when it merges multiple commands in one
-	aCommand must not be nil"
-	self assert: aCommand isNotNil.
+	"Recycle aCommand removing any payload and if recycling enabled"
 
-	shouldRecycle
-		ifFalse: [ ^ self ].
-
-	aCommand payload: nil.
-	commandsPool release: aCommand
 ]
 
 { #category : #'commands recycling' }

@@ -8,7 +8,7 @@ Class {
 	#superclass : #Object,
 	#traits : 'TBlDebug',
 	#classTraits : 'TBlDebug classTrait',
-	#category : #'OnBloc-Infinite-DataSource-Support'
+	#category : #'OnBloc-NotUsed-Infinite-DataSource-Support'
 }
 
 { #category : #'element -> manager' }
