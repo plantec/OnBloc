@@ -18,7 +18,7 @@ Class {
 	#pools : [
 		'BlInfiniteConstants'
 	],
-	#category : #'OnBloc-Infinite-Layouts-Linear-Utilities'
+	#category : #'OnBloc-Infinite-Layouts-Linear'
 }
 
 { #category : #accessing }

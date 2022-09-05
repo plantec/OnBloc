@@ -1,6 +1,6 @@
 Class {
 	#name : #OBlInfiniteLinearLayout,
-	#superclass : #BlInfiniteLayout,
+	#superclass : #OBlInfiniteLayout,
 	#instVars : [
 		'layoutState',
 		'orientation',
@@ -812,7 +812,7 @@ OBlInfiniteLinearLayout >> layoutChildrenIn: aBlInfiniteRecycler state: aBlInfin
 
 	anOffsetSpace := self layoutChildrenFill: anExtraSpace.
 	anOffsetSpace := self layoutChildrenFixGaps: anOffsetSpace.
-	self layoutChildrenForPredictiveAnimations: anOffsetSpace.
+	"self layoutChildrenForPredictiveAnimations: anOffsetSpace."
 	
 	self state isPreLayout
 		ifTrue: [ anchorInfo reset ]

@@ -53,73 +53,11 @@ Class {
 	#category : #'OnBloc-Infinite-! Core'
 }
 
-{ #category : #'children - add/remove' }
-OBlInfiniteElement >> addAnimatingChild: anElementHolder [
-	"Adds a element to the animatingElements list.
-	animatingElements holds the child elements that are currently being kept around
-	purely for the purpose of being animated out of view. They are drawn as a regular
-	part of the child list of the InfiniteElement, but they are invisible to the Layout
-	as they are managed separately from the regular child elements"
-	| anElement alreadyParented |
-	
-	anElement := anElementHolder itemElement.
-	alreadyParented := anElement parent == self.
-	
-	recycler unscrapHolder: (self childHolderOf: anElement).
-	anElementHolder isTmpDetached
-		"re-attach"
-		ifTrue: [ childrenManager attachChild: anElement at: 0 hidden: true ]
-		ifFalse: [ alreadyParented
-			ifFalse: [ childrenManager addChild: anElement hidden: true ]
-			ifTrue: [ childrenManager hide: anElement ] ]
-]
-
 { #category : #animations }
 OBlInfiniteElement >> animateAppearance: anElementHolder preInfo: aPreInfoHolder postInfo: aPostInfoHolder [
 	
-	anElementHolder isRecyclable: false.
-
 	(itemAnimator
 		animateAppearance: anElementHolder
-		preLayoutInfo: aPreInfoHolder
-		postLayoutInfo: aPostInfoHolder)
-			ifTrue: [ self postAnimationRunner ]
-]
-
-{ #category : #animations }
-OBlInfiniteElement >> animateChangeFrom: anOldElementHolder to: aNewElementHolder preInfo: aPreInfoHolder postInfo: aPostInfoHolder oldHolderDisappearing: oldHolderDisappearing newHolderDisappearing: newHolderDisappearing [
-
-	anOldElementHolder isRecyclable: false.
-	oldHolderDisappearing
-		ifTrue: [ self addAnimatingChild: anOldElementHolder ].
-	
-	(anOldElementHolder ~~ aNewElementHolder)
-		ifTrue: [ 
-			newHolderDisappearing
-				ifTrue: [ self addAnimatingChild: aNewElementHolder ].
-			anOldElementHolder shadowedHolder: aNewElementHolder.
-			"old holder should disappear after animation ends"
-			self addAnimatingChild: anOldElementHolder.
-			recycler unscrapHolder: anOldElementHolder.
-			aNewElementHolder isRecyclable: false.
-			aNewElementHolder shadowingHolder: anOldElementHolder ].
-	
-	(itemAnimator
-		animateChange: aNewElementHolder
-		previousHolder: anOldElementHolder
-		preLayoutInfo: aPreInfoHolder
-		postLayoutInfo: aPostInfoHolder)
-			ifTrue: [ self postAnimationRunner ]
-]
-
-{ #category : #animations }
-OBlInfiniteElement >> animateDisappearance: anElementHolder preInfo: aPreInfoHolder postInfo: aPostInfoHolder [
-
-	self addAnimatingChild: anElementHolder.
-	anElementHolder isRecyclable: false.
-	
-	(itemAnimator
-		animateDisappearance: anElementHolder
 		preLayoutInfo: aPreInfoHolder
 		postLayoutInfo: aPostInfoHolder)
 			ifTrue: [ self postAnimationRunner ]
@@ -448,12 +386,12 @@ OBlInfiniteElement >> deepestFocusedChildIn: anElement [
 
 { #category : #initialization }
 OBlInfiniteElement >> defaultChildrenController [
-	^ BlInfiniteDefaultChildrenController new
+	^ OBlInfiniteDefaultChildrenController new
 ]
 
 { #category : #initialization }
 OBlInfiniteElement >> defaultChildrenManager [
-	^ BlInfiniteChildrenManager new
+	^ OBlInfiniteChildrenManager new
 ]
 
 { #category : #initialization }
@@ -480,7 +418,7 @@ OBlInfiniteElement >> defaultDataSourceManager [
 { #category : #initialization }
 OBlInfiniteElement >> defaultDataSourceObserver [
 	"Return class, actuall instantiation happens in initialize"
-	^ BlInfiniteElementDataSourceObserver
+	^ OBlInfiniteElementDataSourceObserver
 ]
 
 { #category : #initialization }
@@ -516,12 +454,12 @@ OBlInfiniteElement >> defaultOverScrollMode [
 
 { #category : #initialization }
 OBlInfiniteElement >> defaultRecycler [
-	^ AlbRecycler new
+	^ OBlInfiniteRecycler new
 ]
 
 { #category : #initialization }
 OBlInfiniteElement >> defaultRecyclerController [
-	^ AlbRecyclerController new
+	^ OBlRecyclerController new
 ]
 
 { #category : #initialization }
@@ -856,27 +794,19 @@ OBlInfiniteElement >> elementRangeUpdate: aPositionStart itemCount: anItemCount 
 
 { #category : #'children - accessing' }
 OBlInfiniteElement >> findElementHolderForDataSourcePosition: aPosition [
+
 	"Return the ViewHolder for the item in the given position of the data set"
+
 	<return: #BlInfiniteHolder or: nil>
+	dataSourceChangedAfterLayout ifTrue: [ ^ nil ].
 
-	| aHiddenHolder |
-	dataSourceChangedAfterLayout
-		ifTrue: [ ^ nil ].
-
-	aHiddenHolder := nil.
-
-
-	childrenManager unfilteredChildrenDo: [ :anElement |
+	childrenManager unfilteredChildrenDo: [ :anElement | 
 		| anElementHolder |
 		anElementHolder := self elementHolderOf: anElement.
-		(anElementHolder isRemoved not and: [ (self dataSourcePositionOf: anElementHolder) = aPosition ])
-			ifTrue: [
-				(childrenManager isHidden: anElementHolder itemElement)
-					ifTrue: [ aHiddenHolder := anElementHolder ]
-					ifFalse: [ ^ anElementHolder ] ] ].
+		(anElementHolder isRemoved not and: [ (self dataSourcePositionOf: anElementHolder) = aPosition ]) ifTrue: [ 
+			^ anElementHolder ] ].
 
-
-	^ aHiddenHolder
+	^ nil
 ]
 
 { #category : #'children - accessing' }
@@ -886,30 +816,22 @@ OBlInfiniteElement >> findElementHolderForItemId: anId [
 
 { #category : #'children - accessing' }
 OBlInfiniteElement >> findElementHolderForPosition: aPosition checkNew: shouldCheckNewPosition [
+
 	<return: #BlInfiniteHolder or: nil>
-	| aHiddenElement |
-	
-	aHiddenElement := nil.
-	
-	childrenManager unfilteredChildrenDo: [ :anElement |
+	childrenManager unfilteredChildrenDo: [ :anElement | 
 		| anElementHolder |
 		anElementHolder := self elementHolderOf: anElement.
-		anElementHolder isRemoved
-			ifFalse: [ 
-				| shouldSkip |
-				shouldSkip := shouldCheckNewPosition
-					ifTrue: [ anElementHolder position ~= aPosition ]
-					ifFalse: [ anElementHolder layoutPosition ~= aPosition ].
-				shouldSkip
-					ifFalse: [ 
-						(childrenManager isHidden: anElementHolder itemElement)
-							ifTrue: [ aHiddenElement := anElementHolder ]
-							ifFalse: [ ^ anElementHolder ] ]	] ].
-	
+		anElementHolder isRemoved ifFalse: [ 
+			| shouldSkip |
+			shouldSkip := shouldCheckNewPosition
+				              ifTrue: [ anElementHolder position ~= aPosition ]
+				              ifFalse: [ anElementHolder layoutPosition ~= aPosition ].
+			shouldSkip ifFalse: [ ^ anElementHolder ] ] ].
+
 	"We should not query cached element. It creates a problem during data source updates
 	when we are dealing with already laid out elements. Also, for the public use, it is more
 	reasonable to return null if position is not laid out"
-	^ aHiddenElement
+	^ nil
 ]
 
 { #category : #'private - positions' }
@@ -1415,10 +1337,6 @@ OBlInfiniteElement >> onEnterLayoutOrScroll [
 	layoutOrScrollCounter := layoutOrScrollCounter + 1
 ]
 
-{ #category : #'hooks - state' }
-OBlInfiniteElement >> onEnteredHiddenState: aChildElement [
-]
-
 { #category : #'hooks - layout' }
 OBlInfiniteElement >> onExitLayoutOrScroll [
 	
@@ -1448,10 +1366,6 @@ OBlInfiniteElement >> onLayoutDone [
 	super onLayoutDone.
 	remainingBounds := self bounds asRectangle.
 	self itemDecorationsDo: [ :d | remainingBounds := d onLayoutDoneIn: self remaining: remainingBounds ]
-]
-
-{ #category : #'hooks - state' }
-OBlInfiniteElement >> onLeftHiddenState: aChildElement [
 ]
 
 { #category : #measurement }
@@ -1640,34 +1554,24 @@ OBlInfiniteElement >> recordAnimationInfoIfBouncedHidden: anElementHolder itemHo
 
 { #category : #'private - focus' }
 OBlInfiniteElement >> recoverFocusFromState [
+
 	| aFocusTarget |
+	(preserveFocusAfterLayout and: [ self hasFocus ]) ifFalse: [ ^ self ].
 
-	(preserveFocusAfterLayout and: [ self hasFocus ])
-		ifFalse: [ ^ self ].
+	"only recover focus if InfiniteElement itself has the focus"
+	self isFocused ifFalse: [ self focusedChild ifNil: [ ^ self ] ].
 
-	"only recover focus if InfiniteElement itself has the focus or the focused element is hidden"
-	self isFocused
-		ifFalse: [ 
-			| aFocusedChild |
-			aFocusedChild := self focusedChild.
-			(aFocusedChild isNotNil and: [ childrenManager isHidden: aFocusedChild ])
-				ifFalse: [ ^ self ] ].
-	
 	aFocusTarget := nil.
-	
-	(self state focusedItemPosition ~= NoPosition)
-		ifTrue: [ aFocusTarget := self findElementHolderForDataSourcePosition: self state focusedItemPosition ].
-	
-	(aFocusTarget isNil and: [
-		self state focusedItemId ~= NoId and: [
-			dataSource hasStableIds ] ])
-				ifTrue: [ aFocusTarget := self findElementHolderForItemId: self state focusedItemId ].
-				
-	(aFocusTarget isNil or: [
-		aFocusTarget itemElement hasFocus or: [
-			aFocusTarget itemElement hasFocusable not ] ])
-				ifTrue: [ ^ self ].
-	
+
+	self state focusedItemPosition ~= NoPosition ifTrue: [ 
+		aFocusTarget := self findElementHolderForDataSourcePosition: self state focusedItemPosition ].
+
+	(aFocusTarget isNil and: [ self state focusedItemId ~= NoId and: [ dataSource hasStableIds ] ]) ifTrue: [ 
+		aFocusTarget := self findElementHolderForItemId: self state focusedItemId ].
+
+	(aFocusTarget isNil or: [ aFocusTarget itemElement hasFocus or: [ aFocusTarget itemElement hasFocusable not ] ]) 
+		ifTrue: [ ^ self ]
+
 	"could not find element to give focus to"
 ]
 
@@ -1676,26 +1580,6 @@ OBlInfiniteElement >> recycler [
 	<return: #BlInfiniteRecycler>
 
 	^ recycler
-]
-
-{ #category : #'children - add/remove' }
-OBlInfiniteElement >> removeAnimatingChild: anElement [
-	"Removes an element from the animatingElements list.
-	Return true if an animating element is removed, false otherwise"
-	<return: #Boolean>
-	| isRemoved |
-	
-	self eatRequestLayout.
-	isRemoved := childrenManager removeChildIfHidden: anElement.
-	isRemoved
-		ifTrue: [ 
-			| anElementHolder |
-			anElementHolder := self elementHolderOf: anElement.
-			recycler unscrapHolder: anElementHolder].
-	
-	"only clear request eaten flag if we removed the element"
-	self resumeRequestLayout: isRemoved not.
-	^ isRemoved
 ]
 
 { #category : #'children - add/remove' }

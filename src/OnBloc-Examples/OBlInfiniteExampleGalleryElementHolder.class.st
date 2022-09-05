@@ -1,6 +1,6 @@
 Class {
 	#name : #OBlInfiniteExampleGalleryElementHolder,
-	#superclass : #BlInfiniteHolder,
+	#superclass : #OBlInfiniteHolder,
 	#instVars : [
 		'image'
 	],

@@ -13,17 +13,13 @@ Class {
 
 { #category : #nil }
 OBlInfiniteExampleGalleryImageElement >> aeDrawOn: aeCanvas [
-	| aScale |
-	super aeDrawOn: aeCanvas.	
-	form
-		ifNil: [ ^ self ].	
-	aScale := (self extent / form extent) asFloatPoint.
-	aeCanvas restoreContextAfter: [ 
-		aeCanvas setBackgroundWith: [ aeCanvas setBackgroundWithForm: form alpha: 1.0. ].
-		aeCanvas setBorderOff.
-		aeCanvas pathScale: aScale.
-		aeCanvas drawFigure]
 
+	| aScale |
+	form ifNil: [ ^ super aeDrawOn: aeCanvas ].
+	aeCanvas restoreContextAfter: [ 
+		aScale := (self extent / form extent) asFloatPoint.
+		aeCanvas pathScale: aScale.
+		super aeDrawOn: aeCanvas ]
 ]
 
 { #category : #layout }
@@ -68,13 +64,9 @@ OBlInfiniteExampleGalleryImageElement >> form: aForm [
 	
 	image form == aForm
 		ifFalse: [ ^ self ].
-	
-	self
-		assert: [ image form == aForm ]
-		description: [ 'Form must belong to current image' ].
-
 	form := aForm.
 	bitmap := nil.
+	self background: (BlBackground image: form).
 	self requestLayout.
 	self invalidate
 ]

@@ -1,8 +1,9 @@
 Class {
 	#name : #OBlInfiniteExampleGalleryDataSource,
-	#superclass : #BlInfiniteDataSource,
+	#superclass : #OBlInfiniteDataSource,
 	#instVars : [
-		'images'
+		'images',
+		'loader'
 	],
 	#category : #'OnBloc-Examples-Infinite-Image-Gallery'
 }
@@ -42,17 +43,15 @@ OBlInfiniteExampleGalleryDataSource >> onCreateHolder: anInfiniteElement type: a
 
 { #category : #requesting }
 OBlInfiniteExampleGalleryDataSource >> requestImages [
-	
-	images
-		ifNotEmpty: [ ^ self ].
 
-	loader
-		ifNotNil: [ ^ self ].
+	images ifNotEmpty: [ ^ self ].
 
-	loader := [
-		| theImages |
-		theImages := (STONJSON fromString: 'https://unsplash.it/list' asUrl retrieveContents)
-			collect: [ :aDictionary | OBlInfiniteExampleGalleryImage fromDictionary: aDictionary ].
-		theImages sort: [ :a :b | a id > b id ].
-		self images: theImages ] fork
+	loader ifNotNil: [ ^ self ].
+
+	loader := [ 
+	          | theImages |
+	          theImages := (STONJSON fromString: 'https://unsplash.it/list' asUrl retrieveContents) collect: [ :aDictionary | 
+		                       OBlInfiniteExampleGalleryImage fromDictionary: aDictionary ].
+	          theImages sort: [ :a :b | a id > b id ].
+	          self images: theImages ] fork
 ]
