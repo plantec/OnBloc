@@ -1,7 +1,7 @@
 Class {
 	#name : #OBlInfiniteExampleGalleryListElement,
 	#superclass : #BlInfiniteElement,
-	#category : #'OnBloc-Infinite-Examples-Gallery'
+	#category : #'OnBloc-Examples-Infinite-Image-Gallery'
 }
 
 { #category : #examples }

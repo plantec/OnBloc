@@ -12,7 +12,7 @@ Class {
 		'id',
 		'form'
 	],
-	#category : #'OnBloc-Infinite-Examples-Gallery'
+	#category : #'OnBloc-Examples-Infinite-Image-Gallery'
 }
 
 { #category : #'instance creation' }

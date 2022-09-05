@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'image'
 	],
-	#category : #'OnBloc-Infinite-Examples-Gallery'
+	#category : #'OnBloc-Examples-Infinite-Image-Gallery'
 }
 
 { #category : #accessing }
