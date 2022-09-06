@@ -62,58 +62,46 @@ OBlInfiniteLayout >> addChild: anElement at: anIndex [
 
 { #category : #'private - children' }
 OBlInfiniteLayout >> addChild: anElement at: anIndex disappearing: isDisappearing [
+
 	"If anIndex == 0 child will be attached at the end"
+
 	| anElementHolder anInfiniteConstraints |
-	
-	infiniteElement telemetry
-		timeSync: [ 'Add {1} as child at {2} disappearing {3}' format: { anElement . anIndex . isDisappearing } ]
-		during: [
-			anElementHolder := self elementHolderOf: anElement.
-			
-			(isDisappearing or: [ anElementHolder isRemoved ])
-				ifTrue: [ self addToDisappearedInLayout: anElementHolder ]
-				ifFalse: [ self removeFromDisappearedInLayout: anElementHolder ].
-				
-			anInfiniteConstraints := anElement constraints infinite.
-			
-			(anElementHolder wasReturnedFromScrap or: [ anElementHolder isScrap ])
-				ifTrue: [
-					anElementHolder isScrap
-						ifTrue: [ self recycler unscrapHolder: anElementHolder ]
-						ifFalse: [ anElementHolder clearReturnedFromScrap ].
-					childManager attachChild: anElement at: anIndex ]
+	anElementHolder := self elementHolderOf: anElement.
+
+	(isDisappearing or: [ anElementHolder isRemoved ])
+		ifTrue: [ self addToDisappearedInLayout: anElementHolder ]
+		ifFalse: [ self removeFromDisappearedInLayout: anElementHolder ].
+
+	anInfiniteConstraints := anElement constraints infinite.
+
+	(anElementHolder wasReturnedFromScrap or: [ anElementHolder isScrap ])
+		ifTrue: [ 
+			anElementHolder isScrap
+				ifTrue: [ self recycler unscrapHolder: anElementHolder ]
+				ifFalse: [ anElementHolder clearReturnedFromScrap ].
+			childManager attachChild: anElement at: anIndex in: infiniteElement ]
+		ifFalse: [ 
+			anElement parent == infiniteElement
+				ifTrue: [ 
+					| currentIndex index |
+					index := anIndex = 0
+						         ifTrue: [ self childrenCount ]
+						         ifFalse: [ anIndex ].
+					currentIndex := infiniteElement childIndexOf: anElement.
+					currentIndex <= 0 ifTrue: [ 
+						self error: 'Added element has infinite element as parent but is not a direct child of it' ].
+					currentIndex ~= index ifTrue: [ self moveChildFrom: currentIndex to: index ] ]
 				ifFalse: [ 
-					anElement parent == infiniteElement
-						ifTrue: [ 
-							| currentIndex index |
-							
-							infiniteElement telemetry
-								timeSync: [ 'Re-add child {1} back at {2} disappearing {3}' format: { anElement . anIndex . isDisappearing } ]
-								during: [
-									index := anIndex = 0
-										ifTrue: [ childManager childrenCount ]
-										ifFalse: [ anIndex ].
-									currentIndex := childManager childIndexOf: anElement.
-									currentIndex <= 0
-										ifTrue: [ self error: 'Added element has infinite element as parent but is not a direct child of it' ].
-									currentIndex ~= index
-										ifTrue: [ self moveChildFrom: currentIndex to: index ] ] ]
-						ifFalse: [ 
-							infiniteElement telemetry
-								timeSync: [ 'Add child {1} as a new at {2} disappearing {3}' format: { anElement . anIndex . isDisappearing } ]
-								during: [
-									childManager addChild: anElement at: anIndex.
-									anInfiniteConstraints insetsDirty: true.
-									"If smooth scroller is currently running, let it know that a new element was attached"
-									self smoothScroller ifNotNil: [ :aSmoothScroller |
-										aSmoothScroller isRunning ifTrue: [
-											aSmoothScroller onChildAttached: anElement ] ] ] ] ].
-					
-			anInfiniteConstraints pendingInvalidate ifTrue: [ 
-				self flag: 'Do we need to request layout here?'.
-				"anElementHolder itemElement invalidate."
-				anInfiniteConstraints pendingInvalidate: false ] ]
-			
+					childManager addChild: anElement at: anIndex in: infiniteElement.
+					anInfiniteConstraints insetsDirty: true.
+					"If smooth scroller is currently running, let it know that a new element was attached"
+					self smoothScroller ifNotNil: [ :aSmoothScroller | 
+						aSmoothScroller isRunning ifTrue: [ aSmoothScroller onChildAttached: anElement ] ] ] ].
+
+	anInfiniteConstraints pendingInvalidate ifTrue: [ 
+		self flag: 'Do we need to request layout here?'.
+		"anElementHolder itemElement invalidate."
+		anInfiniteConstraints pendingInvalidate: false ]
 ]
 
 { #category : #'children - add/remove' }
@@ -154,7 +142,7 @@ OBlInfiniteLayout >> assertNotInLayoutOrScroll [
 { #category : #'children - add/remove' }
 OBlInfiniteLayout >> attachChild: anElement [
 	"Reattach a previously detached child element at the end of the list"
-	self attachChild: anElement at: 0
+	self attachChild: anElement at: 0 in: infiniteElement 
 ]
 
 { #category : #'children - add/remove' }
@@ -172,7 +160,7 @@ OBlInfiniteLayout >> attachChild: anElement at: anIndex [
 		ifTrue: [ self addToDisappearedInLayout: anElementHolder ]
 		ifFalse: [ self removeFromDisappearedInLayout: anElementHolder ].
 
-	childManager attachChild: anElement at: anIndex
+	childManager attachChild: anElement at: anIndex in: infiniteElement
 ]
 
 { #category : #accessing }
@@ -295,7 +283,7 @@ OBlInfiniteLayout >> childAt: anIndex [
 	"Return a child element at the given index"
 	<return: #BlElement>
 	
-	^ childManager childAt: anIndex
+	^ infiniteElement childAt: anIndex
 ]
 
 { #category : #'children - accessing' }
@@ -351,7 +339,7 @@ OBlInfiniteLayout >> childrenCount [
 	This does not include children that were temporarily detached and/or scrapped."
 	<return: #Number>
 
-	^ childManager childrenCount
+	^ infiniteElement childrenCount
 ]
 
 { #category : #'children - accessing' }
@@ -504,14 +492,14 @@ OBlInfiniteLayout >> detachAndScrapAttachedChildren [
 OBlInfiniteLayout >> detachChild: anElement [
 	"Temporarily detach a child element"
 
-	self detachChildAt: (childManager childIndexOf: anElement)
+	self detachChildAt: (infiniteElement childIndexOf: anElement)
 ]
 
 { #category : #'children - add/remove' }
 OBlInfiniteLayout >> detachChildAt: anIndex [
 	"Temporarily detach a child element at the index"
 
-	childManager detachChildAt: anIndex
+	childManager detachChildAt: anIndex in: infiniteElement
 ]
 
 { #category : #'children - accessing' }
@@ -592,20 +580,6 @@ OBlInfiniteLayout >> heightSpec [
 	<return: #BlMeasurementSpec>
 
 	^ heightSpec
-]
-
-{ #category : #'children - state' }
-OBlInfiniteLayout >> ignoreChild: anElement [
-	"Flags an element so that it will not be scrapped or recycled"
-	| anElementHolder |
-	
-	(anElement parent ~~ infiniteElement
-		or: [ (infiniteElement childIndexOf: anElement) = 0 ])
-			ifTrue: [ self error: 'Not attached element can not be ignored' ].
-	
-	anElementHolder := self elementHolderOf: anElement.
-	anElementHolder flags addIgnore.
-	self infoRemoveHolder: anElementHolder
 ]
 
 { #category : #initialization }
@@ -1061,7 +1035,7 @@ OBlInfiniteLayout >> removeAllChildren [
 
 	"Only remove non-animating elements"
 	self reverseChildrenDo: [ :anElement :anIndex |
-		childManager removeChildAt: anIndex ]
+		childManager removeChildAt: anIndex in: infiniteElement ]
 ]
 
 { #category : #'children - add/remove' }
@@ -1130,7 +1104,7 @@ OBlInfiniteLayout >> removeChild: anElement [
 	InfiniteLayouts should use this method to completely remove a child view that is no longer needed.
    Note: InfiniteLayouts should strongly consider recycling removed views using BlInfiniteRecycler#recycleElement:"
 
-	childManager removeChild: anElement
+	childManager removeChild: anElement in: infiniteElement
 ]
 
 { #category : #'children - add/remove' }
@@ -1140,7 +1114,7 @@ OBlInfiniteLayout >> removeChildAt: anIndex [
    Note: InfiniteLayouts should strongly consider recycling removed views using BlInfiniteRecycler#recycleElement:"
 
 	(self childAt: anIndex)
-		ifNotNil: [ childManager removeChildAt: anIndex ]
+		ifNotNil: [ childManager removeChildAt: anIndex in: infiniteElement ]
 ]
 
 { #category : #'children - add/remove' }

@@ -10,18 +10,13 @@ Class {
 		'infiniteElement',
 		'childManager'
 	],
-	#category : #'OnBloc-Infinite-Children'
+	#category : #'OnBloc-NotUsed-Infinite-Children'
 }
 
 { #category : #'manager -> element' }
 OBlInfiniteDefaultChildrenController >> addChild: anElement at: anIndex [
-	infiniteElement telemetry
-		timeSync: [ 'Add child {1} to infinite element at {2}' format: { anElement . anIndex } ]
-		during: [ infiniteElement addChild: anElement at: anIndex. ].
-
-	infiniteElement telemetry
-		timeSync: [ 'Dispatch child {1} atatched to infinite element at {2}' format: { anElement . anIndex } ]
-		during: [ infiniteElement dispatchChildAttached: anElement ]
+	infiniteElement addChild: anElement at: anIndex.
+	infiniteElement dispatchChildAttached: anElement
 ]
 
 { #category : #'manager -> element' }

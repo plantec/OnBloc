@@ -7,171 +7,110 @@ Class {
 	#superclass : #Object,
 	#traits : 'TBlDebug',
 	#classTraits : 'TBlDebug classTrait',
-	#instVars : [
-		'controller'
-	],
 	#category : #'OnBloc-Infinite-Children'
 }
 
 { #category : #'children add/remove' }
-OBlInfiniteChildrenManager >> addChild: child [ 
-	self addChild: child at: 0
-]
+OBlInfiniteChildrenManager >> addChild: aChildElement at: anIndex in: anInfiniteElement [
 
-{ #category : #'children add/remove' }
-OBlInfiniteChildrenManager >> addChild: aChildElement at: anIndex [
-
-	"Adds a child at an index and makes it hidden if isHidden is true.
+	"Adds a child at an index.
 	If an Index is less or equal 0 child will be appended to the end"
 
 	| anOffset |
 	anOffset := (anIndex <= 0
-		             ifTrue: [ controller childrenCount + 1 ]
+		             ifTrue: [ anInfiniteElement childrenCount + 1 ]
 		             ifFalse: [ anIndex ]) max: 1.
-	controller addChild: aChildElement at: anOffset
+	anInfiniteElement addChild: aChildElement at: anOffset.
+	anInfiniteElement dispatchChildAttached: aChildElement.
+
 ]
 
 { #category : #'children add/remove' }
-OBlInfiniteChildrenManager >> attachChild: aChildElement at: anIndex [ 
+OBlInfiniteChildrenManager >> attachChild: aChildElement at: anIndex in: anInfiniteElement [
+
 	"Attaches aChildElement to the infinite element"
 
-	| anOffset |
-	
+	| anOffset anElementHolder |
 	anOffset := (anIndex <= 0
-		ifTrue: [ controller childrenCount + 1 ]
-		ifFalse: [ anIndex ]) max: 1.
-	
-	controller attachChild: aChildElement at: anOffset
-]
+		             ifTrue: [ anInfiniteElement childrenCount + 1 ]
+		             ifFalse: [ anIndex ]) max: 1.
 
-{ #category : #'children accessing' }
-OBlInfiniteChildrenManager >> childAt: anIndex [
-	"Returns the child at anIndex"
-	<return: #BlElement>
+	anElementHolder := anInfiniteElement elementHolderOf: aChildElement.
+	(anElementHolder isTmpDetached not and: [ anElementHolder shouldIgnore not ]) ifTrue: [ 
+		self error: 'Can not attach a child which is not previously detached ' ].
 
-	^ controller childAt: anIndex
-]
-
-{ #category : #'children accessing' }
-OBlInfiniteChildrenManager >> childIndexOf: aChildElement [
-	"Return the index of the child in regular perspective.
-	Return 0 if child is not present in infinite element"
-	<return: #Number>
-
-	|index|
-	
-	index := controller childIndexOf: aChildElement.
-	index <= 0
-		ifTrue: [ ^ 0 ].		
-	^ index 
-]
-
-{ #category : #'children accessing' }
-OBlInfiniteChildrenManager >> childrenCount [
-	"Return the number of not hidden children"
-	<return: #Number>
-
-	^ controller childrenCount
-]
-
-{ #category : #'children accessing' }
-OBlInfiniteChildrenManager >> childrenDo: aBlock [
-
-	1 to: self childrenCount do: [ :anIndex |
-		aBlock value: (self childAt: anIndex) ]
-]
-
-{ #category : #accessing }
-OBlInfiniteChildrenManager >> controller [
-	^ controller
-]
-
-{ #category : #accessing }
-OBlInfiniteChildrenManager >> controller: aChildController [
-	controller := aChildController
-]
-
-{ #category : #initialization }
-OBlInfiniteChildrenManager >> defaultBucket [
-	^ BlInfiniteBucket new
+	anElementHolder clearTmpDetached.
+	anInfiniteElement attachChild: aChildElement at: anOffset
 ]
 
 { #category : #'children add/remove' }
-OBlInfiniteChildrenManager >> detachChildAt: anIndex [
+OBlInfiniteChildrenManager >> detachChildAt: anIndex in: anInfiniteElement [
 	"Detaches a child element at anIndex from infinite element"
-	controller detachChildAt: anIndex
-]
-
-{ #category : #testing }
-OBlInfiniteChildrenManager >> hasChildren [
-	"Return true if there are any non-hidden children, false otherwise"
-	<return: #Boolean>
-
-	^ self childrenCount > 0
-]
-
-{ #category : #initialization }
-OBlInfiniteChildrenManager >> initialize [
-	super initialize.
+	| anElement anElementHolder |
+	anElement := anInfiniteElement children 
+		at: anIndex
+		ifAbsent: [ ^ self ].
 	
-
+	anElementHolder := anInfiniteElement elementHolderOf: anElement.
+	
+	(anElementHolder isTmpDetached and: [
+		anElement shouldIgnore not ])
+			ifTrue: [ self error: 'Can not detach already detached child!' ].
+	
+	anElementHolder flags addTmpDetached.
+	anInfiniteElement detachChild: anElement
 ]
 
 { #category : #'children add/remove' }
-OBlInfiniteChildrenManager >> removeAllChildrenUnfiltered [
-	"Remove all children from the infinite element including the hidden ones"
-
-	controller removeAllChildren
-]
-
-{ #category : #'children add/remove' }
-OBlInfiniteChildrenManager >> removeChild: aChildElement [
+OBlInfiniteChildrenManager >> removeChild: aChildElement in: anInfiniteElement [
 	"Remove aChildElement from infinite element
 	and do not track it anymore (unhide and remove from bucket)"
 	| index |
 
-	index := controller childIndexOf: aChildElement.
+	index := anInfiniteElement childIndexOf: aChildElement.
 	index <= 0
 		ifTrue: [ ^ self ].
 	
-	controller removeChildAt: index
+	self removeChildAt: index in: anInfiniteElement 
 ]
 
 { #category : #'children add/remove' }
-OBlInfiniteChildrenManager >> removeChildAt: anIndex [
+OBlInfiniteChildrenManager >> removeChildAt: anIndex in: anInfiniteElement [
 
 	"Remove a child at anIndex from infinite element
 	and do not track it anymore."
 
-	| anElement |
-	anElement := controller childAt: anIndex.
-	anElement ifNil: [ ^ self ].
+	| anElement |	
+	anElement := anInfiniteElement children 
+		at: anIndex
+		ifAbsent: [ ^ self ].
 
-	controller removeChildAt: anIndex
+	anInfiniteElement dispatchChildDetached: anElement.
+	anInfiniteElement removeChildAt: anIndex
 ]
 
 { #category : #'children accessing' }
-OBlInfiniteChildrenManager >> unfilteredChildAt: anIndex [
+OBlInfiniteChildrenManager >> unfilteredChildAt: anIndex in: anInfiniteElement [
 	"Return a child element by infinite element's offset.
 	I will not offset this index"
 	<return: #BlElement>
 
-	^ controller childAt: anIndex
+	^ anInfiniteElement childAt: anIndex
 ]
 
 { #category : #'children accessing' }
-OBlInfiniteChildrenManager >> unfilteredChildrenCount [
+OBlInfiniteChildrenManager >> unfilteredChildrenCountIn: anInfiniteElement [
 	"Return the total number of children"
 	<return: #Number>
 
-	^ controller childrenCount
+	^ anInfiniteElement childrenCount
 ]
 
 { #category : #'children accessing' }
-OBlInfiniteChildrenManager >> unfilteredChildrenDo: aBlock [
+OBlInfiniteChildrenManager >> unfilteredChildrenDo: aBlock in: anInfiniteElement [
 	"Do not remove children in a Block!"
 	| aChildCount |
-	aChildCount := self unfilteredChildrenCount.
+	aChildCount := self unfilteredChildrenCountIn: anInfiniteElement.
 	1 to: aChildCount do: [ :anIndex |
-		aBlock value: (self unfilteredChildAt: anIndex) ]
+		aBlock value: (self unfilteredChildAt: anIndex in: anInfiniteElement) ]
 ]

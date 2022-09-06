@@ -7,7 +7,7 @@ Child manager communicates with infinite element  only using my interface
 Class {
 	#name : #OBlInfiniteAbstractChildrenController,
 	#superclass : #Object,
-	#category : #'OnBloc-Infinite-Children'
+	#category : #'OnBloc-NotUsed-Infinite-Children'
 }
 
 { #category : #'manager -> element' }

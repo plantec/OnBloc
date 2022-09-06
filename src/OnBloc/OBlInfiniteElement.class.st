@@ -183,7 +183,7 @@ OBlInfiniteElement >> clearOldPositions [
 		| anElementHolder |
 		anElementHolder := self elementHolderOf: anElement.
 		anElementHolder shouldIgnore
-			ifFalse: [ anElementHolder clearOldPosition ] ].
+			ifFalse: [ anElementHolder clearOldPosition ] ] in: self.
 		
 	recycler clearOldPositions
 ]
@@ -569,7 +569,7 @@ OBlInfiniteElement >> dispatchLayoutFirstStepPredictiveAnimations [
 	layout layoutChildrenIn: self recycler state: self state.
 	self state structureChanged: didStructureChange.
 	
-	childrenManager childrenDo: [ :anElement |
+	self childrenDo: [ :anElement |
 		| anElementHolder |
 		anElementHolder := self elementHolderOf: anElement.
 		(anElementHolder shouldIgnore or: [
@@ -598,7 +598,7 @@ OBlInfiniteElement >> dispatchLayoutFirstStepSimpleAnimations [
 		assert: [ self state willRunSimpleAnimations ]
 		description: [ 'My state must be running simple animations!' ].
 
-	childrenManager childrenDo: [ :anElement |
+	self childrenDo: [ :anElement |
 		| anElementHolder |
 		anElementHolder := self elementHolderOf: anElement.
 		(anElementHolder shouldIgnore or: [
@@ -690,7 +690,7 @@ OBlInfiniteElement >> dispatchLayoutThirdStepSimpleAnimations [
 	Traverse list in reverse because we may call animateChange in the loop which may
 	remove the target element holder"	
 	
-	childrenManager childrenDo: [ :anElement |
+	self childrenDo: [ :anElement |
 		| anElementHolder |
 		anElementHolder := self elementHolderOf: anElement.
 		anElementHolder shouldIgnore ifFalse: [ 
@@ -785,6 +785,7 @@ OBlInfiniteElement >> elementRangeUpdate: aPositionStart itemCount: anItemCount 
 						anElementHolder flags addUpdate.
 						anElementHolder addPayload: anObject.
 						anElement constraints infinite insetsDirty: true ] ] ]
+			in: self
 ]
 
 { #category : #'children - accessing' }
@@ -799,7 +800,7 @@ OBlInfiniteElement >> findElementHolderForDataSourcePosition: aPosition [
 		| anElementHolder |
 		anElementHolder := self elementHolderOf: anElement.
 		(anElementHolder isRemoved not and: [ (self dataSourcePositionOf: anElementHolder) = aPosition ]) ifTrue: [ 
-			^ anElementHolder ] ].
+			^ anElementHolder ] ] in: self.
 
 	^ nil
 ]
@@ -821,7 +822,7 @@ OBlInfiniteElement >> findElementHolderForPosition: aPosition checkNew: shouldCh
 			shouldSkip := shouldCheckNewPosition
 				              ifTrue: [ anElementHolder position ~= aPosition ]
 				              ifFalse: [ anElementHolder layoutPosition ~= aPosition ].
-			shouldSkip ifFalse: [ ^ anElementHolder ] ] ].
+			shouldSkip ifFalse: [ ^ anElementHolder ] ] ] in: self.
 
 	"We should not query cached element. It creates a problem during data source updates
 	when we are dealing with already laid out elements. Also, for the public use, it is more
@@ -835,13 +836,13 @@ OBlInfiniteElement >> findMinMaxChildLayoutPositions [
 	
 	| minPositionPreLayout maxPositionPreLayout |
 	
-	childrenManager hasChildren
+	self hasChildren
 		ifFalse: [ ^ NoPosition to: NoPosition ].
 
 	minPositionPreLayout := Float infinity.
 	maxPositionPreLayout := Float negativeInfinity.
 	
-	childrenManager childrenDo: [ :anElement | 
+	self childrenDo: [ :anElement | 
 		| anElementHolder |
 		anElementHolder := self elementHolderOf: anElement.
 		anElementHolder shouldIgnore ifFalse: [ 
@@ -897,7 +898,7 @@ OBlInfiniteElement >> getDecorationsInsetsOfChildElement: anItemElement [
 { #category : #'private - animations' }
 OBlInfiniteElement >> handleMissingPreInfoForChange: anActualElementHolder oldChangeHolder: anOldChangeElementHolder at: anActualKey [
 
-	childrenManager childrenDo: [ :anElement |
+	self childrenDo: [ :anElement |
 		| anElementHolder |
 		anElementHolder := self elementHolderOf: anElement.
 		anElementHolder == anActualElementHolder ifFalse: [ 
@@ -939,7 +940,7 @@ OBlInfiniteElement >> hasUpdatedChild [
 	"Return true if any of existing elemnts holder needs to be updated"
 	<return: #Boolean>
 
-	childrenManager childrenDo: [ :anElement |
+	self childrenDo: [ :anElement |
 		| anElementHolder |
 		anElementHolder := self elementHolderOf: anElement.
 		(anElementHolder shouldIgnore not and:[
@@ -990,10 +991,7 @@ OBlInfiniteElement >> initialize [
 
 { #category : #initialization }
 OBlInfiniteElement >> initializeChildrenManager [
-	childrenManager := self defaultChildrenManager.
-	self defaultChildrenController
-		infiniteElement: self;
-		childrenManager: childrenManager
+	childrenManager := self defaultChildrenManager
 ]
 
 { #category : #initialization }
@@ -1126,7 +1124,7 @@ OBlInfiniteElement >> markDataSourceChangeDuringMeasure [
 OBlInfiniteElement >> markItemDecorationsInsetsDirty [
 	
 	childrenManager unfilteredChildrenDo: [ :anElement |
-		anElement constraints infinite insetsDirty: true ]
+		anElement constraints infinite insetsDirty: true ] in: self
 ]
 
 { #category : #layout }
@@ -1148,7 +1146,7 @@ OBlInfiniteElement >> markKnownElementsInvalid [
 		anElementHolder := self elementHolderOf: anElement.
 		anElementHolder shouldIgnore ifFalse: [ 
 			anElementHolder flags addUpdate.
-			anElementHolder flags addInvalid ] ].
+			anElementHolder flags addInvalid ] ] in: self.
 	
 	self markItemDecorationsInsetsDirty.
 ]
@@ -1198,7 +1196,7 @@ OBlInfiniteElement >> notifyScrolled: aPoint [
 
 { #category : #'children - geometry' }
 OBlInfiniteElement >> offsetChildrenHorizontallyBy: aNumber [
-	childrenManager childrenDo: [ :anElement |
+	self childrenDo: [ :anElement |
 		| previousPosition newPosition aBlBoundsUpdater |
 		previousPosition := anElement position.
 		newPosition := (previousPosition x + aNumber) @ previousPosition y.
@@ -1218,7 +1216,7 @@ OBlInfiniteElement >> offsetChildrenHorizontallyBy: aNumber [
 { #category : #'children - geometry' }
 OBlInfiniteElement >> offsetChildrenVerticallyBy: aNumber [
 	
-	childrenManager childrenDo: [ :anElement |
+	self childrenDo: [ :anElement |
 		| previousPosition newPosition aBlBoundsUpdater |
 
 		previousPosition := anElement position.
@@ -1244,7 +1242,7 @@ OBlInfiniteElement >> offsetPositionRecordsForInsert: aStartPosition itemCount: 
 		(anElementHolder shouldIgnore not and: [ anElementHolder position >= aStartPosition ])
 			ifTrue: [ 
 				anElementHolder offsetPositionBy: anItemCount applyToPreLayout: false.
-				state structureChanged: true ] ].
+				state structureChanged: true ] ] in: self.
 	
 	
 	self requestLayout
@@ -1272,7 +1270,7 @@ OBlInfiniteElement >> offsetPositionRecordsForMove: aFromPosition to: aToPositio
 				anElementHolder position = aFromPosition
 					ifTrue: [ anElementHolder offsetPositionBy: aToPosition - aFromPosition applyToPreLayout: false ]
 					ifFalse: [ anElementHolder offsetPositionBy: anInBetweenOffset applyToPreLayout: false ].
-				state structureChanged: true ] ].
+				state structureChanged: true ] ] in: self.
 
 	self requestLayout
 ]
@@ -1301,7 +1299,7 @@ OBlInfiniteElement >> offsetPositionRecordsForRemove: aPositionStart itemCount: 
 									flagRemovedAndOffsetPosition: aPositionStart - 1
 									by: anItemCount negated
 									applyToPreLayout: applyToPreLayout.
-								state structureChanged: true ] ] ] ].
+								state structureChanged: true ] ] ] ] in: self.
 	
 	self requestLayout
 ]
@@ -1675,7 +1673,7 @@ OBlInfiniteElement >> saveOldPositions [
 		(anElementHolder position = NoPosition and: [ anElementHolder isRemoved not ])
 			ifTrue: [ self error: 'Element holder can not have undefined position unless it is removed' ].
 		anElementHolder shouldIgnore
-			ifFalse: [ anElementHolder saveOldPosition ] ]
+			ifFalse: [ anElementHolder saveOldPosition ] ] in: self
 ]
 
 { #category : #scrolling }
@@ -1812,7 +1810,7 @@ OBlInfiniteElement >> setDataSourceChangedAfterLayout [
 		| anElementHolder |
 		anElementHolder := self elementHolderOf: anElement.
 		anElementHolder shouldIgnore
-			ifFalse: [ anElementHolder flags addDataSourcePositionUnknown ] ].
+			ifFalse: [ anElementHolder flags addDataSourcePositionUnknown ] ] in: self.
 	
 	"immediately mark all elements as invalid, so prefetched ones can be
 	differentiated from elements bound to previous data set - both in children, and cache"
