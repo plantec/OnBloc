@@ -82,6 +82,17 @@ OBlInfiniteAbstractDataSourceController >> markElementHoldersUpdated: aStartPosi
 ]
 
 { #category : #'manager -> element' }
+OBlInfiniteAbstractDataSourceController >> markElementHoldersUpdated: aStartPosition itemCount: anItemCount payload: aPayloadObject in: anInfiniteElement [
+	"Ask infinite element to update amount of items defined by itemCount
+	starting from aStartPosition with an optional payload object.
+	aStartPosition must not be nil.
+	anItemCount must not be nil.
+	aPayloadObject is optional and may be nil"
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'manager -> element' }
 OBlInfiniteAbstractDataSourceController >> offsetPositions: aStartPosition forAdd: anItemCount [
 	"Ask infinite element to update item positions from startPosition
 	in order to add anItemCount amount of new items.
@@ -93,6 +104,17 @@ OBlInfiniteAbstractDataSourceController >> offsetPositions: aStartPosition forAd
 
 { #category : #'manager -> element' }
 OBlInfiniteAbstractDataSourceController >> offsetPositions: aStartPosition forRemovingInvisible: anItemCount [
+	"Ask infinite element to update item positions after
+	removing invisible elements starting from aStartPosition
+	an amount defined by anItemCount.
+	aStartPosition must not be nil.
+	anItemCount must not be nil"
+	
+	^ self subclassResponsibility
+]
+
+{ #category : #'manager -> element' }
+OBlInfiniteAbstractDataSourceController >> offsetPositions: aStartPosition forRemovingInvisible: anItemCount in: anInfiniteElement [
 	"Ask infinite element to update item positions after
 	removing invisible elements starting from aStartPosition
 	an amount defined by anItemCount.

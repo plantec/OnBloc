@@ -11,7 +11,7 @@ Class {
 	#instVars : [
 		'infiniteElement'
 	],
-	#category : #'OnBloc-Infinite-DataSource-Support'
+	#category : #'OnBloc-NotUsed-Infinite-DataSource-Support'
 }
 
 { #category : #accessing }
@@ -30,25 +30,36 @@ OBlInfiniteDefaultDataSourceController >> dispatchCommand: aCommand [
 
 { #category : #accessing }
 OBlInfiniteDefaultDataSourceController >> element: anInfiniteElement [
-	infiniteElement := anInfiniteElement
+	
 ]
 
 { #category : #'manager -> element' }
 OBlInfiniteDefaultDataSourceController >> elementHolderAt: aPosition [
 	<return: #BlElement or: nil>
-
+self halt.
 	^ infiniteElement findElementHolderForPosition: aPosition checkNew: true
 ]
 
 { #category : #'manager -> element' }
 OBlInfiniteDefaultDataSourceController >> markElementHoldersUpdated: aPositionStart itemCount: anItemCount payload: aPayloadObject [
-
+self halt.
 	infiniteElement
 		elementRangeUpdate: aPositionStart
 		itemCount: anItemCount
 		payload: aPayloadObject.
 		
 	infiniteElement markItemsChanged
+]
+
+{ #category : #'manager -> element' }
+OBlInfiniteDefaultDataSourceController >> markElementHoldersUpdated: aPositionStart itemCount: anItemCount payload: aPayloadObject in: anInfiniteElement [
+
+	anInfiniteElement
+		elementRangeUpdate: aPositionStart
+		itemCount: anItemCount
+		payload: aPayloadObject.
+		
+	anInfiniteElement markItemsChanged
 ]
 
 { #category : #'manager -> element' }
@@ -59,6 +70,16 @@ OBlInfiniteDefaultDataSourceController >> offsetPositions: aStartPosition forAdd
 		itemCount: anItemCount.
 		
 	infiniteElement markItemsAddedOrRemoved
+]
+
+{ #category : #'manager -> element' }
+OBlInfiniteDefaultDataSourceController >> offsetPositions: aStartPosition forAdd: anItemCount in: anInfiniteElement [
+	
+	anInfiniteElement
+		offsetPositionRecordsForInsert: aStartPosition
+		itemCount: anItemCount.
+		
+	anInfiniteElement markItemsAddedOrRemoved
 ]
 
 { #category : #'manager -> element' }
@@ -88,6 +109,17 @@ OBlInfiniteDefaultDataSourceController >> offsetPositions: aStartPosition forRem
 ]
 
 { #category : #'manager -> element' }
+OBlInfiniteDefaultDataSourceController >> offsetPositions: aStartPosition forRemovingLaidOutOrNewElement: anItemCount in: anInfiniteElement [
+
+	anInfiniteElement
+		offsetPositionRecordsForRemove: aStartPosition
+		itemCount: anItemCount
+		applyToPreLayout: true.
+	
+	anInfiniteElement markItemsAddedOrRemoved
+]
+
+{ #category : #'manager -> element' }
 OBlInfiniteDefaultDataSourceController >> offsetPositionsForMove: aFromPosition to: aToPosition [
 
 	infiniteElement
@@ -95,6 +127,16 @@ OBlInfiniteDefaultDataSourceController >> offsetPositionsForMove: aFromPosition 
 		to: aToPosition.
 
 	infiniteElement markItemsAddedOrRemoved
+]
+
+{ #category : #'manager -> element' }
+OBlInfiniteDefaultDataSourceController >> offsetPositionsForMove: aFromPosition to: aToPosition in: anInfiniteElement [
+
+	anInfiniteElement
+		offsetPositionRecordsForMove: aFromPosition
+		to: aToPosition.
+
+	anInfiniteElement markItemsAddedOrRemoved
 ]
 
 { #category : #'manager -> element' }

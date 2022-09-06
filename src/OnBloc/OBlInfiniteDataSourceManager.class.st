@@ -34,14 +34,12 @@ Class {
 	#instVars : [
 		'pendingCommands',
 		'postponedCommands',
-		'controller',
-		'commandsReorderer',
 		'existingCommandTypes'
 	],
 	#category : #'OnBloc-Infinite-DataSource-Support'
 }
 
-{ #category : #'element -> manager' }
+{ #category : #'commands processing' }
 OBlInfiniteDataSourceManager >> applyPendingCommandsOnPosition: aPosition [
 	"Virually perform every pending command to determine how provided
 	position will change.
@@ -110,7 +108,7 @@ OBlInfiniteDataSourceManager >> computePositionOffset: aPosition firstPostponedI
 	^ position
 ]
 
-{ #category : #'element -> manager' }
+{ #category : #'commands processing' }
 OBlInfiniteDataSourceManager >> consumeCommandsInOnePassIn: anInfiniteElement [
 	"Skip pre-processing and perform all pending commands in one pass."
 
@@ -121,7 +119,7 @@ OBlInfiniteDataSourceManager >> consumeCommandsInOnePassIn: anInfiniteElement [
 
 	pendingCommands do: [ :command |
 		self dispatchCommand: command to: anInfiniteElement.
-		command offsetPositionsOn: controller.
+		command offsetPositionsIn: anInfiniteElement.
 		self onCommandProcessed: command ].
 
 	self recycleCommandsAndClearList: pendingCommands.
@@ -138,17 +136,12 @@ OBlInfiniteDataSourceManager >> consumePostponedCommandsIn: anInfiniteElement [
 	existingCommandTypes clear
 ]
 
-{ #category : #accessing }
-OBlInfiniteDataSourceManager >> controller: aController [
-	controller := aController
-]
-
 { #category : #'commands recycling' }
 OBlInfiniteDataSourceManager >> createCommand: type positionStart: positionStart itemCount: itemCount payload: payload [
 	"Return a data source command with specified parameters"
 	<return: #BlInfiniteDataSourceCommand>
 	
-	^ BlInfiniteDataSourceCommand new
+	^ OBlInfiniteDataSourceCommand new
 			type: type;
 			positionStart: positionStart;
 			itemCount: itemCount;
@@ -157,11 +150,11 @@ OBlInfiniteDataSourceManager >> createCommand: type positionStart: positionStart
 
 { #category : #initialization }
 OBlInfiniteDataSourceManager >> defaultCommandsReorderer [
-	^ BlInfiniteDataSourceCommandsReorderer new
+	^ OBlInfiniteDataSourceCommandsReorderer new
 ]
 
 { #category : #private }
-OBlInfiniteDataSourceManager >> dispatchAndUpdateElementHolders: aCommand [
+OBlInfiniteDataSourceManager >> dispatchAndUpdateElementHolders: aCommand on: anInfiniteElement [
 	| tmpStart tmpCnt offsetPositionForPartial positionMultiplier payload|
 	tmpStart := self updatePosition: aCommand positionStart withPostponed: aCommand.
 	tmpCnt := 1.
@@ -181,7 +174,7 @@ OBlInfiniteDataSourceManager >> dispatchAndUpdateElementHolders: aCommand [
 					itemCount: tmpCnt;
 					payload: aCommand payload.
 				
-				self dispatchFirstPassAndUpdateElementHolders: tmpCommand offset: offsetPositionForPartial.
+				self dispatchFirstPassAndUpdateElementHolders: tmpCommand offset: offsetPositionForPartial in: anInfiniteElement.
 				self recycleCommand: tmpCommand.
 				
 				aCommand isUpdate ifTrue: [ 
@@ -198,11 +191,11 @@ OBlInfiniteDataSourceManager >> dispatchAndUpdateElementHolders: aCommand [
 			positionStart: tmpStart;
 			itemCount: tmpCnt;
 			payload: payload.
-		self dispatchFirstPassAndUpdateElementHolders: tmpCommand offset: offsetPositionForPartial.
+		self dispatchFirstPassAndUpdateElementHolders: tmpCommand offset: offsetPositionForPartial in: anInfiniteElement.
 		self recycleCommand: tmpCommand ].
 ]
 
-{ #category : #initialization }
+{ #category : #'commands processing' }
 OBlInfiniteDataSourceManager >> dispatchCommand: aCommand to: anInfiniteElement [
 	"Dispatche data source update command to all interested objects,
 	in this case to infinite element's layout.
@@ -212,10 +205,10 @@ OBlInfiniteDataSourceManager >> dispatchCommand: aCommand to: anInfiniteElement 
 ]
 
 { #category : #helper }
-OBlInfiniteDataSourceManager >> dispatchFirstPassAndUpdateElementHolders: aCommand offset: offsetStart [
+OBlInfiniteDataSourceManager >> dispatchFirstPassAndUpdateElementHolders: aCommand offset: offsetStart in: anInfiniteElement [
 
-	controller onDispatchFirstPass: aCommand.
-	aCommand updateElementHoldersOn: self offset: offsetStart
+	self dispatchCommand: aCommand to: anInfiniteElement.
+	aCommand updateElementHoldersIn: anInfiniteElement offset: offsetStart
 ]
 
 { #category : #'testing - commands' }
@@ -294,8 +287,65 @@ OBlInfiniteDataSourceManager >> initialize [
 	
 	postponedCommands := OrderedCollection new.
 	pendingCommands := OrderedCollection new.
-	commandsReorderer := self defaultCommandsReorderer dataSourceManager: self.
+	"commandsReorderer := self defaultCommandsReorderer dataSourceManager: self."
 	existingCommandTypes := BlInfiniteDataSourceCommandTypeFlags new
+]
+
+{ #category : #'manager -> element' }
+OBlInfiniteDataSourceManager >> markElementHoldersUpdated: aPositionStart itemCount: anItemCount payload: aPayloadObject in: anInfiniteElement [
+
+	anInfiniteElement
+		elementRangeUpdate: aPositionStart
+		itemCount: anItemCount
+		payload: aPayloadObject.
+		
+	anInfiniteElement markItemsChanged
+]
+
+{ #category : #adding }
+OBlInfiniteDataSourceManager >> offsetPositions: aStartPosition forAdd: anItemCount in: anInfiniteElement [
+	
+	anInfiniteElement
+		offsetPositionRecordsForInsert: aStartPosition
+		itemCount: anItemCount.
+		
+	anInfiniteElement markItemsAddedOrRemoved
+]
+
+{ #category : #'manager -> element' }
+OBlInfiniteDataSourceManager >> offsetPositions: aStartPosition forRemovingInvisible: anItemCount in: anInfiniteElement [
+	| newDeletedCount |
+
+	anInfiniteElement
+		offsetPositionRecordsForRemove: aStartPosition
+		itemCount: anItemCount
+		applyToPreLayout: true.
+	
+	anInfiniteElement markItemsAddedOrRemoved.
+
+	newDeletedCount := anInfiniteElement state deletedInvisibleItemCountSincePreviousLayout + anItemCount.
+	anInfiniteElement state deletedInvisibleItemCountSincePreviousLayout: newDeletedCount
+]
+
+{ #category : #'manager -> element' }
+OBlInfiniteDataSourceManager >> offsetPositions: aStartPosition forRemovingLaidOutOrNewElement: anItemCount in: anInfiniteElement [
+
+	anInfiniteElement
+		offsetPositionRecordsForRemove: aStartPosition
+		itemCount: anItemCount
+		applyToPreLayout: true.
+	
+	anInfiniteElement markItemsAddedOrRemoved
+]
+
+{ #category : #'manager -> element' }
+OBlInfiniteDataSourceManager >> offsetPositionsForMove: aFromPosition to: aToPosition in: anInfiniteElement [
+
+	anInfiniteElement
+		offsetPositionRecordsForMove: aFromPosition
+		to: aToPosition.
+
+	anInfiniteElement markItemsAddedOrRemoved
 ]
 
 { #category : #'commands processing' }
@@ -317,7 +367,7 @@ OBlInfiniteDataSourceManager >> onItemRangeChanged: aPositionStart itemCount: an
 
 	"Register update command"
 	pendingCommands add: (self
-		createCommand: BlInfiniteDataSourceCommandTypeUpdate instance
+		createCommand: OBlInfiniteDataSourceCommandTypeUpdate instance
 		positionStart: aPositionStart
 		itemCount: anItemCount
 		payload: anObjectPayload).
@@ -338,7 +388,7 @@ OBlInfiniteDataSourceManager >> onItemRangeInserted: aPositionStart itemCount: a
 
 	"Register add command"
 	pendingCommands add: (self
-		createCommand: BlInfiniteDataSourceCommandTypeAdd instance
+		createCommand: OBlInfiniteDataSourceCommandTypeAdd instance
 		positionStart: aPositionStart
 		itemCount: anItemCount
 		payload: nil).
@@ -362,7 +412,7 @@ OBlInfiniteDataSourceManager >> onItemRangeMoved: aPositionStart to: aPositionEn
 
 	"Register move command"
 	pendingCommands add: (self
-		createCommand: BlInfiniteDataSourceCommandTypeMove instance
+		createCommand: OBlInfiniteDataSourceCommandTypeMove instance
 		positionStart: aPositionStart
 		itemCount: aPositionEnd
 		payload: nil).
@@ -383,7 +433,7 @@ OBlInfiniteDataSourceManager >> onItemRangeRemoved: aPositionStart itemCount: an
 
 	"Register remove command"
 	pendingCommands add: (self
-		createCommand: BlInfiniteDataSourceCommandTypeRemove instance
+		createCommand: OBlInfiniteDataSourceCommandTypeRemove instance
 		positionStart: aPositionStart
 		itemCount: anItemCount
 		payload: nil).
@@ -393,18 +443,18 @@ OBlInfiniteDataSourceManager >> onItemRangeRemoved: aPositionStart itemCount: an
 ]
 
 { #category : #private }
-OBlInfiniteDataSourceManager >> postponeAndUpdateElementHolders: aCommand [
+OBlInfiniteDataSourceManager >> postponeAndUpdateElementHolders: aCommand on: anInfiniteElement [
 	
 	postponedCommands add: aCommand.
-	aCommand updateElementHoldersOn: self
+	aCommand updateElementHoldersIn: anInfiniteElement.
 ]
 
 { #category : #'commands processing' }
-OBlInfiniteDataSourceManager >> preProcessCommands [
+OBlInfiniteDataSourceManager >> preProcessCommandsIn: anInfiniteElement [
 
-	commandsReorderer reorderCommands: pendingCommands.
+	"commandsReorderer reorderCommands: pendingCommands."
 	pendingCommands do: [ :command |
-		command applyOn: self.
+		command applyIn: anInfiniteElement.
 		self onCommandProcessed: command ].
 	pendingCommands removeAll
 ]

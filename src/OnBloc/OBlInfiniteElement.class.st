@@ -279,7 +279,7 @@ OBlInfiniteElement >> consumePendingDataSourceCommands [
 	dataSourceManager hasOnlyUpdateCommand
 		ifTrue: [ 
 			self eatRequestLayout.
-			dataSourceManager preProcessCommands.
+			dataSourceManager preProcessCommandsIn: self.
 			layoutRequestEaten ifFalse: [ 
 				self hasUpdatedChild
 					ifTrue: [ self dispatchLayout ]
@@ -403,11 +403,6 @@ OBlInfiniteElement >> defaultChildrenUpdateRunnable [
 { #category : #initialization }
 OBlInfiniteElement >> defaultDataSource [
 	^ BlInfiniteBasicDataSource new
-]
-
-{ #category : #initialization }
-OBlInfiniteElement >> defaultDataSourceController [
-	^ OBlInfiniteDefaultDataSourceController new
 ]
 
 { #category : #initialization }
@@ -1006,11 +1001,7 @@ OBlInfiniteElement >> initializeDataSource [
 	dataSource := self defaultDataSource.
 	dataSourceObserver := self defaultDataSourceObserver on: self.
 	dataSource addEventHandler: dataSourceObserver.
-	
-	dataSourceManager := self defaultDataSourceManager.
-	self defaultDataSourceController
-		element: self;
-		dataSourceManager: dataSourceManager
+	dataSourceManager := self defaultDataSourceManager
 ]
 
 { #category : #initialization }
@@ -1515,7 +1506,7 @@ OBlInfiniteElement >> processDataSourceCommandsAndSetAnimationFlags [
 	
 	self flag: 'APL: predictiveItemAnimationsEnabled is alway false'.
 	self predictiveItemAnimationsEnabled
-		ifTrue: [ dataSourceManager preProcessCommands ]
+		ifTrue: [ dataSourceManager preProcessCommandsIn: self ]
 		ifFalse: [ dataSourceManager consumeCommandsInOnePassIn: self ].
 
 	animationTypeSupported := itemsAddedOrRemoved or: [ itemsChanged ].
