@@ -80,9 +80,7 @@ OBlInfiniteExampleGalleryImageElement >> image: aGalleryImage [
 	image := aGalleryImage.
 	itemElement text: (('Image:: ', aGalleryImage id asString) asRopedText
 		foreground: Color white;
-		fontSize: 14;
-		weight: 50;
-		fontName: 'Helvetica Neue').
+		fontSize: 14).
 	
 	self loadImage
 ]
