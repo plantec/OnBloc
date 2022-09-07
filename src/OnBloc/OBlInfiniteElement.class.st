@@ -533,7 +533,7 @@ OBlInfiniteElement >> dispatchLayoutFirstStep [
 	itemsChanged := false.
 	self state isPreLayout: self state willRunPredictiveAnimations.
 	self state itemCount: self dataSource itemCount.
-	layoutPositionsRange := self findMinMaxChildLayoutPositions.
+	self layoutPositionsRange: self findMinMaxChildLayoutPositions.
 	
 	self state willRunSimpleAnimations
 		ifTrue: [ self dispatchLayoutFirstStepSimpleAnimations ].
@@ -1106,6 +1106,18 @@ OBlInfiniteElement >> layoutFrozen: aBoolean [
 		ifTrue: [ 
 			layoutFrozen := true.
 			self stopScroll ]
+]
+
+{ #category : #accessing }
+OBlInfiniteElement >> layoutPositionsRange [
+	"layouted children interval"
+	^ layoutPositionsRange 
+]
+
+{ #category : #accessing }
+OBlInfiniteElement >> layoutPositionsRange: anInterval [
+	"layouted children interval"
+	layoutPositionsRange := anInterval
 ]
 
 { #category : #layout }
