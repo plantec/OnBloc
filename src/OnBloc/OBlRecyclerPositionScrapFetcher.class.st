@@ -10,7 +10,7 @@ OBlRecyclerPositionScrapFetcher >> childRemoved: anElement in: anInfiniteElement
 
 { #category : #initialization }
 OBlRecyclerPositionScrapFetcher >> defaultNext [
-	^ OBlRecyclerDataSourceFetcher new
+	^ OBlRecyclerDataSourceFetcher uniqueInstance
 ]
 
 { #category : #'element fetching' }

@@ -78,7 +78,7 @@ OBlInfiniteRecycler >> clearScrap [
 
 { #category : #initialization }
 OBlInfiniteRecycler >> defaultFetcher [
-	^ OBlRecyclerPositionScrapFetcher new
+	^ OBlRecyclerPositionScrapFetcher uniqueInstance 
 
 ]
 
