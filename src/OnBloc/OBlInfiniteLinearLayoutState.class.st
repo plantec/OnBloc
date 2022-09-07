@@ -228,7 +228,7 @@ OBlInfiniteLinearLayoutState >> nextElement: aRecycler in: anInfiniteElement [
 		  ifTrue: [ self nextElementFromScrapList ]
 		  ifFalse: [ 
 			  | anElement |
-			  anElement := aRecycler elementFor: currentPosition.
+			  anElement := aRecycler elementFor: currentPosition in: anInfiniteElement.
 			  currentPosition := currentPosition + itemDirection multiplier.
 			  anElement ]
 ]

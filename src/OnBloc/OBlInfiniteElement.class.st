@@ -453,11 +453,6 @@ OBlInfiniteElement >> defaultRecycler [
 ]
 
 { #category : #initialization }
-OBlInfiniteElement >> defaultRecyclerController [
-	^ OBlRecyclerController new
-]
-
-{ #category : #initialization }
 OBlInfiniteElement >> defaultScrollFlinger [
 	"Return class, actuall instantiation happens in initialize"
 	^ BlInfiniteScrollFlinger
@@ -1010,9 +1005,7 @@ OBlInfiniteElement >> initializeEventHandlers [
 
 { #category : #initialization }
 OBlInfiniteElement >> initializeRecycler [
-	recycler := self defaultRecycler.
-	self defaultRecyclerController
-		infiniteElement: self
+	recycler := self defaultRecycler
 ]
 
 { #category : #'private - invalidation' }

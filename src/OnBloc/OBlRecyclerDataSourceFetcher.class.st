@@ -1,18 +1,13 @@
 Class {
 	#name : #OBlRecyclerDataSourceFetcher,
-	#superclass : #BlInfiniteRecyclerFetcher,
+	#superclass : #OBlInfiniteRecyclerFetcher,
 	#category : #'OnBloc-Infinite-Recycler'
 }
 
-{ #category : #initialization }
-OBlRecyclerDataSourceFetcher >> defaultNext [
-	^ nil
-]
-
 { #category : #'element fetching' }
-OBlRecyclerDataSourceFetcher >> elementFor: aPosition controller: aRecyclerController [
+OBlRecyclerDataSourceFetcher >> elementFor: aPosition in: anInfiniteElement [
 
 	| holder |
-	holder := aRecyclerController createElementHolderOfType: (aRecyclerController itemTypeAt: aPosition).
+	holder :=  anInfiniteElement dataSource createHolder: anInfiniteElement type: (anInfiniteElement dataSource itemTypeAt: aPosition).
 	^ holder -> false
 ]

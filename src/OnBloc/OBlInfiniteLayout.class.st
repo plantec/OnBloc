@@ -1054,7 +1054,7 @@ OBlInfiniteLayout >> removeAndRecycleChild: anElement [
 	"Remove a child element and recycle it using BlInfiniteRecycler."
 
 	self removeChild: anElement.
-	self recycler recycleElement: anElement
+	self recycler recycleElement: anElement in: infiniteElement 
 ]
 
 { #category : #'children - add/remove' }
@@ -1064,7 +1064,7 @@ OBlInfiniteLayout >> removeAndRecycleChildAt: anIndex [
 
 	anElement := self childAt: anIndex.
 	self removeChildAt: anIndex.
-	self recycler recycleElement: anElement
+	self recycler recycleElement: anElement in: infiniteElement 
 ]
 
 { #category : #'private - recycling' }
@@ -1186,7 +1186,7 @@ OBlInfiniteLayout >> scrapOrRecycleChild: anElement at: anIndex [
 			self removeChildAt: anIndex ]
 		ifFalse: [
 			self detachChildAt: anIndex.
-			self recycler scrapElement: anElement ]
+			self recycler scrapElement: anElement in: infiniteElement ]
 ]
 
 { #category : #scrolling }

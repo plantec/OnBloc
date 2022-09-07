@@ -1,8 +1,12 @@
 Class {
 	#name : #OBlRecyclerPositionScrapFetcher,
-	#superclass : #BlInfiniteRecyclerFetcher,
+	#superclass : #OBlInfiniteRecyclerFetcher,
 	#category : #'OnBloc-Infinite-Recycler'
 }
+
+{ #category : #'element fetching' }
+OBlRecyclerPositionScrapFetcher >> childRemoved: anElement in: anInfiniteElement [
+]
 
 { #category : #initialization }
 OBlRecyclerPositionScrapFetcher >> defaultNext [
@@ -10,41 +14,35 @@ OBlRecyclerPositionScrapFetcher >> defaultNext [
 ]
 
 { #category : #'element fetching' }
-OBlRecyclerPositionScrapFetcher >> elementFor: aPosition controller: aRecyclerController [
+OBlRecyclerPositionScrapFetcher >> elementFor: aPosition in: anInfiniteElement [
 
-	| holder fromScrap dryRun |
+	| holder fromScrap |
 	fromScrap := false.
-	holder := self exactScrapFor: aPosition type: BlInfiniteItemType invalid controller: aRecyclerController.
+	holder := self exactScrapFor: aPosition type: BlInfiniteItemType invalid in: anInfiniteElement.
 	holder ifNotNil: [ 
-		(self validateHolder: holder controller: aRecyclerController)
+		(self validateHolder: holder in: anInfiniteElement)
 			ifFalse: [ 
-				
-					holder flags addInvalid.
-					holder isScrap
-						ifTrue: [ 
-							aRecyclerController childRemoved: holder itemElement.
-							holder itemElement dispatchRemovedFromParent: holder infiniteElement.
-							aRecyclerController unscrapHolder: holder ]
-						ifFalse: [ 
-							holder wasReturnedFromScrap ifTrue: [ holder clearReturnedFromScrap ] ].
+				holder flags addInvalid.
+				holder isScrap
+					ifTrue: [ 
+						self childRemoved: holder itemElement in: holder infiniteElement.
+						holder itemElement dispatchRemovedFromParent: holder infiniteElement.
+						anInfiniteElement recycler unscrapHolder: holder ]
+					ifFalse: [ holder wasReturnedFromScrap ifTrue: [ holder clearReturnedFromScrap ] ].
 				holder := nil ]
 			ifTrue: [ fromScrap := true ] ].
 
-	^ holder ifNotNil: [ holder -> fromScrap ] ifNil: [
-		  self nextDo: [ :next | 
-			  next
-				  elementFor: aPosition
-				  controller: aRecyclerController ] ]
+	^ holder ifNotNil: [ holder -> fromScrap ] ifNil: [ self nextFetcher elementFor: aPosition in: anInfiniteElement ]
 ]
 
 { #category : #private }
-OBlRecyclerPositionScrapFetcher >> exactScrapFor: aPosition type: itemType controller: aRecyclerController [
+OBlRecyclerPositionScrapFetcher >> exactScrapFor: aPosition type: itemType in: anInfiniteElement [
 
-	^ aRecyclerController attachedScrap 
+	^ anInfiniteElement recycler attachedScrap 
 		detect: [ :holder | (holder wasReturnedFromScrap not
 			and: [ holder layoutPosition = aPosition 
 				and: [ holder isInvalid not
-					and: [ aRecyclerController isPreLayout
+					and: [ anInfiniteElement state isPreLayout
 						or: [ holder isRemoved not ] ] ] ]) ]
 		ifFound: [ :holder | 
 			(itemType = BlInfiniteItemType invalid
@@ -57,24 +55,24 @@ OBlRecyclerPositionScrapFetcher >> exactScrapFor: aPosition type: itemType contr
 ]
 
 { #category : #private }
-OBlRecyclerPositionScrapFetcher >> validateHolder: aHolder controller: aRecyclerController [
+OBlRecyclerPositionScrapFetcher >> validateHolder: aHolder in: anInfiniteElement [
 
 	aHolder isRemoved ifTrue: [ 
-		aRecyclerController isPreLayout
+		anInfiniteElement state isPreLayout
 			ifFalse: [ Error signal: 'Should not get a removed holder!' ].
-		^ aRecyclerController isPreLayout ].
+		^ anInfiniteElement state isPreLayout ].
 
-	(aHolder position <= 0 or: [ aHolder position > aRecyclerController dataSourceItemCount ])
+	(aHolder position <= 0 or: [ aHolder position > anInfiniteElement dataSource itemCount ])
 		ifTrue: [ Error signal: ('Holder has completely wrong position! position = {1}, count = {2}'
-			format: { aHolder position. aRecyclerController dataSourceItemCount. }) ].
+			format: { aHolder position. anInfiniteElement dataSource itemCount. }) ].
 
-	aRecyclerController isPreLayout ifFalse: [ 
+	anInfiniteElement state isPreLayout ifFalse: [ 
 		| type |
-		type := aRecyclerController itemTypeAt: aHolder position.
+		type := anInfiniteElement dataSource itemTypeAt: aHolder position.
 		type = aHolder itemType
 			ifFalse: [ ^ false ] ].
 
-	^ aRecyclerController hasStableIds
-		ifTrue: [ aHolder itemId = (aRecyclerController itemIdAt: aHolder position) ]
+	^ anInfiniteElement dataSource hasStableIds
+		ifTrue: [ aHolder itemId = (anInfiniteElement dataSource itemIdAt: aHolder position) ]
 		ifFalse: [ true ]
 ]

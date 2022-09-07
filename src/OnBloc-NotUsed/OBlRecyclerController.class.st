@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'infiniteElement'
 	],
-	#category : #'OnBloc-Infinite-Recycler'
+	#category : #'OnBloc-NotUsed-Infinite-Recycler'
 }
 
 { #category : #'scrap fetcher -> recycler' }

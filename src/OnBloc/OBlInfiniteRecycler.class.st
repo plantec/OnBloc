@@ -33,9 +33,7 @@ Class {
 	#traits : 'TBlDebug',
 	#classTraits : 'TBlDebug classTrait',
 	#instVars : [
-		'controller',
-		'attachedScrap',
-		'fetcher'
+		'attachedScrap'
 	],
 	#category : #'OnBloc-Infinite-Recycler'
 }
@@ -46,6 +44,17 @@ OBlInfiniteRecycler >> attachedScrap [
 	<return: #SequenceableCollection>
 	
 	^ attachedScrap
+]
+
+{ #category : #recycling }
+OBlInfiniteRecycler >> canReuseUpdatedElementHolder: anElementHolder in: anInfiniteElement [
+	"Return true if changed element holder can be reused"
+	<return: #Boolean>
+	
+	^ anInfiniteElement itemAnimator supportsAnimations not or: [ 
+			anInfiniteElement itemAnimator
+				canReuseUpdatedElementHolder: anElementHolder
+				payloads: anElementHolder payloads ]
 ]
 
 { #category : #initialization }
@@ -67,16 +76,6 @@ OBlInfiniteRecycler >> clearScrap [
 	attachedScrap removeAll
 ]
 
-{ #category : #accessing }
-OBlInfiniteRecycler >> controller [
-	^ controller
-]
-
-{ #category : #accessing }
-OBlInfiniteRecycler >> controller: aBlInfiniteRecyclerController [
-	controller := aBlInfiniteRecyclerController
-]
-
 { #category : #initialization }
 OBlInfiniteRecycler >> defaultFetcher [
 	^ OBlRecyclerPositionScrapFetcher new
@@ -84,16 +83,16 @@ OBlInfiniteRecycler >> defaultFetcher [
 ]
 
 { #category : #private }
-OBlInfiniteRecycler >> elementFor: aPosition [ 
+OBlInfiniteRecycler >> elementFor: aPosition in: anInfiniteElement [
 	"I do a hard work obtaining element for the data at a position in data source.
 	@see elementFor: for more information"
 	<return: #BlElement>
 	| holder fromScrap fetchedResult bound itemElement anInfiniteConstraints |
 
-	(aPosition < 1 or: [ aPosition > self controller dataSourceItemCount ])
+	(aPosition < 1 or: [ aPosition > anInfiniteElement  dataSource itemCount ])
 		ifTrue: [ Error signal: 'Position is out of bounds!' ].
 
-	fetchedResult := fetcher elementFor: aPosition controller: self controller.
+	fetchedResult := self fetcher elementFor: aPosition in: anInfiniteElement.
 	
 	holder := fetchedResult key.
 	fromScrap := fetchedResult value.
@@ -102,19 +101,19 @@ OBlInfiniteRecycler >> elementFor: aPosition [
 	self assert: fromScrap isNotNil.
 
 	bound := false.
-	(self controller isPreLayout and: [ holder isBound ])
+	(anInfiniteElement state isPreLayout and: [ holder isBound ])
 		ifTrue: [ holder preLayoutPosition: aPosition ]
 		ifFalse: [
 			(holder isBound not or: [ holder needsUpdate or: [ holder isInvalid ] ]) ifTrue: [
 				| offsetPosition |
 				holder isRemoved ifTrue: [ Error signal: 'Removed holder should come here only in pre-layout!' ].
-				offsetPosition := self controller computePositionOffset: aPosition.
-				holder infiniteElement: self controller infiniteElement.
+				offsetPosition := anInfiniteElement dataSourceManager computePositionOffset: aPosition.
+				holder infiniteElement: anInfiniteElement.
 				
-				self controller bindHolder: holder at: offsetPosition.
+				anInfiniteElement dataSource bindHolder: holder at: offsetPosition.
 				
 				bound := true.
-				self controller isPreLayout
+				anInfiniteElement state isPreLayout
 					ifTrue: [ holder preLayoutPosition: aPosition ] ] ].
 	
 	itemElement := holder itemElement.
@@ -124,12 +123,15 @@ OBlInfiniteRecycler >> elementFor: aPosition [
 	^ itemElement
 ]
 
+{ #category : #private }
+OBlInfiniteRecycler >> fetcher [
+	^self defaultFetcher 
+]
+
 { #category : #initialization }
 OBlInfiniteRecycler >> initialize [
 	super initialize.
-	attachedScrap := OrderedCollection new.
-	fetcher := self defaultFetcher.
-
+	attachedScrap := OrderedCollection new
 ]
 
 { #category : #recycling }
@@ -140,7 +142,7 @@ OBlInfiniteRecycler >> quickRecycleScrap: anElement [
 ]
 
 { #category : #recycling }
-OBlInfiniteRecycler >> recycleElement: anElement [
+OBlInfiniteRecycler >> recycleElement: anElement in: anInfiniteElement [
 	"Recycle a detached element.
 	The specified element will be added to a pool of elements for later rebinding and reuse.
 	An element must be fully detached (removed from parent) before it may be recycled.
@@ -148,7 +150,7 @@ OBlInfiniteRecycler >> recycleElement: anElement [
 
 	Notice: I try to make element recycle-able since layout intended to recycle this element (e.g. even if it is in scrap or change cache)"
 	| anElementHolder |
-	anElementHolder := self controller elementHolderOf: anElement.	
+	anElementHolder := anInfiniteElement elementHolderOf: anElement.	
 	anElementHolder isScrap
 		ifTrue: [ self unscrapHolder: anElementHolder ]
 		ifFalse: [ anElementHolder wasReturnedFromScrap
@@ -185,20 +187,20 @@ OBlInfiniteRecycler >> scrapCount [
 ]
 
 { #category : #recycling }
-OBlInfiniteRecycler >> scrapElement: anElement [
+OBlInfiniteRecycler >> scrapElement: anElement in: anInfiniteElement [
 
 	| anElementHolder |
-	anElementHolder := self controller elementHolderOf: anElement.
+	anElementHolder := anInfiniteElement elementHolderOf: anElement.
 
 	(anElementHolder isRemoved or: [ 
 		 anElementHolder isInvalid or: [ 
 			 anElementHolder isUpdated not or: [ 
-				 self controller canReuseUpdatedElementHolder: anElementHolder ] ] ]) 
+				 self canReuseUpdatedElementHolder: anElementHolder in: anInfiniteElement ] ] ]) 
 		ifFalse: [ ^ self ].
 
 	(anElementHolder isInvalid and: [ 
 		 anElementHolder isRemoved not and: [ 
-			 self controller hasStableIds not ] ]) ifTrue: [ 
+			 anInfiniteElement dataSource hasStableIds not ] ]) ifTrue: [ 
 		self error:
 			'Can not scrap invalid elements, because they can not be reused from scrap and should be rebound from recycler pool instead' ].
 	anElementHolder detachRecycler.

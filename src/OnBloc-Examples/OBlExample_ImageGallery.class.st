@@ -36,9 +36,9 @@ OBlExample_ImageGallery class >> exampleGallery [
 	headerText := BlTextElement new
 		text: ('bloc gallery' asRopedText
 			foreground: (Color white alpha: 0.8);
-			fontSize: 20;
-			weight: 50;
-			fontName: 'Helvetica Neue');
+			fontSize: 30;
+			bold;
+			fontName: 'Arial');
 		constraintsDo: [ :c |
 			c horizontal fitContent.
 			c vertical fitContent.
