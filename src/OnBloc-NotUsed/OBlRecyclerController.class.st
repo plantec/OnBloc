@@ -93,11 +93,6 @@ OBlRecyclerController >> infiniteElement: anInfiniteElement [
 	infiniteElement recycler controller: self.
 ]
 
-{ #category : #accessing }
-OBlRecyclerController >> infoStore [
-	^ infiniteElement infoStore
-]
-
 { #category : #'recycler -> element' }
 OBlRecyclerController >> isItemPrefetchEnabled [
 	^ infiniteElement layout isItemPrefetchEnabled

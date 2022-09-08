@@ -23,22 +23,18 @@ Class {
 		'childrenManager',
 		'state',
 		'recycler',
-		'itemAnimator',
 		'hasFixedSize',
 		'layoutOrScrollCounter',
 		'dispatchScrollCounter',
 		'layoutFrozen',
 		'layoutRequestEaten',
-		'itemAnimationRunner',
 		'itemDecorations',
 		'dataSourceChangedAfterLayout',
 		'firstLayoutComplete',
 		'itemsAddedOrRemoved',
 		'itemsChanged',
-		'infoStore',
 		'preserveFocusAfterLayout',
 		'layoutPositionsRange',
-		'infoStoreProcessor',
 		'eatRequestLayoutCounter',
 		'childrenUpdateRunnable',
 		'dataSourceChangeDuringMeasure',
@@ -52,16 +48,6 @@ Class {
 	],
 	#category : #'OnBloc-Infinite-! Core'
 }
-
-{ #category : #animations }
-OBlInfiniteElement >> animateAppearance: anElementHolder preInfo: aPreInfoHolder postInfo: aPostInfoHolder [
-	
-	(itemAnimator
-		animateAppearance: anElementHolder
-		preLayoutInfo: aPreInfoHolder
-		postLayoutInfo: aPostInfoHolder)
-			ifTrue: [ self postAnimationRunner ]
-]
 
 { #category : #'private - assertions' }
 OBlInfiniteElement >> assertInLayoutOrScroll [
@@ -179,12 +165,14 @@ OBlInfiniteElement >> childrenManager [
 { #category : #'private - positions' }
 OBlInfiniteElement >> clearOldPositions [
 
-	childrenManager unfilteredChildrenDo: [ :anElement |
-		| anElementHolder |
-		anElementHolder := self elementHolderOf: anElement.
-		anElementHolder shouldIgnore
-			ifFalse: [ anElementHolder clearOldPosition ] ] in: self.
-		
+	childrenManager
+		unfilteredChildrenDo: [ :anElement | 
+			| anElementHolder |
+			anElementHolder := self elementHolderOf: anElement.
+			anElementHolder shouldIgnore ifFalse: [ 
+				anElementHolder clearOldPosition ] ]
+		in: self.
+
 	recycler clearOldPositions
 ]
 
@@ -417,22 +405,6 @@ OBlInfiniteElement >> defaultDataSourceObserver [
 ]
 
 { #category : #initialization }
-OBlInfiniteElement >> defaultInfoStore [
-	^ BlInfiniteElementInfoStore new
-]
-
-{ #category : #initialization }
-OBlInfiniteElement >> defaultInfoStoreProcessor [
-	"Return class, actuall instantiation happens in initialize"
-	^ BlInfiniteElementInfoStoreDefaultProcessor
-]
-
-{ #category : #initialization }
-OBlInfiniteElement >> defaultItemAnimator [
-	^ BlInfiniteItemAnimator new
-]
-
-{ #category : #initialization }
 OBlInfiniteElement >> defaultLayout [
 	^ BlInfiniteBasicLayout new
 ]
@@ -460,7 +432,7 @@ OBlInfiniteElement >> defaultScrollFlinger [
 
 { #category : #initialization }
 OBlInfiniteElement >> defaultState [
-	^ BlInfiniteState new
+	^ OBlInfiniteState new
 ]
 
 { #category : #'private - positions' }
@@ -517,107 +489,25 @@ OBlInfiniteElement >> dispatchLayout [
 OBlInfiniteElement >> dispatchLayoutFirstStep [
 	"The first step of a layout where we
   		- process data source updates
-		- decide which animation should run
 		- save information about current child elements
 		- If necessary, run predictive layout and save its information"
 
 	self state assertLayoutStep: BlInfiniteLayoutStepFlags Start.
 	self state isMeasuring: false.
 	self eatRequestLayout.
-	infoStore clear.
 	self onEnterLayoutOrScroll.
-	self processDataSourceCommandsAndSetAnimationFlags.
+	self processDataSourceCommands.
 	self saveFocusInfo.
-	self state trackOldChangeHolders: (self state willRunSimpleAnimations and: [ itemsChanged ]).
 	itemsAddedOrRemoved := false.
 	itemsChanged := false.
-	self state isPreLayout: self state willRunPredictiveAnimations.
+	self state isPreLayout: false.
 	self state itemCount: self dataSource itemCount.
 	self layoutPositionsRange: self findMinMaxChildLayoutPositions.
-	
-	self state willRunSimpleAnimations
-		ifTrue: [ self dispatchLayoutFirstStepSimpleAnimations ].
-		
-	self state willRunPredictiveAnimations
-		ifTrue: [ self dispatchLayoutFirstStepPredictiveAnimations ].
 	
 	self clearOldPositions.
 	self onExitLayoutOrScroll.
 	self resumeRequestLayout: false.
 	self state beStepLayout
-]
-
-{ #category : #layout }
-OBlInfiniteElement >> dispatchLayoutFirstStepPredictiveAnimations [
-	"Perform prelayout. I will use the old positions of items.
-	The infinite layout is expected to layout everything,
-	even removed items (though not to add removed items back to the container).
-	This gives the pre-layout position of APPEARING views which come into existence as part of the real layout"
-	| didStructureChange |
-	
-	"Save old positions so that InfiniteLayout can run its mapping logic."
-	self saveOldPositions.
-	
-	"temporarily disable flag because we are asking for previous layout"
-	didStructureChange := self state didStructureChange.
-	self state structureChanged: false.
-	layout layoutChildrenIn: self recycler state: self state.
-	self state structureChanged: didStructureChange.
-	
-	self childrenDo: [ :anElement |
-		| anElementHolder |
-		anElementHolder := self elementHolderOf: anElement.
-		(anElementHolder shouldIgnore or: [
-			infoStore isInPreLayout: anElementHolder ])
-				ifFalse: [ 
-					| theFlags wasHidden anAnimationInfo |
-					theFlags := itemAnimator buildDataSourceChangeFlagsForAnimations: anElementHolder.
-					wasHidden := anElementHolder flags hasBouncedFromHiddenList.
-					wasHidden
-						ifFalse: [ theFlags addAppearedInPreLayout ].
-					anAnimationInfo := itemAnimator
-						recordPreLayoutInformation: self state
-						holder: anElementHolder
-						flags: theFlags
-						payloads: anElementHolder payloads.
-					wasHidden
-						ifTrue: [ self recordAnimationInfoIfBouncedHidden: anElementHolder itemHolder: anAnimationInfo ]
-						ifFalse: [ infoStore addToAppearedInPreLayout: anElementHolder itemHolder: anAnimationInfo ] ] ]
-]
-
-{ #category : #layout }
-OBlInfiniteElement >> dispatchLayoutFirstStepSimpleAnimations [
-	"Find out where all non-removed items are, pre-layout"
-	
-	self
-		assert: [ self state willRunSimpleAnimations ]
-		description: [ 'My state must be running simple animations!' ].
-
-	self childrenDo: [ :anElement |
-		| anElementHolder |
-		anElementHolder := self elementHolderOf: anElement.
-		(anElementHolder shouldIgnore or: [
-			anElementHolder isInvalid and: [
-				dataSource hasStableIds not ] ])
-			ifFalse: [ 
-				| animationInfo |
-				animationInfo := itemAnimator
-					recordPreLayoutInformation: self state
-					holder: anElementHolder
-					flags: (itemAnimator buildDataSourceChangeFlagsForAnimations: anElementHolder)
-					payloads: anElementHolder payloads.
-				
-				infoStore addToPreLayout: anElementHolder itemHolder: animationInfo.
-				
-				(self state trackOldChangeHolders and: [
-					anElementHolder isUpdated and: [
-						anElementHolder isRemoved not and: [ 
-							anElementHolder shouldIgnore not and: [ 
-								anElementHolder isInvalid not ] ] ] ])
-					ifTrue: [ 
-						| aKey |
-						aKey := self changedHolderKeyOf: anElementHolder.
-						infoStore addToOldChangeHolders: anElementHolder at: aKey ] ] ]
 ]
 
 { #category : #layout }
@@ -628,9 +518,7 @@ OBlInfiniteElement >> dispatchLayoutSecondStep [
 	self eatRequestLayout.
 	self onEnterLayoutOrScroll.
 	
-	self state
-		assertLayoutStep: BlInfiniteLayoutStepFlags Layout
-		or: BlInfiniteLayoutStepFlags Animations.
+	self state assertLayoutStep: BlInfiniteLayoutStepFlags Layout.
 	
 	dataSourceManager consumeCommandsInOnePassIn: self.
 	self state itemCount: dataSource itemCount.
@@ -640,10 +528,8 @@ OBlInfiniteElement >> dispatchLayoutSecondStep [
 	self state isPreLayout: false.
 	layout layoutChildrenIn: self recycler state: self state.
 	self state structureChanged: false.
-	
-	"layoutChildren may have caused user code to disable item animations; re-check"
-	self state runSimpleAnimations: (self state willRunSimpleAnimations and: [ itemAnimator supportsAnimations ]).
-	self state beStepAnimations.
+
+	self state beStepAnimations.	
 	self onExitLayoutOrScroll.
 	self resumeRequestLayout: false
 ]
@@ -652,70 +538,25 @@ OBlInfiniteElement >> dispatchLayoutSecondStep [
 OBlInfiniteElement >> dispatchLayoutThirdStep [
 	"The final step of the layout where we save the information about elements for animations,
 	trigger animations and do any necessary cleanup."
-	
+
 	self state assertLayoutStep: BlInfiniteLayoutStepFlags Animations.
+	
 	self eatRequestLayout.
 	self onEnterLayoutOrScroll.
 	self state beStepStart.
-	
-	self state willRunSimpleAnimations
-		ifTrue: [ self dispatchLayoutThirdStepSimpleAnimations ].
-	
+		
 	layout removeAndRecycleScrap.
 	self state previousLayoutItemCount: self state itemCount.
 	dataSourceChangedAfterLayout := false.
-	self state runSimpleAnimations: false.
-	self state runPredictiveAnimations: false.
-	self layout requestedSimpleAnimations: false.
 
 	layout layoutCompleted.
 	self onExitLayoutOrScroll.
 	self resumeRequestLayout: false.
-	infoStore clear.
 	
 	(self didChildPositionsRangeChange: layoutPositionsRange)
 		ifTrue: [ self dispatchOnScrolled: 0@0 ].
 	self recoverFocusFromState.
 	self resetFocusInfo
-]
-
-{ #category : #layout }
-OBlInfiniteElement >> dispatchLayoutThirdStepSimpleAnimations [
-	"Find out where things are now, and process change animations.
-	Traverse list in reverse because we may call animateChange in the loop which may
-	remove the target element holder"	
-	
-	self childrenDo: [ :anElement |
-		| anElementHolder |
-		anElementHolder := self elementHolderOf: anElement.
-		anElementHolder shouldIgnore ifFalse: [ 
-			| aKey anAnimationInfo oldChangeHolder |
-			aKey := self changedHolderKeyOf: anElementHolder.
-			anAnimationInfo := itemAnimator recordPostLayoutInformation: self state holder: anElementHolder.
-			oldChangeHolder := infoStore oldChangedHolderAt: aKey.
-			(oldChangeHolder isNotNil and: [ oldChangeHolder shouldIgnore not ])
-				ifTrue: [ 
-					| oldDisappearing newDisappearing |
-					"run a change animation"
-					oldDisappearing := infoStore isDisappearing: oldChangeHolder.
-					newDisappearing := infoStore isDisappearing: anElementHolder.
-					(oldDisappearing and: [ oldChangeHolder == anElementHolder ])
-						"run disappear animation instead of change"
-						ifTrue: [ infoStore addToPostLayout: anElementHolder itemHolder: anAnimationInfo ]
-						ifFalse: [ 
-							| aPreInfo aPostInfo |
-							aPreInfo := infoStore popFromPreLayout: oldChangeHolder.
-							"we add and remove so that any post info is merged"
-							infoStore addToPostLayout: anElementHolder itemHolder: anAnimationInfo.
-							aPostInfo := infoStore popFromPostLayout: anElementHolder.
-							aPreInfo
-								ifNil: [ self handleMissingPreInfoForChange: anElementHolder oldChangeHolder: oldChangeHolder at: aKey ]
-								ifNotNil: [ self flag: 'animateChange(oldChangeViewHolder, holder, preInfo, postInfo, oldDisappearing, newDisappearing)' ] ] ]
-				ifFalse: [ 
-					infoStore addToPostLayout: anElementHolder itemHolder: anAnimationInfo ] ] ].
-	
-	"Process element info lists and trigger animations"
-	infoStore processOn: infoStoreProcessor
 ]
 
 { #category : #'api - scrolling notifying' }
@@ -791,11 +632,14 @@ OBlInfiniteElement >> findElementHolderForDataSourcePosition: aPosition [
 	<return: #BlInfiniteHolder or: nil>
 	dataSourceChangedAfterLayout ifTrue: [ ^ nil ].
 
-	childrenManager unfilteredChildrenDo: [ :anElement | 
-		| anElementHolder |
-		anElementHolder := self elementHolderOf: anElement.
-		(anElementHolder isRemoved not and: [ (self dataSourcePositionOf: anElementHolder) = aPosition ]) ifTrue: [ 
-			^ anElementHolder ] ] in: self.
+	childrenManager
+		unfilteredChildrenDo: [ :anElement | 
+			| anElementHolder |
+			anElementHolder := self elementHolderOf: anElement.
+			(anElementHolder isRemoved not and: [ 
+				 (self dataSourcePositionOf: anElementHolder) = aPosition ]) 
+				ifTrue: [ ^ anElementHolder ] ]
+		in: self.
 
 	^ nil
 ]
@@ -809,15 +653,18 @@ OBlInfiniteElement >> findElementHolderForItemId: anId [
 OBlInfiniteElement >> findElementHolderForPosition: aPosition checkNew: shouldCheckNewPosition [
 
 	<return: #BlInfiniteHolder or: nil>
-	childrenManager unfilteredChildrenDo: [ :anElement | 
-		| anElementHolder |
-		anElementHolder := self elementHolderOf: anElement.
-		anElementHolder isRemoved ifFalse: [ 
-			| shouldSkip |
-			shouldSkip := shouldCheckNewPosition
-				              ifTrue: [ anElementHolder position ~= aPosition ]
-				              ifFalse: [ anElementHolder layoutPosition ~= aPosition ].
-			shouldSkip ifFalse: [ ^ anElementHolder ] ] ] in: self.
+	childrenManager
+		unfilteredChildrenDo: [ :anElement | 
+			| anElementHolder |
+			anElementHolder := self elementHolderOf: anElement.
+			anElementHolder isRemoved ifFalse: [ 
+				| shouldSkip |
+				shouldSkip := shouldCheckNewPosition
+					              ifTrue: [ anElementHolder position ~= aPosition ]
+					              ifFalse: [ 
+					              anElementHolder layoutPosition ~= aPosition ].
+				shouldSkip ifFalse: [ ^ anElementHolder ] ] ]
+		in: self.
 
 	"We should not query cached element. It creates a problem during data source updates
 	when we are dealing with already laid out elements. Also, for the public use, it is more
@@ -890,21 +737,6 @@ OBlInfiniteElement >> getDecorationsInsetsOfChildElement: anItemElement [
 	
 ]
 
-{ #category : #'private - animations' }
-OBlInfiniteElement >> handleMissingPreInfoForChange: anActualElementHolder oldChangeHolder: anOldChangeElementHolder at: anActualKey [
-
-	self childrenDo: [ :anElement |
-		| anElementHolder |
-		anElementHolder := self elementHolderOf: anElement.
-		anElementHolder == anActualElementHolder ifFalse: [ 
-			| aKey |
-			aKey := self changedHolderKeyOf: anElementHolder.
-			aKey = anActualKey ifTrue: [
-				dataSource hasStableIds
-					ifTrue: [ self error: 'Two different ElementHolders have the same stable ID. Stable IDs in your data source MUST BE unique and SHOULD NOT change.' ]
-					ifFalse: [ self error: 'Two different ElementHolders have the same change ID. This might happen due to inconsistent DataSource update events or if the InfinieElement lays out the same Element multiple times.' ] ] ] ]
-]
-
 { #category : #'accessing - properties' }
 OBlInfiniteElement >> hasFixedSize [
 	"Return true if changes in datasource content cannot change the size of the InfiniteElement itself"
@@ -944,11 +776,6 @@ OBlInfiniteElement >> hasUpdatedChild [
 	^ false 
 ]
 
-{ #category : #accessing }
-OBlInfiniteElement >> infoStore [
-	^ infoStore
-]
-
 { #category : #initialization }
 OBlInfiniteElement >> initialize [
 	super initialize.
@@ -967,9 +794,6 @@ OBlInfiniteElement >> initialize [
 	preserveFocusAfterLayout := true.
 	
 	itemDecorations := OrderedCollection new.
-	itemAnimator := self defaultItemAnimator.
-	infoStore := self defaultInfoStore.
-	infoStoreProcessor := self defaultInfoStoreProcessor on: self.
 	state := self defaultState.
 	childrenUpdateRunnable := self defaultChildrenUpdateRunnable on: self.
 	overScrollMode := self defaultOverScrollMode.
@@ -1062,12 +886,6 @@ OBlInfiniteElement >> isLayoutFrozen [
 	^ layoutFrozen
 ]
 
-{ #category : #accessing }
-OBlInfiniteElement >> itemAnimator [
-	<return: #BlInfiniteItemAnimator>
-	^ itemAnimator
-]
-
 { #category : #'item decorations - accessing' }
 OBlInfiniteElement >> itemDecorations [
 	^ itemDecorations
@@ -1127,9 +945,11 @@ OBlInfiniteElement >> markDataSourceChangeDuringMeasure [
 
 { #category : #'private - invalidation' }
 OBlInfiniteElement >> markItemDecorationsInsetsDirty [
-	
-	childrenManager unfilteredChildrenDo: [ :anElement |
-		anElement constraints infinite insetsDirty: true ] in: self
+
+	childrenManager
+		unfilteredChildrenDo: [ :anElement | 
+		anElement constraints infinite insetsDirty: true ]
+		in: self
 ]
 
 { #category : #layout }
@@ -1144,16 +964,19 @@ OBlInfiniteElement >> markItemsChanged [
 
 { #category : #'private - invalidation' }
 OBlInfiniteElement >> markKnownElementsInvalid [
+
 	"Mark all known elements as invalid. Used in response to a, the whole world might have changed data change event"
 
-	childrenManager unfilteredChildrenDo: [ :anElement |
-		| anElementHolder |
-		anElementHolder := self elementHolderOf: anElement.
-		anElementHolder shouldIgnore ifFalse: [ 
-			anElementHolder flags addUpdate.
-			anElementHolder flags addInvalid ] ] in: self.
-	
-	self markItemDecorationsInsetsDirty.
+	childrenManager
+		unfilteredChildrenDo: [ :anElement | 
+			| anElementHolder |
+			anElementHolder := self elementHolderOf: anElement.
+			anElementHolder shouldIgnore ifFalse: [ 
+				anElementHolder flags addUpdate.
+				anElementHolder flags addInvalid ] ]
+		in: self.
+
+	self markItemDecorationsInsetsDirty
 ]
 
 { #category : #layout }
@@ -1241,24 +1064,28 @@ OBlInfiniteElement >> offsetChildrenVerticallyBy: aNumber [
 { #category : #'private - commands' }
 OBlInfiniteElement >> offsetPositionRecordsForInsert: aStartPosition itemCount: anItemCount [
 
-	childrenManager unfilteredChildrenDo: [ :anElement |
-		| anElementHolder |
-		anElementHolder := self elementHolderOf: anElement.
-		(anElementHolder shouldIgnore not and: [ anElementHolder position >= aStartPosition ])
-			ifTrue: [ 
-				anElementHolder offsetPositionBy: anItemCount applyToPreLayout: false.
-				state structureChanged: true ] ] in: self.
-	
-	
+	childrenManager
+		unfilteredChildrenDo: [ :anElement | 
+			| anElementHolder |
+			anElementHolder := self elementHolderOf: anElement.
+			(anElementHolder shouldIgnore not and: [ 
+				 anElementHolder position >= aStartPosition ]) ifTrue: [ 
+				anElementHolder
+					offsetPositionBy: anItemCount
+					applyToPreLayout: false.
+				state structureChanged: true ] ]
+		in: self.
+
+
 	self requestLayout
 ]
 
 { #category : #'private - commands' }
 OBlInfiniteElement >> offsetPositionRecordsForMove: aFromPosition to: aToPosition [
-	| aStart anEnd anInBetweenOffset|
-	
+
+	| aStart anEnd anInBetweenOffset |
 	aFromPosition < aToPosition
-		ifTrue: [
+		ifTrue: [ 
 			aStart := aFromPosition.
 			anEnd := aToPosition.
 			anInBetweenOffset := -1 ]
@@ -1266,46 +1093,53 @@ OBlInfiniteElement >> offsetPositionRecordsForMove: aFromPosition to: aToPositio
 			aStart := aToPosition.
 			anEnd := aFromPosition.
 			anInBetweenOffset := 1 ].
-	
-	childrenManager unfilteredChildrenDo: [ :anElement |
-		| anElementHolder |
-		anElementHolder := self elementHolderOf: anElement.
-		(anElementHolder position between: aStart and: anEnd)
-			ifTrue: [ 
+
+	childrenManager
+		unfilteredChildrenDo: [ :anElement | 
+			| anElementHolder |
+			anElementHolder := self elementHolderOf: anElement.
+			(anElementHolder position between: aStart and: anEnd) ifTrue: [ 
 				anElementHolder position = aFromPosition
-					ifTrue: [ anElementHolder offsetPositionBy: aToPosition - aFromPosition applyToPreLayout: false ]
-					ifFalse: [ anElementHolder offsetPositionBy: anInBetweenOffset applyToPreLayout: false ].
-				state structureChanged: true ] ] in: self.
+					ifTrue: [ 
+						anElementHolder
+							offsetPositionBy: aToPosition - aFromPosition
+							applyToPreLayout: false ]
+					ifFalse: [ 
+						anElementHolder
+							offsetPositionBy: anInBetweenOffset
+							applyToPreLayout: false ].
+				state structureChanged: true ] ]
+		in: self.
 
 	self requestLayout
 ]
 
 { #category : #'private - commands' }
 OBlInfiniteElement >> offsetPositionRecordsForRemove: aPositionStart itemCount: anItemCount applyToPreLayout: applyToPreLayout [
+
 	| aPositionEnd |
-	
 	aPositionEnd := aPositionStart + anItemCount.
-	
-	childrenManager unfilteredChildrenDo: [ :anElement |
-		| anElementHolder |
-		anElementHolder := self elementHolderOf: anElement.
-		anElementHolder shouldIgnore
-			ifFalse: [ 	
-				anElementHolder position >= aPositionEnd 
-					ifTrue: [	
-							anElementHolder
-								offsetPositionBy: anItemCount negated
-								applyToPreLayout: applyToPreLayout.
-							state structureChanged: true ]
+
+	childrenManager
+		unfilteredChildrenDo: [ :anElement | 
+			| anElementHolder |
+			anElementHolder := self elementHolderOf: anElement.
+			anElementHolder shouldIgnore ifFalse: [ 
+				anElementHolder position >= aPositionEnd
+					ifTrue: [ 
+						anElementHolder
+							offsetPositionBy: anItemCount negated
+							applyToPreLayout: applyToPreLayout.
+						state structureChanged: true ]
 					ifFalse: [ 
-						anElementHolder position >= aPositionStart
-							ifTrue: [
-								anElementHolder
-									flagRemovedAndOffsetPosition: aPositionStart - 1
-									by: anItemCount negated
-									applyToPreLayout: applyToPreLayout.
-								state structureChanged: true ] ] ] ] in: self.
-	
+						anElementHolder position >= aPositionStart ifTrue: [ 
+							anElementHolder
+								flagRemovedAndOffsetPosition: aPositionStart - 1
+								by: anItemCount negated
+								applyToPreLayout: applyToPreLayout.
+							state structureChanged: true ] ] ] ]
+		in: self.
+
 	self requestLayout
 ]
 
@@ -1412,13 +1246,9 @@ OBlInfiniteElement >> onMeasureCustom: anExtentMeasurementSpec [
 	
 	dataSourceChangeDuringMeasure ifTrue: [ 
 		self eatRequestLayout.
-		self processDataSourceCommandsAndSetAnimationFlags.
-		
-		self state willRunPredictiveAnimations
-			ifTrue: [ self state isPreLayout: true ]
-			ifFalse: [ 
-				dataSourceManager consumeCommandsInOnePassIn: self.
-				self state isPreLayout: false ].
+		self processDataSourceCommands.
+		dataSourceManager consumeCommandsInOnePassIn: self.
+		self state isPreLayout: false .
 		dataSourceChangeDuringMeasure := false.
 		self resumeRequestLayout: false ].
 	
@@ -1445,7 +1275,7 @@ OBlInfiniteElement >> onScrolled: aPoint [
 	I will always be invoked before event handlers. If a subclass needs to perform any additional upkeep
 	or bookkeeping after scrolling but before events fired, this is a good place to do so"
 
-	self itemDecorationsDo: [ :d | d onScrollDoneIn: self ]
+	"self itemDecorationsDo: [ :d | d onScrollDoneIn: self ]"
 ]
 
 { #category : #'api - scrolling accessing' }
@@ -1456,12 +1286,6 @@ OBlInfiniteElement >> overScrollMode [
 { #category : #'api - scrolling accessing' }
 OBlInfiniteElement >> overScrollMode: aBlOverScrollMode [
 	overScrollMode := aBlOverScrollMode
-]
-
-{ #category : #'deferred actions' }
-OBlInfiniteElement >> postAnimationRunner [
-	"It is up to animation runner to decide if it needs to be poster or not"
-	itemAnimationRunner postOn: self
 ]
 
 { #category : #'deferred actions' }
@@ -1480,70 +1304,28 @@ OBlInfiniteElement >> postSmoothScroller [
 	scrollFlinger postOnAnimation
 ]
 
-{ #category : #'private - testing' }
-OBlInfiniteElement >> predictiveItemAnimationsEnabled [
-	<return: #Boolean>
-	^ itemAnimator supportsAnimations
-		and: [ layout supportsPredictiveItemAnimations ]
-]
-
 { #category : #'accessing - properties' }
 OBlInfiniteElement >> prefetchingAllowed [
 	^ false
 ]
 
 { #category : #'private - commands' }
-OBlInfiniteElement >> processDataSourceCommandsAndSetAnimationFlags [
+OBlInfiniteElement >> processDataSourceCommands [
+
 	"Consumes data source commands and calculates which type of animations we want to run.
 	Is sent in onMeasure and dispatchLayout.
 	This method may process only the pre-layout state of updates or all of them."
-	| animationTypeSupported |
-	
-	dataSourceChangedAfterLayout ifTrue: [
+
+	dataSourceChangedAfterLayout ifTrue: [ 
 		dataSourceManager resetCommands.
 		self markKnownElementsInvalid.
 		layout onItemsChanged ].
-	
-	"Simple animations are a subset of advanced animations (which will cause a pre-layout step)
-	If layout supports predictive animations, pre-process to decide if we want to run them"
-	
-	self flag: 'APL: predictiveItemAnimationsEnabled is alway false'.
-	self predictiveItemAnimationsEnabled
-		ifTrue: [ dataSourceManager preProcessCommandsIn: self ]
-		ifFalse: [ dataSourceManager consumeCommandsInOnePassIn: self ].
 
-	animationTypeSupported := itemsAddedOrRemoved or: [ itemsChanged ].
-	self state runSimpleAnimations: (firstLayoutComplete and: [
-		itemAnimator supportsAnimations and: [ 
-			(dataSourceChangedAfterLayout or: [ animationTypeSupported or: [ layout requestedSimpleAnimations ] ])
-				and: [ dataSourceChangedAfterLayout not or: [ dataSource hasStableIds ] ] ] ]).
-	
-	self state runPredictiveAnimations: (self state willRunSimpleAnimations and: [
-		animationTypeSupported and: [ dataSourceChangedAfterLayout not and: [ self predictiveItemAnimationsEnabled ] ] ])
+	dataSourceManager consumeCommandsInOnePassIn: self
 ]
 
 { #category : #'private - scrolling' }
 OBlInfiniteElement >> pullGlows: anEventPoint overscroll: anOverScrollPoint [
-]
-
-{ #category : #'private - animations' }
-OBlInfiniteElement >> recordAnimationInfoIfBouncedHidden: anElementHolder itemHolder: anItemHolder [
-	"Record the animation information for an element holder that was bounced from hidden list.
-	It also clears the bounce back flag."
-
-	"looks like this view bounced back from hidden list!"
-	anElementHolder flags clearBouncedFromHiddenList.
-	
-	(self state trackOldChangeHolders and: [
-		anElementHolder isUpdated and: [ 
-			anElementHolder isRemoved not and: [
-				anElementHolder shouldIgnore not ] ] ])
-		ifTrue: [ 
-			| aKey |
-			aKey := self changedHolderKeyOf: anElementHolder.
-			infoStore addToOldChangeHolders: anElementHolder at: aKey ].
-	
-	infoStore addToPreLayout: anElementHolder itemHolder: anItemHolder
 ]
 
 { #category : #'private - focus' }
@@ -1667,18 +1449,6 @@ OBlInfiniteElement >> saveFocusInfo [
 				ifTrue: [ NoPosition ]
 				ifFalse: [ aFocusedElementHolder dataSourcePosition ]).
 			self state focusedSubChild: (self deepestFocusedChildIn: aFocusedElementHolder itemElement) ]
-]
-
-{ #category : #'private - positions' }
-OBlInfiniteElement >> saveOldPositions [
-
-	childrenManager unfilteredChildrenDo: [ :anElement |
-		| anElementHolder |
-		anElementHolder := self elementHolderOf: anElement.
-		(anElementHolder position = NoPosition and: [ anElementHolder isRemoved not ])
-			ifTrue: [ self error: 'Element holder can not have undefined position unless it is removed' ].
-		anElementHolder shouldIgnore
-			ifFalse: [ anElementHolder saveOldPosition ] ] in: self
 ]
 
 { #category : #scrolling }
@@ -1805,18 +1575,20 @@ OBlInfiniteElement >> scrollVerticallyBy: aNumber [
 
 { #category : #'private - invalidation' }
 OBlInfiniteElement >> setDataSourceChangedAfterLayout [
-	
+
 	"We already set that data source is changed"
-	dataSourceChangedAfterLayout
-		ifTrue: [ ^ self ].
-		
+
+	dataSourceChangedAfterLayout ifTrue: [ ^ self ].
+
 	dataSourceChangedAfterLayout := true.
-	childrenManager unfilteredChildrenDo: [ :anElement |
-		| anElementHolder |
-		anElementHolder := self elementHolderOf: anElement.
-		anElementHolder shouldIgnore
-			ifFalse: [ anElementHolder flags addDataSourcePositionUnknown ] ] in: self.
-	
+	childrenManager
+		unfilteredChildrenDo: [ :anElement | 
+			| anElementHolder |
+			anElementHolder := self elementHolderOf: anElement.
+			anElementHolder shouldIgnore ifFalse: [ 
+				anElementHolder flags addDataSourcePositionUnknown ] ]
+		in: self.
+
 	"immediately mark all elements as invalid, so prefetched ones can be
 	differentiated from elements bound to previous data set - both in children, and cache"
 	self markKnownElementsInvalid

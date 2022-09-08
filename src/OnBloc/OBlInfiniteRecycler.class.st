@@ -46,17 +46,6 @@ OBlInfiniteRecycler >> attachedScrap [
 	^ attachedScrap
 ]
 
-{ #category : #recycling }
-OBlInfiniteRecycler >> canReuseUpdatedElementHolder: anElementHolder in: anInfiniteElement [
-	"Return true if changed element holder can be reused"
-	<return: #Boolean>
-	
-	^ anInfiniteElement itemAnimator supportsAnimations not or: [ 
-			anInfiniteElement itemAnimator
-				canReuseUpdatedElementHolder: anElementHolder
-				payloads: anElementHolder payloads ]
-]
-
 { #category : #initialization }
 OBlInfiniteRecycler >> clear [
 	self removeScrap
@@ -92,10 +81,8 @@ OBlInfiniteRecycler >> elementFor: aPosition in: anInfiniteElement [
 	(aPosition < 1 or: [ aPosition > anInfiniteElement  dataSource itemCount ])
 		ifTrue: [ Error signal: 'Position is out of bounds!' ].
 
-	fetchedResult := self fetcher elementFor: aPosition in: anInfiniteElement.
-	
-	holder := fetchedResult key.
-	fromScrap := fetchedResult value.
+	holder := self fetcher elementFor: aPosition in: anInfiniteElement.
+	fromScrap := holder wasReturnedFromScrap.
 
 	self assert: holder isNotNil.
 	self assert: fromScrap isNotNil.
@@ -125,11 +112,13 @@ OBlInfiniteRecycler >> elementFor: aPosition in: anInfiniteElement [
 
 { #category : #private }
 OBlInfiniteRecycler >> fetcher [
-	^self defaultFetcher 
+
+	^ self defaultFetcher
 ]
 
 { #category : #initialization }
 OBlInfiniteRecycler >> initialize [
+
 	super initialize.
 	attachedScrap := OrderedCollection new
 ]
@@ -159,8 +148,10 @@ OBlInfiniteRecycler >> recycleElement: anElement in: anInfiniteElement [
 
 { #category : #recycling }
 OBlInfiniteRecycler >> removeScrap [
+
 	"Remove all scrap elements out of this recycler.
 	Detached elements contained within a recycler pool will remain"
+
 	attachedScrap removeAll
 ]
 
@@ -193,9 +184,7 @@ OBlInfiniteRecycler >> scrapElement: anElement in: anInfiniteElement [
 	anElementHolder := anInfiniteElement elementHolderOf: anElement.
 
 	(anElementHolder isRemoved or: [ 
-		 anElementHolder isInvalid or: [ 
-			 anElementHolder isUpdated not or: [ 
-				 self canReuseUpdatedElementHolder: anElementHolder in: anInfiniteElement ] ] ]) 
+		 anElementHolder isInvalid or: [ anElementHolder isUpdated not ] ]) 
 		ifFalse: [ ^ self ].
 
 	(anElementHolder isInvalid and: [ 
@@ -209,14 +198,16 @@ OBlInfiniteRecycler >> scrapElement: anElement in: anInfiniteElement [
 
 { #category : #'accessing - cache' }
 OBlInfiniteRecycler >> scrappedElementAt: anIndex [
-	"Return scrapped element at anIndex"
-	<return: #BlElement>
 
+	"Return scrapped element at anIndex"
+
+	<return: #BlElement>
 	^ (attachedScrap at: anIndex) itemElement
 ]
 
 { #category : #recycling }
 OBlInfiniteRecycler >> unscrapHolder: anElementHolder [
+
 	"Remove a previously scrapped element holder from the pool of eligible scrap.
 	An element will no longer be eligible for reuse until re-scrapped or until
 	it is explicitly removed and recycled"

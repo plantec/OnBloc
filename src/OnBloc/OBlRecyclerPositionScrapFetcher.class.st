@@ -32,7 +32,7 @@ OBlRecyclerPositionScrapFetcher >> elementFor: aPosition in: anInfiniteElement [
 				holder := nil ]
 			ifTrue: [ fromScrap := true ] ].
 
-	^ holder ifNotNil: [ holder -> fromScrap ] ifNil: [ self nextFetcher elementFor: aPosition in: anInfiniteElement ]
+	^ holder ifNil: [ self nextFetcher elementFor: aPosition in: anInfiniteElement ]
 ]
 
 { #category : #private }
@@ -72,7 +72,8 @@ OBlRecyclerPositionScrapFetcher >> validateHolder: aHolder in: anInfiniteElement
 		type = aHolder itemType
 			ifFalse: [ ^ false ] ].
 
-	^ anInfiniteElement dataSource hasStableIds
-		ifTrue: [ aHolder itemId = (anInfiniteElement dataSource itemIdAt: aHolder position) ]
-		ifFalse: [ true ]
+	anInfiniteElement dataSource hasStableIds
+		ifTrue: [ ^ aHolder itemId = (anInfiniteElement dataSource itemIdAt: aHolder position) ].
+		
+	^ true
 ]

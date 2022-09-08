@@ -7,7 +7,7 @@ Class {
 { #category : #'element fetching' }
 OBlRecyclerDataSourceFetcher >> elementFor: aPosition in: anInfiniteElement [
 
-	| holder |
-	holder :=  anInfiniteElement dataSource createHolder: anInfiniteElement type: (anInfiniteElement dataSource itemTypeAt: aPosition).
-	^ holder -> false
+	^ anInfiniteElement dataSource
+		  createHolder: anInfiniteElement
+		  type: (anInfiniteElement dataSource itemTypeAt: aPosition)
 ]

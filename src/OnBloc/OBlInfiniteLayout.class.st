@@ -30,7 +30,6 @@ Class {
 		'autoMeasure',
 		'itemPrefetchEnabled',
 		'measurementCacheEnabled',
-		'requestedSimpleAnimations',
 		'smoothScroller',
 		'announcer'
 	],
@@ -67,10 +66,6 @@ OBlInfiniteLayout >> addChild: anElement at: anIndex disappearing: isDisappearin
 
 	| anElementHolder anInfiniteConstraints |
 	anElementHolder := self elementHolderOf: anElement.
-
-	(isDisappearing or: [ anElementHolder isRemoved ])
-		ifTrue: [ self addToDisappearedInLayout: anElementHolder ]
-		ifFalse: [ self removeFromDisappearedInLayout: anElementHolder ].
 
 	anInfiniteConstraints := anElement constraints infinite.
 
@@ -121,11 +116,6 @@ OBlInfiniteLayout >> addDisappearingChild: anElement at: anIndex [
 	self addChild: anElement at: anIndex disappearing: true
 ]
 
-{ #category : #adding }
-OBlInfiniteLayout >> addToDisappearedInLayout: anElementHolder [
-	infiniteElement infoStore addToDisappearedInLayout: anElementHolder
-]
-
 { #category : #accessing }
 OBlInfiniteLayout >> announcer [
 	^ announcer ifNil: [ announcer := Announcer new ]
@@ -149,17 +139,6 @@ OBlInfiniteLayout >> attachChild: anElement [
 OBlInfiniteLayout >> attachChild: anElement at: anIndex [
 	"Reattach a previously detached child element.
 	If anIndex == 0 child will be attached at the end"
-	| anElementHolder |
-
-	anElementHolder := self elementHolderOf: anElement.
-	self
-		assert: [ anElementHolder isNotNil ]
-		description: [ 'Temporary detached child must have element holder' ].
-
-	anElementHolder isRemoved
-		ifTrue: [ self addToDisappearedInLayout: anElementHolder ]
-		ifFalse: [ self removeFromDisappearedInLayout: anElementHolder ].
-
 	childManager attachChild: anElement at: anIndex in: infiniteElement
 ]
 
@@ -511,14 +490,6 @@ OBlInfiniteLayout >> elementHolderOf: anElement [
 	^ infiniteElement elementHolderOf: anElement
 ]
 
-{ #category : #animations }
-OBlInfiniteLayout >> endAnimation: anElementHolder [
-	"Ends all animations on the elements created by the ItemAnimator"
-	
-	infiniteElement itemAnimator supportsAnimations
-		ifTrue: [ infiniteElement itemAnimator endAnimation: anElementHolder ]
-]
-
 { #category : #initialization }
 OBlInfiniteLayout >> exactMeasurementSpecFrom: anInfiniteElement [
 	self measurementSpec: (BlExtentMeasurementSpec exact: anInfiniteElement extent)
@@ -612,7 +583,6 @@ OBlInfiniteLayout >> initialize [
 	horizontalChildFinder := BlInfiniteHorizontalChildBoundsBasedFinder new layout: self.
 	verticalChildFinder := BlInfiniteVerticalChildBoundsBasedFinder new layout: self.
 	
-	requestedSimpleAnimations := false.
 	autoMeasure := self defaultAutoMeasure.
 
 	"InfiniteLayout has its own more strict measurement cache to avoid re-measuring a child
@@ -1086,7 +1056,6 @@ OBlInfiniteLayout >> removeAndRecycleScrap [
 				the element) may recycle it too, so we guard it before we use user APIs."
 				anElementHolder isTmpDetached
 					ifTrue: [ infiniteElement removeDetachedChild: aScrappedElement animate: false ].
-				self endAnimation: anElementHolder.
 				self recycler quickRecycleScrap: aScrappedElement	] ].
 	"we used quick recycling mechanism in the loop and have to clear scrap manually"
 	self recycler clearScrap.
@@ -1124,31 +1093,11 @@ OBlInfiniteLayout >> removeDetachedChild: anElement [
 	infiniteElement removeDetachedChild: anElement animate: false
 ]
 
-{ #category : #removing }
-OBlInfiniteLayout >> removeFromDisappearedInLayout: anElementHolder [
-	infiniteElement infoStore removeFromDisappearedInLayout: anElementHolder
-]
-
 { #category : #layout }
 OBlInfiniteLayout >> requestLayout [
 	"During layout initialization infinite element may still be not set"
 	infiniteElement
 		ifNotNil: [ :anElement | anElement requestLayout ]
-]
-
-{ #category : #animations }
-OBlInfiniteLayout >> requestSimpleAnimationsInNextLayout [
-	requestedSimpleAnimations := true
-]
-
-{ #category : #accessing }
-OBlInfiniteLayout >> requestedSimpleAnimations [
-	^ requestedSimpleAnimations
-]
-
-{ #category : #accessing }
-OBlInfiniteLayout >> requestedSimpleAnimations: aBoolean [
-	requestedSimpleAnimations := aBoolean
 ]
 
 { #category : #'children - accessing' }
