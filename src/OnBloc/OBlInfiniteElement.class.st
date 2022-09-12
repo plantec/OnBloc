@@ -1229,6 +1229,7 @@ OBlInfiniteElement >> onMeasureAuto: anExtentMeasurementSpec [
 	which also has non-exact width & height, we have to re-measure."
 	layout shouldMeasureTwice
 		ifTrue: [ 
+			self state beStepLayout.
 			layout measurementSpec: (BlExtentMeasurementSpec exact: self measuredExtent).
 			self state isMeasuring: true.
 			self dispatchLayoutSecondStep.
