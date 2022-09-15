@@ -373,11 +373,6 @@ OBlInfiniteElement >> deepestFocusedChildIn: anElement [
 ]
 
 { #category : #initialization }
-OBlInfiniteElement >> defaultChildrenController [
-	^ OBlInfiniteDefaultChildrenController new
-]
-
-{ #category : #initialization }
 OBlInfiniteElement >> defaultChildrenManager [
 	^ OBlInfiniteChildrenManager new
 ]
