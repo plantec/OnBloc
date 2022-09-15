@@ -120,7 +120,7 @@ OBlInfiniteDataSourceManager >> consumeCommandsInOnePassIn: anInfiniteElement [
 	pendingCommands do: [ :command |
 		self dispatchCommand: command to: anInfiniteElement.
 		command offsetPositionsIn: anInfiniteElement.
-		self onCommandProcessed: command ].
+		self onCommandProcessed: command in: anInfiniteElement].
 
 	self recycleCommandsAndClearList: pendingCommands.
 	existingCommandTypes clear
@@ -349,7 +349,7 @@ OBlInfiniteDataSourceManager >> offsetPositionsForMove: aFromPosition to: aToPos
 ]
 
 { #category : #'commands processing' }
-OBlInfiniteDataSourceManager >> onCommandProcessed: aCommand [
+OBlInfiniteDataSourceManager >> onCommandProcessed: aCommand in: anInfiniteElement [
 ]
 
 { #category : #'data source updates' }
@@ -455,7 +455,7 @@ OBlInfiniteDataSourceManager >> preProcessCommandsIn: anInfiniteElement [
 	"commandsReorderer reorderCommands: pendingCommands."
 	pendingCommands do: [ :command |
 		command applyIn: anInfiniteElement.
-		self onCommandProcessed: command ].
+		self onCommandProcessed: command in: anInfiniteElement].
 	pendingCommands removeAll
 ]
 
