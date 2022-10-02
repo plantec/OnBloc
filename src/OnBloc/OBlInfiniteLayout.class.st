@@ -19,7 +19,6 @@ Class {
 	#name : #OBlInfiniteLayout,
 	#superclass : #BlLayout,
 	#instVars : [
-		'childManager',
 		'infiniteElement',
 		'horizontalChildFinder',
 		'verticalChildFinder',
@@ -74,7 +73,7 @@ OBlInfiniteLayout >> addChild: anElement at: anIndex disappearing: isDisappearin
 			anElementHolder isScrap
 				ifTrue: [ self recycler unscrapHolder: anElementHolder ]
 				ifFalse: [ anElementHolder clearReturnedFromScrap ].
-			childManager attachChild: anElement at: anIndex in: infiniteElement ]
+			infiniteElement childrenManager attachChild: anElement at: anIndex in: infiniteElement ]
 		ifFalse: [ 
 			anElement parent == infiniteElement
 				ifTrue: [ 
@@ -87,7 +86,7 @@ OBlInfiniteLayout >> addChild: anElement at: anIndex disappearing: isDisappearin
 						self error: 'Added element has infinite element as parent but is not a direct child of it' ].
 					currentIndex ~= index ifTrue: [ self moveChildFrom: currentIndex to: index ] ]
 				ifFalse: [ 
-					childManager addChild: anElement at: anIndex in: infiniteElement.
+					infiniteElement childrenManager addChild: anElement at: anIndex in: infiniteElement.
 					anInfiniteConstraints insetsDirty: true.
 					"If smooth scroller is currently running, let it know that a new element was attached"
 					self smoothScroller ifNotNil: [ :aSmoothScroller | 
@@ -139,7 +138,7 @@ OBlInfiniteLayout >> attachChild: anElement [
 OBlInfiniteLayout >> attachChild: anElement at: anIndex [
 	"Reattach a previously detached child element.
 	If anIndex == 0 child will be attached at the end"
-	childManager attachChild: anElement at: anIndex in: infiniteElement
+	infiniteElement childrenManager attachChild: anElement at: anIndex in: infiniteElement
 ]
 
 { #category : #accessing }
@@ -478,7 +477,7 @@ OBlInfiniteLayout >> detachChild: anElement [
 OBlInfiniteLayout >> detachChildAt: anIndex [
 	"Temporarily detach a child element at the index"
 
-	childManager detachChildAt: anIndex in: infiniteElement
+	infiniteElement childrenManager detachChildAt: anIndex in: infiniteElement
 ]
 
 { #category : #'children - accessing' }
@@ -559,11 +558,8 @@ OBlInfiniteLayout >> infiniteElement: anInfiniteElement [
 	It is only possible to attach infinite element once!
 	anInfiniteElement must not be nil"
 	self assert: [ infiniteElement isNil ] description: [ 'Infinite element is already attached' ].
-	self assert: [ childManager isNil ] description: [ 'Child manager must not be set' ].
-	self assert: [ anInfiniteElement isNotNil ] description: [ 'Can not attach nil infinite element' ].
 	
 	infiniteElement := anInfiniteElement.
-	childManager := infiniteElement childrenManager.
 
 	width := infiniteElement width min: self maximumWidth.
 	height := infiniteElement height min: self maximumHeight.
@@ -1005,7 +1001,7 @@ OBlInfiniteLayout >> removeAllChildren [
 
 	"Only remove non-animating elements"
 	self reverseChildrenDo: [ :anElement :anIndex |
-		childManager removeChildAt: anIndex in: infiniteElement ]
+		infiniteElement childrenManager removeChildAt: anIndex in: infiniteElement ]
 ]
 
 { #category : #'children - add/remove' }
@@ -1073,7 +1069,7 @@ OBlInfiniteLayout >> removeChild: anElement [
 	InfiniteLayouts should use this method to completely remove a child view that is no longer needed.
    Note: InfiniteLayouts should strongly consider recycling removed views using BlInfiniteRecycler#recycleElement:"
 
-	childManager removeChild: anElement in: infiniteElement
+	infiniteElement childrenManager removeChild: anElement in: infiniteElement
 ]
 
 { #category : #'children - add/remove' }
@@ -1083,7 +1079,7 @@ OBlInfiniteLayout >> removeChildAt: anIndex [
    Note: InfiniteLayouts should strongly consider recycling removed views using BlInfiniteRecycler#recycleElement:"
 
 	(self childAt: anIndex)
-		ifNotNil: [ childManager removeChildAt: anIndex in: infiniteElement ]
+		ifNotNil: [ infiniteElement childrenManager removeChildAt: anIndex in: infiniteElement ]
 ]
 
 { #category : #'children - add/remove' }
