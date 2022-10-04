@@ -37,8 +37,6 @@ anElement := aStencil create.
 Class {
 	#name : #OBlStencil,
 	#superclass : #Object,
-	#traits : 'TBlDebug',
-	#classTraits : 'TBlDebug classTrait',
 	#category : #'OnBloc-Stencil'
 }
 
@@ -58,9 +56,8 @@ OBlStencil >> asElement [
 
 { #category : #converting }
 OBlStencil >> asStencil [
-	<return: #OBlStencil>
 
-	^ self
+	^ self 
 ]
 
 { #category : #'api - instantiation' }
