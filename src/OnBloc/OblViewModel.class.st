@@ -21,7 +21,7 @@ OBlViewModel >> eventDispatcher [
 OBlViewModel >> onInstalledIn: anElement [
 	"Is sent when I am added to an element (or to the other actor which is added to the element)"
 	super onInstalledIn: anElement.
-	eventDispatcher := anElement eventDispatcher.	
+	eventDispatcher := anElement editor eventDispatcher.	
 
 
 ]
