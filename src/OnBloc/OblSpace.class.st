@@ -1698,7 +1698,8 @@ OBlSpace >> showSpace: aSpace [
 
 { #category : #accessing }
 OBlSpace >> space [
-	^self
+
+	^ self
 ]
 
 { #category : #'host space - text input' }
