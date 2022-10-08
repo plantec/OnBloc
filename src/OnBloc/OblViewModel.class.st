@@ -32,30 +32,3 @@ OBlViewModel >> onUninstalledIn: anElement [
 	super onUninstalledIn: anElement.
 	eventDispatcher := nil
 ]
-
-{ #category : #'event management' }
-OBlViewModel >> request: aRequest [
-
-	self dispatchEvent: aRequest.
-
-	^ aRequest response
-]
-
-{ #category : #'event management' }
-OBlViewModel >> when: aRequestClass reply: aBlock [
-	self when: aRequestClass do: [ :aRequest |
-		| aReplyEvent |
-		
-		aRequest consumed: true.
-
-		aReplyEvent := aBlock cull: (aRequest responseFor: self) cull: aRequest.
-
-		aRequest canRespond
-			ifTrue: [ aRequest response: aReplyEvent ].
-
-		aReplyEvent source: self.
-		
-		aRequest isConsumed ifTrue: [ 
-			aRequest isOneWay ifFalse: [ 
-				self dispatchEvent: aReplyEvent ] ] ]
-]
