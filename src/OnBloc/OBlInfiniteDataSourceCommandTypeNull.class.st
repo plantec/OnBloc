@@ -34,10 +34,6 @@ OBlInfiniteDataSourceCommandTypeNull >> positionMultiplier [
 ]
 
 { #category : #dispatch }
-OBlInfiniteDataSourceCommandTypeNull >> swapMoveOn: aContext in: aListOfCommands badMoveIndex: badMoveIndex nextIndex: nextIndex [
-]
-
-{ #category : #dispatch }
 OBlInfiniteDataSourceCommandTypeNull >> updateElementHoldersIn: aContext command: aCommand [
 ]
 

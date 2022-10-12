@@ -86,11 +86,6 @@ OBlInfiniteDataSourceCommandType >> positionMultiplier [
 ]
 
 { #category : #dispatch }
-OBlInfiniteDataSourceCommandType >> swapMoveOn: aContext in: aListOfCommands badMoveIndex: badMoveIndex nextIndex: nextIndex [
-	^ self subclassResponsibility
-]
-
-{ #category : #dispatch }
 OBlInfiniteDataSourceCommandType >> updateElementHoldersIn: anInfiniteElement command: aCommand [
 	^ self subclassResponsibility
 ]

@@ -100,16 +100,11 @@ OBlInfiniteDataSourceCommandTypeUpdate >> positionMultiplier [
 { #category : #private }
 OBlInfiniteDataSourceCommandTypeUpdate >> postponeOn: aContext start: aStartPosition count: anItemCount payload: anObject [
 	|newCommand|
-	newCommand := aContext createCommand: self
+	newCommand := aContext dataSourceManager createCommand: self
 		positionStart: aStartPosition
 		itemCount: anItemCount
 		payload: anObject.
-	aContext postponeAndUpdateElementHolders: newCommand
-]
-
-{ #category : #dispatch }
-OBlInfiniteDataSourceCommandTypeUpdate >> swapMoveOn: aContext in: aListOfCommands badMoveIndex: badMoveIndex nextIndex: nextIndex [
-	aContext swapMoveUpdateIn: aListOfCommands badMoveIndex: badMoveIndex nextIndex: nextIndex
+	aContext dataSourceManager postponeAndUpdateElementHolders: newCommand on: aContext
 ]
 
 { #category : #dispatch }

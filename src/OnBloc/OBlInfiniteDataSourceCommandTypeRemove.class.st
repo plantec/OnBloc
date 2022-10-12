@@ -27,7 +27,7 @@ OBlInfiniteDataSourceCommandTypeRemove >> apply: aCommand in: anInfiniteElement 
 				type := command typeNewOrLaidOut ]
 			ifFalse: [ 
 				type = command typeNewOrLaidOut ifTrue: [ 
-					self postponeOn: anInfiniteElement start: tmpStart count: tmpCount.
+					self postponeIn: anInfiniteElement start: tmpStart count: tmpCount.
 					typeChanged := true ].
 				type := command typeInvisible ].
 
@@ -108,7 +108,7 @@ OBlInfiniteDataSourceCommandTypeRemove >> positionMultiplier [
 ]
 
 { #category : #private }
-OBlInfiniteDataSourceCommandTypeRemove >> postponeOn: anInfiniteElement start: aStartPosition count: anItemCount [
+OBlInfiniteDataSourceCommandTypeRemove >> postponeIn: anInfiniteElement start: aStartPosition count: anItemCount [
 
 	| newCommand manager |
 	manager := anInfiniteElement dataSourceManager.
@@ -120,11 +120,6 @@ OBlInfiniteDataSourceCommandTypeRemove >> postponeOn: anInfiniteElement start: a
 	manager
 		postponeAndUpdateElementHolders: newCommand
 		on: anInfiniteElement
-]
-
-{ #category : #dispatch }
-OBlInfiniteDataSourceCommandTypeRemove >> swapMoveOn: aContext in: aListOfCommands badMoveIndex: badMoveIndex nextIndex: nextIndex [
-	aContext swapMoveRemoveIn: aListOfCommands badMoveIndex: badMoveIndex nextIndex: nextIndex
 ]
 
 { #category : #dispatch }

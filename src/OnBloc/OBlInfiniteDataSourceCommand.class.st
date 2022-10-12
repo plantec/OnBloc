@@ -130,9 +130,11 @@ OBlInfiniteDataSourceCommand >> positionStart: anObject [
 	positionStart := anObject
 ]
 
-{ #category : #commands }
-OBlInfiniteDataSourceCommand >> swapMoveOn: aContext in: aListOfCommands badMoveIndex: badMoveIndex nextIndex: nextIndex [
-	type swapMoveOn: aContext in: aListOfCommands badMoveIndex: badMoveIndex nextIndex: nextIndex
+{ #category : #accessing }
+OBlInfiniteDataSourceCommand >> type [
+	<return: #BlInfiniteDataSourceCommandType>
+
+	^ type
 ]
 
 { #category : #accessing }

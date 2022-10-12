@@ -148,11 +148,6 @@ OBlInfiniteDataSourceManager >> createCommand: type positionStart: positionStart
 			payload: payload
 ]
 
-{ #category : #initialization }
-OBlInfiniteDataSourceManager >> defaultCommandsReorderer [
-	^ OBlInfiniteDataSourceCommandsReorderer new
-]
-
 { #category : #private }
 OBlInfiniteDataSourceManager >> dispatchAndUpdateElementHolders: aCommand on: anInfiniteElement [
 	| tmpStart tmpCnt offsetPositionForPartial positionMultiplier payload|
