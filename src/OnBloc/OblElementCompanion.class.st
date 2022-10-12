@@ -1,6 +1,8 @@
 Class {
 	#name : #OBlElementCompanion,
 	#superclass : #Object,
+	#traits : 'TBlAnnounceable',
+	#classTraits : 'TBlAnnounceable classTrait',
 	#category : #'OnBloc-element compagnion'
 }
 
@@ -12,6 +14,12 @@ OBlElementCompanion class >> asLook [
 { #category : #converting }
 OBlElementCompanion >> asLook [
 	^ self
+]
+
+{ #category : #initialization }
+OBlElementCompanion >> initialize [
+	super initialize.
+	announcer := Announcer new
 ]
 
 { #category : #'api - hooks' }
