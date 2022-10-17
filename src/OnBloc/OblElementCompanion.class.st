@@ -1,8 +1,8 @@
 Class {
 	#name : #OBlElementCompanion,
 	#superclass : #Object,
-	#traits : 'TBlAnnounceable',
-	#classTraits : 'TBlAnnounceable classTrait',
+	#traits : 'TBlAnnouncerProvider',
+	#classTraits : 'TBlAnnouncerProvider classTrait',
 	#category : #'OnBloc-element compagnion'
 }
 
