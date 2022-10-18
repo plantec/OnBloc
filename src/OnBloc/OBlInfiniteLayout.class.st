@@ -224,11 +224,9 @@ OBlInfiniteLayout >> calculateChildMeasureSpec: aParentSize parentSpec: aParentS
 
 { #category : #'private - measurement' }
 OBlInfiniteLayout >> calculateSize: aMeasurementSpec desired: aDesiredSize min: aMinSize [
-	"Calculates a size from the given measurement specs and parameters
-	that is closest to the desired size and also complies with the spec"
-	<return: #Number>
-	<argument: #aDesiredSize satisfies: #isBlocFiniteFloat>
-	<argument: #aMinSize satisfies: #isBlocFiniteFloat>
+	"Answer the size from the given measurement specs and parameters that
+	is closer to the desired size and also complies with the spec.
+	The desired and minimum sizes must be numbers that satisfy `#isBlocFiniteFloat`."
 
 	aMeasurementSpec isExact
 		ifTrue: [ ^ aMeasurementSpec size ].
