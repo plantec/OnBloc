@@ -1,8 +1,8 @@
 Class {
 	#name : #OBlElementCompanion,
 	#superclass : #Object,
-	#traits : 'TBlAnnouncerProvider',
-	#classTraits : 'TBlAnnouncerProvider classTrait',
+	#traits : 'TObservable + TBlAnnouncerProvider',
+	#classTraits : 'TObservable classTrait + TBlAnnouncerProvider classTrait',
 	#category : #'OnBloc-element compagnion'
 }
 
@@ -13,6 +13,7 @@ OBlElementCompanion class >> asLook [
 
 { #category : #initialization }
 OBlElementCompanion >> initialize [
+	self class initializeSlots: self.
 	super initialize.
 	announcer := Announcer new
 ]
