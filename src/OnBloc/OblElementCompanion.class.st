@@ -11,11 +11,6 @@ OBlElementCompanion class >> asLook [
 	^ self new asLook
 ]
 
-{ #category : #converting }
-OBlElementCompanion >> asLook [
-	^ self
-]
-
 { #category : #initialization }
 OBlElementCompanion >> initialize [
 	super initialize.

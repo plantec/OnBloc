@@ -23,7 +23,7 @@ BlElement >> dresser: aDresser [
 		currDresser onUninstalledIn: self.
 		self userData at: #dresser put: nil ].
 
-	installed := aDresser asLook.
+	installed := aDresser.
 
 	self userData at: #dresser put: installed.
 	installed onInstalledIn: self
