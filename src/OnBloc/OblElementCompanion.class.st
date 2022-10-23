@@ -24,12 +24,14 @@ OBlElementCompanion >> initialize [
 { #category : #'api - hooks' }
 OBlElementCompanion >> onInstalledIn: anElement [
 
+
 ]
 
 { #category : #'api - hooks' }
 OBlElementCompanion >> onUninstalledIn: anElement [
+
 	"Is sent when I am removed from an element "
-	self unsubscribe: anElement
+
 ]
 
 { #category : #accessing }
