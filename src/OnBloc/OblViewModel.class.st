@@ -5,18 +5,66 @@ Class {
 }
 
 { #category : #initialization }
+OBlViewModel >> defaultDresser [
+
+	^ nil
+
+]
+
+{ #category : #'accessing - dresser' }
+OBlViewModel >> dresser [
+	^ self userData at: #dresser ifAbsent: nil
+]
+
+{ #category : #'accessing - dresser' }
+OBlViewModel >> dresser: aDresser [
+
+	self dresserDo: [ :currDresser | 
+		self widgetDo: [ :widget | 
+			currDresser onUninstalledIn: widget.
+			self userData at: #dresser put: nil ] ].
+
+	self userData at: #dresser put: aDresser.
+
+	self dresserDo: [ :currDresser | 
+		self widgetDo: [ :widget | 
+			currDresser onInstalledIn: widget.
+			self userData at: #dresser put: currDresser ] ]
+]
+
+{ #category : #'accessing - dresser' }
+OBlViewModel >> dresserDo: aBlock [
+	self dresser ifNotNil: aBlock
+]
+
+{ #category : #initialization }
 OBlViewModel >> initialize [ 
 
 	super initialize.
 	self startPostponedActionsStorage.
+	self dresser: self defaultDresser
 
+]
+
+{ #category : #'api - hooks' }
+OBlViewModel >> managePostponedActionsIn: anElement while: aBlock [
+
+	self stopPostponedActionsStorageFor: anElement.
+	aBlock value.
+	self runPostponedActions
 ]
 
 { #category : #'api - hooks' }
 OBlViewModel >> onInstalledIn: anElement [
 
 	super onInstalledIn: anElement.
-	self stopPostponedActionsStorageFor: anElement.
+	self managePostponedActionsIn: anElement while: [ 
+		self onInstalledOnlyMeIn: anElement ]
+]
+
+{ #category : #'api - hooks' }
+OBlViewModel >> onInstalledOnlyMeIn: anElement [
+
 
 ]
 
@@ -26,7 +74,14 @@ OBlViewModel >> onUninstalledIn: anElement [
 	"Is sent when I am removed from an element "
 
 	super onUninstalledIn: anElement.
-	self unsubscribe: anElement
+	self unsubscribe: anElement.
+	self onUninstalledOnlyMeIn: anElement
+]
+
+{ #category : #'api - hooks' }
+OBlViewModel >> onUninstalledOnlyMeIn: anElement [
+
+
 ]
 
 { #category : #'private-postponed actions' }
@@ -42,7 +97,7 @@ OBlViewModel >> removePostponedActions [
 ]
 
 { #category : #'private-postponed actions' }
-OBlViewModel >> runPostponedAction [
+OBlViewModel >> runPostponedActions [
 
 	self postponedActions do: [ :announcement | self announce: announcement ].
 	self removePostponedActions
@@ -51,14 +106,14 @@ OBlViewModel >> runPostponedAction [
 { #category : #'private-postponed actions' }
 OBlViewModel >> startPostponedActionsStorage [
 
-	self when: ToActionRequiredInWidget send: #whenActionRequiredInWidget: to: self
+	self announcerWhen: ToActionRequiredInWidget send: #whenActionRequiredInWidget: to: self
 ]
 
 { #category : #'private-postponed actions' }
 OBlViewModel >> stopPostponedActionsStorageFor: anElement [
 
 	self unsubscribe: self.
-	self when: ToActionRequiredInWidget send: #whenActionRequired: to: anElement
+	self announcerWhen: ToActionRequiredInWidget send: #whenActionRequired: to: anElement
 
 ]
 

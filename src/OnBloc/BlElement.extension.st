@@ -11,30 +11,6 @@ BlElement >> asStencil [
 ]
 
 { #category : #'*OnBloc' }
-BlElement >> dresser [
-	^ self userData at: #dresser ifAbsent: nil
-]
-
-{ #category : #'*OnBloc' }
-BlElement >> dresser: aDresser [
-	| installed |
-	
-	self dresserDo: [ :currDresser |
-		currDresser onUninstalledIn: self.
-		self userData at: #dresser put: nil ].
-
-	installed := aDresser.
-
-	self userData at: #dresser put: installed.
-	installed onInstalledIn: self
-]
-
-{ #category : #'*OnBloc' }
-BlElement >> dresserDo: aBlock [
-	self dresser ifNotNil: aBlock
-]
-
-{ #category : #'*OnBloc' }
 BlElement >> openInOBlSpace [
 	"Add self to a new BlSpace and show it. Answer such space."
 	| sp |
