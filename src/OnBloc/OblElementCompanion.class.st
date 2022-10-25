@@ -18,7 +18,7 @@ OBlElementCompanion class >> asLook [
 OBlElementCompanion >> initialize [
 	self class initializeSlots: self.
 	super initialize.
-	announcer := Announcer new
+	privateAnnouncer := Announcer new
 ]
 
 { #category : #'api - hooks' }

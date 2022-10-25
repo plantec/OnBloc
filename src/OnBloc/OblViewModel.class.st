@@ -106,14 +106,14 @@ OBlViewModel >> runPostponedActions [
 { #category : #'private-postponed actions' }
 OBlViewModel >> startPostponedActionsStorage [
 
-	self announcerWhen: ToActionRequiredInWidget send: #whenActionRequiredInWidget: to: self
+	self whenAnnouncement: ToActionRequiredInWidget send: #whenActionRequiredInWidget: to: self
 ]
 
 { #category : #'private-postponed actions' }
 OBlViewModel >> stopPostponedActionsStorageFor: anElement [
 
 	self unsubscribe: self.
-	self announcerWhen: ToActionRequiredInWidget send: #whenActionRequired: to: anElement
+	self whenAnnouncement: ToActionRequiredInWidget send: #whenActionRequired: to: anElement
 
 ]
 
