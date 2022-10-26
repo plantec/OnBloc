@@ -84,6 +84,14 @@ OBlViewModel >> onUninstalledOnlyMeIn: anElement [
 
 ]
 
+{ #category : #'accessing - widget' }
+OBlViewModel >> onWidget [
+
+	^ self widget
+		  viewModel: self;
+		  yourself
+]
+
 { #category : #'private-postponed actions' }
 OBlViewModel >> postponedActions [
 
@@ -121,6 +129,12 @@ OBlViewModel >> stopPostponedActionsStorageFor: anElement [
 OBlViewModel >> whenActionRequiredInWidget: anActionRequired [
 
 	self postponedActions add: anActionRequired.
+]
+
+{ #category : #'accessing - widget' }
+OBlViewModel >> widget [
+
+	^self subclassResponsibility 
 ]
 
 { #category : #'accessing - widget' }
