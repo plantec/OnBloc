@@ -1280,7 +1280,7 @@ OBlSpace >> initializeFocus [
 
 { #category : #'-- extensions-spec2 --' }
 OBlSpace >> inspectionPreview: aBuilder [
-	<inspectorPresentationOrder: 1 title: 'Preview'>
+	"<inspectorPresentationOrder: 1 title: 'Preview'>"
 
 	^ self root inspectionPreview: aBuilder
 ]
