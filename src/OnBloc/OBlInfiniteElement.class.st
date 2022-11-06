@@ -340,7 +340,7 @@ OBlInfiniteElement >> decorationsInsetsOfChildElement: anElement [
 	
 	anInfiniteConstraints := anElement constraints infinite.
 	anInfiniteConstraints insetsDirty ifTrue: [ 
-		anInfiniteConstraints decorationInsets:
+		anInfiniteConstraints decorationInsets: 
 			(self getDecorationsInsetsOfChildElement: anElement).
 		^ anInfiniteConstraints decorationInsets ].
 
@@ -726,8 +726,8 @@ OBlInfiniteElement >> fling: aVelocity [
 OBlInfiniteElement >> getDecorationsInsetsOfChildElement: anItemElement [
 
 	| insets |
-	insets := BlInsets all: 0.
-	self itemDecorationsDo: [ :d | insets := (d getDecorationsInsetsOfChildElement: anItemElement) + insets ].
+	insets := BlInsets empty.
+	self itemDecorationsDo: [ :d | insets := (d getDecorationsInsetsOfChildElement: anItemElement in: self) + insets ].
 	^ insets
 	
 ]
