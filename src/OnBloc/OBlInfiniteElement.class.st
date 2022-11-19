@@ -513,7 +513,7 @@ OBlInfiniteElement >> dispatchLayoutSecondStep [
 	self eatRequestLayout.
 	self onEnterLayoutOrScroll.
 	
-	self state assertLayoutStep: BlInfiniteLayoutStepFlags Layout.
+	self state assertLayoutStep: BlInfiniteLayoutStepFlags Layout or: BlInfiniteLayoutStepFlags Animations.
 	
 	dataSourceManager consumeCommandsInOnePassIn: self.
 	self state itemCount: dataSource itemCount.
