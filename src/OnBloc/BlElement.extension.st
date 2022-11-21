@@ -15,7 +15,6 @@ BlElement >> openInOBlSpace [
 	"Add self to a new BlSpace and show it. Answer such space."
 	| sp |
 	sp := OBlSpace new.
-	sp root layout: BlFrameLayout new.
 	sp root addChild: self.
 	sp show.
 	^ sp
