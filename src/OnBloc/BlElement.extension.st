@@ -41,27 +41,6 @@ BlElement >> theme: aTheme [
 ]
 
 { #category : #'*OnBloc' }
-BlElement >> viewModel [
-	^ self userData at: #oblViewModel ifAbsent: nil
-]
-
-{ #category : #'*OnBloc' }
-BlElement >> viewModel: aViewModel [
-
-	self viewModelDo: [ :aCurrentModel |
-		aCurrentModel onUninstalledIn: self.
-		self userData at: #oblViewModel put: nil ].
-
-	self userData at: #oblViewModel put: aViewModel.
-	aViewModel onInstalledIn: self
-]
-
-{ #category : #'*OnBloc' }
-BlElement >> viewModelDo: aBlock [
-	self userData at: #oblViewModel ifPresent: aBlock
-]
-
-{ #category : #'*OnBloc' }
 BlElement >> widgetContent [
 
 	^ self
