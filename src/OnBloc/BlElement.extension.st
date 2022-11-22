@@ -22,16 +22,6 @@ BlElement >> openInOBlSpace [
 ]
 
 { #category : #'*OnBloc' }
-BlElement >> openInOblSpace [
-	"Add self to a new BlSpace and show it. Answer such space."
-	
-	^ OBlSpace new
-		  addChild: self;
-		  show;
-		  yourself
-]
-
-{ #category : #'*OnBloc' }
 BlElement >> theme [
 	^ self userData
 		at: #OBlTheme
