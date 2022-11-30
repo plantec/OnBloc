@@ -448,6 +448,12 @@ OBlSpace >> borderless: aBoolean [
 	 self hostSpaceDo: [ :aHostSpace | aHostSpace borderless: aBoolean ].
 ]
 
+{ #category : #accessing }
+OBlSpace >> bounds [
+
+	^ BlBounds origin: self position extent: self extent
+]
+
 { #category : #'change - properties' }
 OBlSpace >> canComputeProperties: anElement [
 	"Return true if properties of the given element can be computed"
