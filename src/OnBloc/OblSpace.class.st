@@ -26,7 +26,6 @@ Class {
 		'hostSpace',
 		'extent',
 		'position',
-		'root',
 		'resizable',
 		'borderless',
 		'dirtyAreas',
@@ -58,9 +57,10 @@ Class {
 		'elementsNeedingStyle',
 		'elementsNeedingPropertiesComputation',
 		'iconStencil',
-		'topFrame',
-		'contextMenuRoot',
-		'popupRoot'
+		'contextMenuLayer',
+		'popupLayer',
+		'rootLayer',
+		'layerHolder'
 	],
 	#classVars : [
 		'UniqueIdGenerator'
@@ -434,8 +434,15 @@ OBlSpace >> asSpartaForm [
 { #category : #'change - rendering' }
 OBlSpace >> beDirtyArea [
 	self
-		invalidRect: (BlBounds origin: 0.0 @ 0.0 extent: self topFrame extent)
-		from: self topFrame
+		invalidRect: (BlBounds origin: 0.0 @ 0.0 extent: self layerHolder extent)
+		from: self layerHolder
+]
+
+{ #category : #'api - displaying' }
+OBlSpace >> becomeVisible [
+	"Notify root element that it is now visible to the user"
+	self layerHolder space: self
+
 ]
 
 { #category : #'window - properties' }
@@ -472,6 +479,12 @@ OBlSpace >> center [
 	self hostSpace ifNotNil: [ :hw | hw center ]
 ]
 
+{ #category : #'children - accessing' }
+OBlSpace >> children [
+
+	^ self layerHolder children
+]
+
 { #category : #'change - rendering' }
 OBlSpace >> clearDirtyAreas [
 	"Clear all dirty areas.
@@ -488,12 +501,20 @@ OBlSpace >> close [
 	(BlParallelUniverse forHost: self host class) closeSpace: self
 ]
 
+{ #category : #'api-painting' }
+OBlSpace >> compositionLayer [
+	"Return my composition layer if I have one or nil otherwise"
+	<return: #BlCompositionLayer or: nil>
+
+	^ self layerHolder compositionLayer
+]
+
 { #category : #accessing }
-OBlSpace >> contextMenuRoot [
+OBlSpace >> contextMenuLayer [
 	"Return my current root element.
 	root can not be nil"
 	
-	^ contextMenuRoot
+	^ contextMenuLayer
 ]
 
 { #category : #'cursor managing' }
@@ -517,7 +538,7 @@ OBlSpace >> defaultContextMenuElevation [
 ]
 
 { #category : #initialization }
-OBlSpace >> defaultContextMenuRoot [
+OBlSpace >> defaultContextMenuLayer [
 
 	^ BlElement new
 		  background: Color transparent;
@@ -551,13 +572,22 @@ OBlSpace >> defaultExtent [
 ]
 
 { #category : #initialization }
+OBlSpace >> defaultLayerHolder [
+
+	^ BlElement new
+		  layout: BlFrameLayout new;
+		  labeled: 'Top';
+		  yourself
+]
+
+{ #category : #initialization }
 OBlSpace >> defaultPopupElevation [
 
 	^ 100
 ]
 
 { #category : #initialization }
-OBlSpace >> defaultPopupRoot [
+OBlSpace >> defaultPopupLayer [
 
 	^ BlElement new
 		  background: Color transparent;
@@ -605,14 +635,6 @@ OBlSpace >> defaultTitle [
 	^ ''
 ]
 
-{ #category : #initialization }
-OBlSpace >> defaultTopFrame [
-
-	^ BlElement new
-		  layout: BlFrameLayout new;
-		  yourself
-]
-
 { #category : #'window - properties' }
 OBlSpace >> densityDpi [
 	"Return the screen density expressed as dots-per-inch"
@@ -642,6 +664,23 @@ OBlSpace >> dirtyAreas [
 	<return: #SequenceableCollection of: #BlBounds>
 
 	^ dirtyAreas
+]
+
+{ #category : #'children dispatching' }
+OBlSpace >> dispatchAddedToSceneGraph [
+	"Sent after any of my parents or I was added to scene graph.
+	I dispatch or fire all necessary events, clean internal caches and send a corresponding hooks"
+
+	self layerHolder dispatchAddedToSceneGraph
+
+]
+
+{ #category : #'children dispatching' }
+OBlSpace >> dispatchRemovedFromSceneGraph [
+	"Sent after topFrame was removed from scene graph.
+	I dispatch or fire all necessary events, clean internal caches and send a corresponding hooks"
+
+	self layerHolder dispatchRemovedFromSceneGraph
 ]
 
 { #category : #pulse }
@@ -676,8 +715,8 @@ OBlSpace >> doComputeProperties [
 	
 	self elementsNeedingPropertiesComputation removeAll.
 	
-	((theElementToProcess includes: self topFrame) or: [ self topFrame needsPropertiesComputation ])
-		ifTrue: [ self doComputePropertiesFromRoot: self topFrame ]
+	((theElementToProcess includes: self layerHolder) or: [ self layerHolder needsPropertiesComputation ])
+		ifTrue: [ self doComputePropertiesFromRoot: self layerHolder ]
 		ifFalse: [ self doComputePropertiesOf: theElementToProcess ]
 ]
 
@@ -751,10 +790,10 @@ OBlSpace >> doComputePropertiesOf: aCollectionOfElements [
 	| theGlobalResolvedProperties |
 
 	self
-		assert: [ (aCollectionOfElements includes: self topFrame) not ]
+		assert: [ (aCollectionOfElements includes: self layerHolder) not ]
 		description: [ 'Must not include root' ].
 
-	theGlobalResolvedProperties := self topFrame properties maybeResolvedProperties propertiesToPropagateToChildren.
+	theGlobalResolvedProperties := self layerHolder properties maybeResolvedProperties propertiesToPropagateToChildren.
 	aCollectionOfElements do: [ :eachElement |
 		"it is possible that properties manipulate the graphical scene,
 		therefore we have to check it here again"
@@ -784,7 +823,7 @@ OBlSpace >> doLayout [
 				layoutCounter = 50
 					ifTrue: [ 'Warning: Layout was performed 50 times per frame!' traceCr ] ].
 
-		self topFrame dispatchLayoutDone
+		self layerHolder dispatchLayoutDone
 
 	"I prevent infinite spawn of debuggers"
 	] on: Error do: [ :anError |
@@ -868,8 +907,8 @@ OBlSpace >> doUpdateLayout [
 	elementsToLayout do: [ :eachElement |
 		self doUpdateLayoutBoundary: eachElement context: aBlElementBoundsUpdater ].
 	
-	self topFrame isLayoutRequested
-		ifTrue: [ self doUpdateLayout: self topFrame context: aBlElementBoundsUpdater ].
+	self layerHolder isLayoutRequested
+		ifTrue: [ self doUpdateLayout: self layerHolder context: aBlElementBoundsUpdater ].
 		
 	aBlElementBoundsUpdater commitChanges
 ]
@@ -1053,10 +1092,10 @@ OBlSpace >> findMouseEventTargetAt: aPoint [
 
 	<return: #BlElement or: nil>
 	| found |
-	found :=  self popupRoot findMouseEventTargetAt: aPoint.
-	found == self popupRoot ifFalse: [ ^ found ].
-	found :=  self contextMenuRoot findMouseEventTargetAt: aPoint.
-	found == self contextMenuRoot ifFalse: [ ^ found ].
+	found :=  self popupLayer findMouseEventTargetAt: aPoint.
+	found == self popupLayer ifFalse: [ ^ found ].
+	found :=  self contextMenuLayer findMouseEventTargetAt: aPoint.
+	found == self contextMenuLayer ifFalse: [ ^ found ].
 	^ self root findMouseEventTargetAt: aPoint
 ]
 
@@ -1105,7 +1144,7 @@ OBlSpace >> frame [
 
 { #category : #drawing }
 OBlSpace >> fullDrawOn: anCanvas [
-	anCanvas fullDraw: self topFrame
+	anCanvas fullDraw: self layerHolder
 ]
 
 { #category : #'window - properties' }
@@ -1349,10 +1388,10 @@ OBlSpace >> initialize [
 	frame := BlSpaceFrame new.
 	telemetry := BlNullTelemetry uniqueInstance.
 
-	topFrame := self defaultTopFrame.
-	popupRoot := self defaultPopupRoot.
-	contextMenuRoot := self defaultContextMenuRoot.
-	root := self defaultRoot.
+	layerHolder := self defaultLayerHolder.
+	popupLayer := self defaultPopupLayer.
+	contextMenuLayer := self defaultContextMenuLayer.
+	rootLayer := self defaultRoot.
 
 	self extent: self defaultExtent.
 
@@ -1365,10 +1404,10 @@ OBlSpace >> initialize [
 
 	self updateCursor: BlCursor default.
 
-	self topFrame space: self.
-	self topFrame addChild: self root.
-	self topFrame addChild: self contextMenuRoot.
-	self topFrame addChild: self popupRoot
+	self layerHolder space: self.
+	self layerHolder addChild: self root.
+	self layerHolder addChild: self contextMenuLayer.
+	self layerHolder addChild: self popupLayer
 
 
 ]
@@ -1383,14 +1422,14 @@ OBlSpace >> initializeFocus [
 OBlSpace >> inspectionPreview: aBuilder [
 	"<inspectorPresentationOrder: 1 title: 'Preview'>"
 
-	^ self topFrame inspectionPreview: aBuilder
+	^ self layerHolder inspectionPreview: aBuilder
 ]
 
 { #category : #'-- extensions-spec2 --' }
 OBlSpace >> inspectionTree: aBuilder [
 	<inspectorPresentationOrder: 2 title: 'Tree'>
 
-	^ self topFrame inspectionTree: aBuilder
+	^ self layerHolder inspectionTree: aBuilder
 ]
 
 { #category : #'change - rendering' }
@@ -1399,6 +1438,13 @@ OBlSpace >> invalidRect: aBlBounds from: anElement [
 	self requestNextPulse.
 	
 	self hostSpaceDo: [ :aHostSpace | aHostSpace requestRedraw ]
+]
+
+{ #category : #'change reporting' }
+OBlSpace >> invalidationBounds [
+	<return: #Rectangle>
+
+	^ self layerHolder invalidationBounds
 ]
 
 { #category : #testing }
@@ -1411,7 +1457,7 @@ OBlSpace >> isLayoutRequested [
 	"Indicates whether or not root element's layout needs to be updated next frame"
 	<return: #Boolean>
 	
-	^ self topFrame isLayoutRequested or: [ self elementsNeedingLayout isNotEmpty ]
+	^ self layerHolder isLayoutRequested or: [ self elementsNeedingLayout isNotEmpty ]
 ]
 
 { #category : #testing }
@@ -1458,6 +1504,14 @@ OBlSpace >> knowsPosition [
 	<return: #Boolean>
 
 	^ position notNil
+]
+
+{ #category : #accessing }
+OBlSpace >> layerHolder [
+	"Return my current root element.
+	root can not be nil"
+	
+	^ layerHolder
 ]
 
 { #category : #'focus managing' }
@@ -1552,7 +1606,7 @@ OBlSpace >> needsPropertiesComputation [
 	<return: #Boolean>
 	
 	^ self elementsNeedingPropertiesComputation isNotEmpty
-		or: [ self topFrame needsPropertiesComputation ]
+		or: [ self layerHolder needsPropertiesComputation ]
 ]
 
 { #category : #'change - properties' }
@@ -1590,15 +1644,15 @@ OBlSpace >> onSessionChanged: aNewSession [
 	self beDirtyArea.
 	self requestNextPulse.
 	
-	self topFrame onSessionChanged: aNewSession
+	self layerHolder onSessionChanged: aNewSession
 ]
 
 { #category : #accessing }
-OBlSpace >> popupRoot [
+OBlSpace >> popupLayer [
 	"Return my current root element.
 	root can not be nil"
 	
-	^ popupRoot
+	^ popupLayer
 ]
 
 { #category : #'window - properties' }
@@ -1732,7 +1786,7 @@ OBlSpace >> root [
 	"Return my current root element.
 	root can not be nil"
 	
-	^ root
+	^ rootLayer
 ]
 
 { #category : #accessing }
@@ -1753,7 +1807,7 @@ OBlSpace >> root: anElement [
 		space: self;
 		size: self extent.
 
-	root := anElement
+	rootLayer := anElement
 ]
 
 { #category : #accessing }
@@ -1781,7 +1835,7 @@ OBlSpace >> setExtent: anExtent [
 	"Actually change space and root extent to a given one"
 
 	extent := anExtent.
-	self topFrame requestLayout
+	self layerHolder requestLayout
 ]
 
 { #category : #'private - accessing' }
@@ -1899,14 +1953,6 @@ OBlSpace >> toFront [
 ]
 
 { #category : #accessing }
-OBlSpace >> topFrame [
-	"Return my current root element.
-	root can not be nil"
-	
-	^ topFrame
-]
-
-{ #category : #accessing }
 OBlSpace >> topMostParent [
 	^ self root
 ]
@@ -1978,6 +2024,19 @@ OBlSpace >> windowScale [
 	^ self
 		hostSpaceDo: [ :aHostSpace | aHostSpace scaleFactor ]
 		ifAbsent: [ 1.0 asPoint ]
+]
+
+{ #category : #'api - children enumeration' }
+OBlSpace >> withAllChildrenBreadthFirst [
+	<return: #Collection of: #BlElement>
+	
+	^ self layerHolder withAllChildrenBreadthFirst
+]
+
+{ #category : #'api - children enumeration' }
+OBlSpace >> withAllChildrenBreadthFirstDo: aBlock [ 
+	
+	^ self layerHolder withAllChildrenBreadthFirstDo: aBlock 
 ]
 
 { #category : #'-- extensions-bloc-dev-tool --' }
