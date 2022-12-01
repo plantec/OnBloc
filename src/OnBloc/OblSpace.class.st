@@ -57,7 +57,10 @@ Class {
 		'reference',
 		'elementsNeedingStyle',
 		'elementsNeedingPropertiesComputation',
-		'iconStencil'
+		'iconStencil',
+		'topFrame',
+		'contextMenuRoot',
+		'popupRoot'
 	],
 	#classVars : [
 		'UniqueIdGenerator'
@@ -431,8 +434,8 @@ OBlSpace >> asSpartaForm [
 { #category : #'change - rendering' }
 OBlSpace >> beDirtyArea [
 	self
-		invalidRect: (BlBounds origin: 0.0 @ 0.0 extent: self root extent)
-		from: self root
+		invalidRect: (BlBounds origin: 0.0 @ 0.0 extent: self topFrame extent)
+		from: self topFrame
 ]
 
 { #category : #'window - properties' }
@@ -485,6 +488,14 @@ OBlSpace >> close [
 	(BlParallelUniverse forHost: self host class) closeSpace: self
 ]
 
+{ #category : #accessing }
+OBlSpace >> contextMenuRoot [
+	"Return my current root element.
+	root can not be nil"
+	
+	^ contextMenuRoot
+]
+
 { #category : #'cursor managing' }
 OBlSpace >> currentCursor [
 	^ currentCursor 
@@ -497,6 +508,26 @@ OBlSpace >> currentCursor: aCursor [
 	currentCursor := aCursor.
 	currentCursor ifNil: [ ^ self updateCursor: BlCursor default ].
 	currentCursor activateOn: self
+]
+
+{ #category : #initialization }
+OBlSpace >> defaultContextMenuElevation [
+
+	^ 50
+]
+
+{ #category : #initialization }
+OBlSpace >> defaultContextMenuRoot [
+
+	^ BlElement new
+		  background: Color transparent;
+		  constraintsDo: [ :c | 
+			  c horizontal matchParent.
+			  c vertical matchParent ];
+		  elevation:
+			  (BlRelativeElevation elevation: self defaultContextMenuElevation);
+		  labeled: 'Context menu layer';
+		  yourself
 ]
 
 { #category : #initialization }
@@ -520,16 +551,48 @@ OBlSpace >> defaultExtent [
 ]
 
 { #category : #initialization }
-OBlSpace >> defaultRoot [
+OBlSpace >> defaultPopupElevation [
+
+	^ 100
+]
+
+{ #category : #initialization }
+OBlSpace >> defaultPopupRoot [
+
 	^ BlElement new
-		background: self defaultRootBackground;
-		labeled: self defaultRootLabel;
-		yourself
+		  background: Color transparent;
+		  constraintsDo: [ :c | 
+			  c horizontal matchParent.
+			  c vertical matchParent ];
+		  elevation:
+			  (BlRelativeElevation elevation: self defaultPopupElevation);
+		  labeled: 'Popup layer';
+		  yourself
+]
+
+{ #category : #initialization }
+OBlSpace >> defaultRoot [
+
+	^ BlElement new
+		  background: self defaultRootBackground;
+		  constraintsDo: [ :c | 
+			  c horizontal matchParent.
+			  c vertical matchParent ];
+		  elevation:
+			  (BlRelativeElevation elevation: self defaultRootElevation);
+		  labeled: self defaultRootLabel;
+		  yourself
 ]
 
 { #category : #initialization }
 OBlSpace >> defaultRootBackground [
 	^ Color white
+]
+
+{ #category : #initialization }
+OBlSpace >> defaultRootElevation [
+
+	^ 0
 ]
 
 { #category : #initialization }
@@ -540,6 +603,14 @@ OBlSpace >> defaultRootLabel [
 { #category : #initialization }
 OBlSpace >> defaultTitle [
 	^ ''
+]
+
+{ #category : #initialization }
+OBlSpace >> defaultTopFrame [
+
+	^ BlElement new
+		  layout: BlFrameLayout new;
+		  yourself
 ]
 
 { #category : #'window - properties' }
@@ -605,8 +676,8 @@ OBlSpace >> doComputeProperties [
 	
 	self elementsNeedingPropertiesComputation removeAll.
 	
-	((theElementToProcess includes: self root) or: [ self root needsPropertiesComputation ])
-		ifTrue: [ self doComputePropertiesFromRoot: self root ]
+	((theElementToProcess includes: self topFrame) or: [ self topFrame needsPropertiesComputation ])
+		ifTrue: [ self doComputePropertiesFromRoot: self topFrame ]
 		ifFalse: [ self doComputePropertiesOf: theElementToProcess ]
 ]
 
@@ -680,10 +751,10 @@ OBlSpace >> doComputePropertiesOf: aCollectionOfElements [
 	| theGlobalResolvedProperties |
 
 	self
-		assert: [ (aCollectionOfElements includes: self root) not ]
+		assert: [ (aCollectionOfElements includes: self topFrame) not ]
 		description: [ 'Must not include root' ].
 
-	theGlobalResolvedProperties := self root properties maybeResolvedProperties propertiesToPropagateToChildren.
+	theGlobalResolvedProperties := self topFrame properties maybeResolvedProperties propertiesToPropagateToChildren.
 	aCollectionOfElements do: [ :eachElement |
 		"it is possible that properties manipulate the graphical scene,
 		therefore we have to check it here again"
@@ -713,7 +784,7 @@ OBlSpace >> doLayout [
 				layoutCounter = 50
 					ifTrue: [ 'Warning: Layout was performed 50 times per frame!' traceCr ] ].
 
-		self root dispatchLayoutDone
+		self topFrame dispatchLayoutDone
 
 	"I prevent infinite spawn of debuggers"
 	] on: Error do: [ :anError |
@@ -797,8 +868,8 @@ OBlSpace >> doUpdateLayout [
 	elementsToLayout do: [ :eachElement |
 		self doUpdateLayoutBoundary: eachElement context: aBlElementBoundsUpdater ].
 	
-	self root isLayoutRequested
-		ifTrue: [ self doUpdateLayout: self root context: aBlElementBoundsUpdater ].
+	self topFrame isLayoutRequested
+		ifTrue: [ self doUpdateLayout: self topFrame context: aBlElementBoundsUpdater ].
 		
 	aBlElementBoundsUpdater commitChanges
 ]
@@ -973,6 +1044,22 @@ OBlSpace >> extractUnstyled: aSetOfElements [
 		suchThat: [ :eachParent | eachParent needsStyle ]
 ]
 
+{ #category : #'event handling' }
+OBlSpace >> findMouseEventTargetAt: aPoint [
+
+	"Return the deepest child element among all my children or myself that may be a target for mouse event at provided location.
+	The coordinate point is given in space coordinates.
+	I may return nil if no such child is found and if I can not be event target either"
+
+	<return: #BlElement or: nil>
+	| found |
+	found :=  self popupRoot findMouseEventTargetAt: aPoint.
+	found == self popupRoot ifFalse: [ ^ found ].
+	found :=  self contextMenuRoot findMouseEventTargetAt: aPoint.
+	found == self contextMenuRoot ifFalse: [ ^ found ].
+	^ self root findMouseEventTargetAt: aPoint
+]
+
 { #category : #'focus managing' }
 OBlSpace >> focusOwner [
 	<return: #BlElement>
@@ -1018,7 +1105,7 @@ OBlSpace >> frame [
 
 { #category : #drawing }
 OBlSpace >> fullDrawOn: anCanvas [
-	anCanvas fullDraw: self root
+	anCanvas fullDraw: self topFrame
 ]
 
 { #category : #'window - properties' }
@@ -1262,6 +1349,9 @@ OBlSpace >> initialize [
 	frame := BlSpaceFrame new.
 	telemetry := BlNullTelemetry uniqueInstance.
 
+	topFrame := self defaultTopFrame.
+	popupRoot := self defaultPopupRoot.
+	contextMenuRoot := self defaultContextMenuRoot.
 	root := self defaultRoot.
 
 	self extent: self defaultExtent.
@@ -1275,7 +1365,12 @@ OBlSpace >> initialize [
 
 	self updateCursor: BlCursor default.
 
-	self root space: self
+	self topFrame space: self.
+	self topFrame addChild: self root.
+	self topFrame addChild: self contextMenuRoot.
+	self topFrame addChild: self popupRoot
+
+
 ]
 
 { #category : #'focus managing' }
@@ -1288,14 +1383,14 @@ OBlSpace >> initializeFocus [
 OBlSpace >> inspectionPreview: aBuilder [
 	"<inspectorPresentationOrder: 1 title: 'Preview'>"
 
-	^ self root inspectionPreview: aBuilder
+	^ self topFrame inspectionPreview: aBuilder
 ]
 
 { #category : #'-- extensions-spec2 --' }
 OBlSpace >> inspectionTree: aBuilder [
 	<inspectorPresentationOrder: 2 title: 'Tree'>
 
-	^ self root inspectionTree: aBuilder
+	^ self topFrame inspectionTree: aBuilder
 ]
 
 { #category : #'change - rendering' }
@@ -1316,7 +1411,7 @@ OBlSpace >> isLayoutRequested [
 	"Indicates whether or not root element's layout needs to be updated next frame"
 	<return: #Boolean>
 	
-	^ self root isLayoutRequested or: [ self elementsNeedingLayout isNotEmpty ]
+	^ self topFrame isLayoutRequested or: [ self elementsNeedingLayout isNotEmpty ]
 ]
 
 { #category : #testing }
@@ -1457,7 +1552,7 @@ OBlSpace >> needsPropertiesComputation [
 	<return: #Boolean>
 	
 	^ self elementsNeedingPropertiesComputation isNotEmpty
-		or: [ self root needsPropertiesComputation ]
+		or: [ self topFrame needsPropertiesComputation ]
 ]
 
 { #category : #'change - properties' }
@@ -1495,7 +1590,15 @@ OBlSpace >> onSessionChanged: aNewSession [
 	self beDirtyArea.
 	self requestNextPulse.
 	
-	self root onSessionChanged: aNewSession
+	self topFrame onSessionChanged: aNewSession
+]
+
+{ #category : #accessing }
+OBlSpace >> popupRoot [
+	"Return my current root element.
+	root can not be nil"
+	
+	^ popupRoot
 ]
 
 { #category : #'window - properties' }
@@ -1678,7 +1781,7 @@ OBlSpace >> setExtent: anExtent [
 	"Actually change space and root extent to a given one"
 
 	extent := anExtent.
-	self root requestLayout
+	self topFrame requestLayout
 ]
 
 { #category : #'private - accessing' }
@@ -1793,6 +1896,14 @@ OBlSpace >> toBack [
 { #category : #'api - displaying' }
 OBlSpace >> toFront [
 	self hostSpace ifNotNil: [ :hw | hw toFront ]
+]
+
+{ #category : #accessing }
+OBlSpace >> topFrame [
+	"Return my current root element.
+	root can not be nil"
+	
+	^ topFrame
 ]
 
 { #category : #accessing }
