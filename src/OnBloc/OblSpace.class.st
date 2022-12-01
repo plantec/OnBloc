@@ -417,6 +417,19 @@ OBlSpace >> addChild: anElement [
 	self root addChild: anElement
 ]
 
+{ #category : #drawing }
+OBlSpace >> aeAsForm [
+
+	^ self layerHolder aeAsForm
+]
+
+{ #category : #drawing }
+OBlSpace >> aeDrawOn: aeCanvas [
+
+	self layerHolder aeDrawOn: aeCanvas
+
+]
+
 { #category : #accessing }
 OBlSpace >> asReference [
 	<return: #BlSpaceReference>
@@ -1147,6 +1160,12 @@ OBlSpace >> fullDrawOn: anCanvas [
 	anCanvas fullDraw: self layerHolder
 ]
 
+{ #category : #'-- extensions-bloc-dev-tool --' }
+OBlSpace >> fullPaintWithTransformOn: aCompositorPainter offset: anOffset [
+
+	self layerHolder fullPaintWithTransformOn: aCompositorPainter offset: anOffset
+]
+
 { #category : #'window - properties' }
 OBlSpace >> fullscreen [
 	"Return true if an underlying window is in fullscreen mode,
@@ -1200,6 +1219,12 @@ OBlSpace >> gestureProcessor [
 { #category : #'focus managing' }
 OBlSpace >> grabFocus [
 	self focused: true
+]
+
+{ #category : #'-- extensions-bloc-dev-tool --' }
+OBlSpace >> hasCompositionLayer [
+
+	^ self layerHolder hasCompositionLayer
 ]
 
 { #category : #testing }
@@ -1981,10 +2006,28 @@ OBlSpace >> updateCursor: aBlCursor [
 	self hostSpaceDo: [ :aHostSpace | aHostSpace cursor: aBlCursor ]
 ]
 
+{ #category : #drawing }
+OBlSpace >> useAlexandrieMorphicWindowHost [
+	
+	self host: BAMorphicWindowHost new
+]
+
+{ #category : #drawing }
+OBlSpace >> useAlexandrieOSWindowSDL2Host [
+	
+	self host: BAOSWindowSDL2Host new
+]
+
 { #category : #'host dependent - ToDo' }
 OBlSpace >> visualBoundsOf: aBlElement [
 
 	^ host visualBoundsOf: aBlElement
+]
+
+{ #category : #'-- extensions-bloc-dev-tool --' }
+OBlSpace >> wantsSeparateCompositingLayer [
+
+	^ self layerHolder wantsSeparateCompositingLayer
 ]
 
 { #category : #'window - properties' }
