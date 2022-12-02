@@ -49,6 +49,13 @@ OBlMouseProcessor >> canStartDrag: aMouseMoveEvent [
 				and: [ (aMouseMoveEvent position - previousMouseDownEvent position) r > self startDragThreshold ] ] ]
 ]
 
+{ #category : #'event processing' }
+OBlMouseProcessor >> checkLastOverTarget [
+
+	(lastOverTarget isNotNil and: [lastOverTarget isAttachedToSceneGraph not]) ifFalse: [ ^ self ].
+	lastOverTarget := nil
+]
+
 { #category : #accessing }
 OBlMouseProcessor >> dblClickDelay [
 	^ self class dblClickDelay
@@ -258,7 +265,7 @@ OBlMouseProcessor >> handleMouseMove: aMouseMoveEvent [
 	"picking and mouse move"
 	
 	aTargetElement := self processPicking: aMouseMoveEvent.
-
+aTargetElement traceCr.
 	self
 		assert: [ aTargetElement isAttachedToSceneGraph ]
 		description: [ 'Target element must be attached to the scene graph' ].
@@ -534,20 +541,11 @@ OBlMouseProcessor >> processPicking: aMouseEvent [
 
 	<return: #BlElement>
 	| aTargetElement |
-	(lastOverTarget isNotNil and: [ 
-		 lastOverTarget isAttachedToSceneGraph not ]) ifTrue: [ 
-		lastOverTarget := nil ].
-
-	"if the last over target contains the point we can start picking from it"
-	aTargetElement := (aMouseEvent isMouseMove and: [ 
-		                   lastOverTarget isNotNil and: [ 
-			                   lastOverTarget containsGlobalPoint:
-				                   aMouseEvent position ] ])
-		                  ifTrue: [ lastOverTarget findMouseEventTargetAt: aMouseEvent position ]
-		                  ifFalse: [ self space findMouseEventTargetAt: aMouseEvent position ].
+	self checkLastOverTarget.
+	"Start picking from root to ensure checking all space layers"
+	aTargetElement := self space findMouseEventTargetAt: aMouseEvent position.
 	"we have to ensure that aTarget is not nil"
-	aTargetElement ifNil: [ aTargetElement := self space root ].
-	^ aTargetElement
+	^ aTargetElement ifNil: [ aTargetElement := self space root ]
 ]
 
 { #category : #accessing }
