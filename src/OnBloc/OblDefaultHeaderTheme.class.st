@@ -8,7 +8,7 @@ Class {
 		'defaultTextColor',
 		'secondaryBackgroundColor'
 	],
-	#category : #'OnBloc-theme'
+	#category : #'OnBloc-Theme'
 }
 
 { #category : #accessing }

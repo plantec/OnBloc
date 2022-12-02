@@ -5,7 +5,7 @@ Class {
 		'color',
 		'errorColor'
 	],
-	#category : #'OnBloc-theme'
+	#category : #'OnBloc-Theme'
 }
 
 { #category : #accessing }

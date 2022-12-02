@@ -5,7 +5,7 @@ Class {
 		'borderColor',
 		'focusedBorderColor'
 	],
-	#category : #'OnBloc-theme'
+	#category : #'OnBloc-Theme'
 }
 
 { #category : #accessing }

@@ -9,7 +9,7 @@ Class {
 		'focusedBorderColor',
 		'pressedColor'
 	],
-	#category : #'OnBloc-theme'
+	#category : #'OnBloc-Theme'
 }
 
 { #category : #accessing }

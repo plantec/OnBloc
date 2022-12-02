@@ -1,18 +1,20 @@
 "
-I'm a replacement for `BlSpace`. The idea is to simplify and to remove complex implicit computations that are implemented in `BlSpace`. 
-For now:
+I'm a replacement for `BlSpace`. The idea is to simplify and to remove complex  computations that are implemented in `BlSpace`. 
+For now
 - I don't use layout resizing propagation rules at all (compare `BlSpace>>#doStyle` and `ToSpace>>#doStyle`)
+
+- I bring a different toplevel structure. I'm made of a `layerHolder` with owns all top level holders which are layouted on top of each other, with the same extent (`rootLayer`, `contextMenuLayer` and `popupLayer`) 
 
 ## Comments from `BlSpace`
 I am the logical representation of a window in Bloc regardless of the current Host in use.
 Here are some of the important objects I use and talk to:
-- {{gtClass:BlCursor}}
-- {{gtClass:BlTime}}
-- Various {{gtClass:BlBaseEventProcessor}} subclasses broker different{{gtClass:BlEvent}}types
-- {{gtClass:BlSpaceFrame}}
+- `BlCursor`
+- `BlTime`
+- Various `BlBaseEventProcessor` subclasses broker `BlEvent` types
+- `BlSpaceFrame`
 
 ## Gracefully closing the image when a space is closed
-A common use case is to quit the application when some particular space is closed. To do this, we provide {{gtClass:BlSpaceShutdownOnCloseListener}} which can be added to any space as an event handler. It listens for a {{gtClass:BlSpaceClosedEvent}}, which is sent after a space is closed. See the listener class for configuration options.
+A common use case is to quit the application when some particular space is closed. To do this, we provide `BlSpaceShutdownOnCloseListener` which can be added to any space as an event handler. It listens for a `BlSpaceClosedEvent`, which is sent after a space is closed. See the listener class for configuration options.
 
 "
 Class {
@@ -65,7 +67,7 @@ Class {
 	#classVars : [
 		'UniqueIdGenerator'
 	],
-	#category : #'OnBloc-space'
+	#category : #'OnBloc-Space'
 }
 
 { #category : #'private - change' }
@@ -441,13 +443,15 @@ OBlSpace >> asReference [
 OBlSpace >> asSpartaForm [
 	<return: #Form>
 
-	^ self root asSpartaForm
+	^ self layerHolder asSpartaForm
 ]
 
 { #category : #'change - rendering' }
 OBlSpace >> beDirtyArea [
+
 	self
-		invalidRect: (BlBounds origin: 0.0 @ 0.0 extent: self layerHolder extent)
+		invalidRect:
+		(BlBounds origin: 0.0 @ 0.0 extent: self layerHolder extent)
 		from: self layerHolder
 ]
 
@@ -500,6 +504,7 @@ OBlSpace >> children [
 
 { #category : #'change - rendering' }
 OBlSpace >> clearDirtyAreas [
+
 	"Clear all dirty areas.
 	Default implementation simply removes all areas from the collection"
 
@@ -514,7 +519,7 @@ OBlSpace >> close [
 	(BlParallelUniverse forHost: self host class) closeSpace: self
 ]
 
-{ #category : #'api-painting' }
+{ #category : #'api - painting' }
 OBlSpace >> compositionLayer [
 	"Return my composition layer if I have one or nil otherwise"
 	<return: #BlCompositionLayer or: nil>
@@ -978,6 +983,7 @@ OBlSpace >> elementsNeedingLayout [
 
 { #category : #'change - rendering' }
 OBlSpace >> elementsNeedingPaint [
+
 	^ elementsNeedingPaint
 ]
 
@@ -1097,6 +1103,24 @@ OBlSpace >> extractUnstyled: aSetOfElements [
 ]
 
 { #category : #'event handling' }
+OBlSpace >> findMouseDownEventTarget: anEvent [
+
+	"Return the deepest child element among all my children or myself that may be a target for mouse event at provided location.
+	The coordinate point is given in space coordinates.
+	I may return nil if no such child is found and if I can not be event target either"
+
+	<return: #BlElement or: nil>
+	self children sortedByElevation reversed do: [ :eachChild | 
+		| found |
+		found := eachChild findMouseEventTargetAt: anEvent position.
+		(found notNil and: [ found ~~ eachChild ]) ifTrue: [
+			self processMouseDown: anEvent inside: found on: self popupLayer.
+			^ found ] ].
+	self processMouseDown: anEvent inside: nil on: self popupLayer.
+	^ nil
+]
+
+{ #category : #'event handling' }
 OBlSpace >> findMouseEventTargetAt: aPoint [
 
 	"Return the deepest child element among all my children or myself that may be a target for mouse event at provided location.
@@ -1104,12 +1128,12 @@ OBlSpace >> findMouseEventTargetAt: aPoint [
 	I may return nil if no such child is found and if I can not be event target either"
 
 	<return: #BlElement or: nil>
-	| found |
-	found :=  self popupLayer findMouseEventTargetAt: aPoint.
-	found == self popupLayer ifFalse: [ ^ found ].
-	found :=  self contextMenuLayer findMouseEventTargetAt: aPoint.
-	found == self contextMenuLayer ifFalse: [ ^ found ].
-	^ self root findMouseEventTargetAt: aPoint
+	self children sortedByElevation reversed do: [ :eachChild | 
+		| found |
+		found := eachChild findMouseEventTargetAt: aPoint.
+		(found notNil and: [ found ~~ eachChild ]) ifTrue: [
+			^ found ] ].
+	^ nil
 ]
 
 { #category : #'focus managing' }
@@ -1157,6 +1181,7 @@ OBlSpace >> frame [
 
 { #category : #drawing }
 OBlSpace >> fullDrawOn: anCanvas [
+
 	anCanvas fullDraw: self layerHolder
 ]
 
@@ -1402,7 +1427,7 @@ OBlSpace >> initialize [
 	eventRecorder := self defaultEventRecorder.
 	self initDispatcher.
 	
-	mouseProcessor := BlMouseProcessor space: self.
+	mouseProcessor := OBlMouseProcessor space: self.
 	focusProcessor := BlFocusProcessor space: self.
 	keyboardProcessor := BlKeyboardProcessor space: self.
 	touchProcessor := BlTouchProcessor space: self.
@@ -1459,9 +1484,10 @@ OBlSpace >> inspectionTree: aBuilder [
 
 { #category : #'change - rendering' }
 OBlSpace >> invalidRect: aBlBounds from: anElement [
+
 	self makeDirty: aBlBounds.
 	self requestNextPulse.
-	
+
 	self hostSpaceDo: [ :aHostSpace | aHostSpace requestRedraw ]
 ]
 
@@ -1559,6 +1585,7 @@ OBlSpace >> makeDirty: aBlBounds [
 
 { #category : #'change - rendering' }
 OBlSpace >> markNeedsCompositionPaint: anElement from: aSourceElement [
+
 	self beDirtyArea.
 	self hostSpaceDo: [ :aHostSpace | aHostSpace requestRedraw ].
 	self requestNextPulse
@@ -1566,6 +1593,7 @@ OBlSpace >> markNeedsCompositionPaint: anElement from: aSourceElement [
 
 { #category : #'change - rendering' }
 OBlSpace >> markNeedsPaint: anElement from: aSourceElement [
+
 	self beDirtyArea.
 	self elementsNeedingPaint add: anElement.
 	self hostSpaceDo: [ :aHostSpace | aHostSpace requestRedraw ].
@@ -1708,6 +1736,21 @@ OBlSpace >> printOn: aStream [
 		<< ')'
 ]
 
+{ #category : #'event handling' }
+OBlSpace >> processMouseDown: anEvent inside: anElement on: aLayer [
+
+	| evt |
+	evt := anEvent clone.
+	"evt traceCr.
+	anElement traceCr."
+	aLayer childrenDo: [ :child | 
+		(anElement isNil or: [ (child == anElement or: [ anElement hasParent: child ]) not ]) 
+			ifTrue: [ 
+				child dispatchEvent: (BlSpaceMouseDownOutsideEvent new
+						 event: evt;
+						 yourself) ] ]
+]
+
 { #category : #pulse }
 OBlSpace >> processPulse [
 	self ensureSession.
@@ -1732,9 +1775,10 @@ OBlSpace >> pulse [
 
 { #category : #'change - rendering' }
 OBlSpace >> pulseRequested [
-	"Return true if space pulse was requested, false otherwise"
-	<return: #Boolean>
 
+	"Return true if space pulse was requested, false otherwise"
+
+	<return: #Boolean>
 	^ nextPulseRequested
 ]
 
@@ -1773,6 +1817,7 @@ OBlSpace >> requestLayout: anElement [
 
 { #category : #'change - rendering' }
 OBlSpace >> requestNextPulse [
+
 	nextPulseRequested := true
 ]
 
@@ -2003,6 +2048,7 @@ OBlSpace >> universe [
 
 { #category : #'cursor managing' }
 OBlSpace >> updateCursor: aBlCursor [
+
 	self hostSpaceDo: [ :aHostSpace | aHostSpace cursor: aBlCursor ]
 ]
 

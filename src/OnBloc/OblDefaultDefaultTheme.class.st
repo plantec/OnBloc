@@ -14,7 +14,7 @@ Class {
 		'distinctTenLightColors',
 		'contentBackgroundColor'
 	],
-	#category : #'OnBloc-theme'
+	#category : #'OnBloc-Theme'
 }
 
 { #category : #accessing }

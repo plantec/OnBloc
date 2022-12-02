@@ -11,7 +11,7 @@ Class {
 		'paleErrorBackgroundColor',
 		'failureBackgroundColor'
 	],
-	#category : #'OnBloc-theme'
+	#category : #'OnBloc-Theme'
 }
 
 { #category : #accessing }

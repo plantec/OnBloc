@@ -10,7 +10,7 @@ Class {
 		'item',
 		'header'
 	],
-	#category : #'OnBloc-theme'
+	#category : #'OnBloc-Theme'
 }
 
 { #category : #accessing }

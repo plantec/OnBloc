@@ -43,7 +43,7 @@ Class {
 		'TextHighlightColor',
 		'TextMarkupColor'
 	],
-	#category : #'OnBloc-theme'
+	#category : #'OnBloc-Theme'
 }
 
 { #category : #accessing }

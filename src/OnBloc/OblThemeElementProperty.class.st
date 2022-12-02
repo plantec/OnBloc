@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'theme'
 	],
-	#category : #'OnBloc-theme'
+	#category : #'OnBloc-Theme'
 }
 
 { #category : #accessing }

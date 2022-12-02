@@ -14,7 +14,7 @@ Class {
 		'hoveredTextColor',
 		'textHighlightColor'
 	],
-	#category : #'OnBloc-theme'
+	#category : #'OnBloc-Theme'
 }
 
 { #category : #accessing }

@@ -25,7 +25,7 @@ Class {
 	#classInstVars : [
 		'default'
 	],
-	#category : #'OnBloc-theme'
+	#category : #'OnBloc-Theme'
 }
 
 { #category : #initialization }
