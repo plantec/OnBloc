@@ -265,7 +265,6 @@ OBlMouseProcessor >> handleMouseMove: aMouseMoveEvent [
 	"picking and mouse move"
 	
 	aTargetElement := self processPicking: aMouseMoveEvent.
-aTargetElement traceCr.
 	self
 		assert: [ aTargetElement isAttachedToSceneGraph ]
 		description: [ 'Target element must be attached to the scene graph' ].
