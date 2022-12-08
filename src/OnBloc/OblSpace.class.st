@@ -428,7 +428,7 @@ OBlSpace >> aeAsForm [
 { #category : #drawing }
 OBlSpace >> aeDrawOn: aeCanvas [
 
-	self layerHolder aeDrawOn: aeCanvas
+	self layerHolder aeFullDrawOn: aeCanvas
 
 ]
 
