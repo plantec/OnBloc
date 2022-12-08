@@ -526,7 +526,7 @@ OBlMouseProcessor >> processMouseUp: aMouseUpEvent [
 					lastClickEvent := nil.
 					self fireEvent: aMouseUpEvent asDoubleClickEvent ]
 				ifFalse: [ 
-					| aClickEvent |
+					| aClickEvent | 
 					aClickEvent := aMouseUpEvent asClickEvent.
 					self fireEvent: aClickEvent.
 					lastClickEvent := aClickEvent copy ] ]
