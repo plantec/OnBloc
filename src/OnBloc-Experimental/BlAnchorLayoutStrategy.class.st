@@ -1,15 +1,21 @@
 Class {
 	#name : #BlAnchorLayoutStrategy,
-	#superclass : #BlLayoutStrategy,
+	#superclass : #BlLayout,
 	#category : #'OnBloc-Experimental-LayoutStrategy'
 }
 
 { #category : #layout }
-BlAnchorLayoutStrategy >> layout: aMorph in: newBounds [
-	
-	"Arrange the submorph based on anchors "
-	" Warning: circular dependencies may exists in such a layout. Have to check this case "
-	
-	self flag: #broken.
-	aMorph layoutComponentsDo: [ :sm | sm bounds: (aMorph globalBoundsToLocal: (sm anchoredBoundsIn: newBounds)) ].
+BlAnchorLayoutStrategy >> layout: anElement in: aRectangle context: aBlElementBoundsUpdater [
+
+	anElement children accountedByLayout do: [ :child |
+		| childLayoutBounds |
+		childLayoutBounds := child constraints position extent: child measuredExtent.
+		child applyLayoutIn: childLayoutBounds context: aBlElementBoundsUpdater].
+	self layoutIgnored: anElement context: aBlElementBoundsUpdater
+]
+
+{ #category : #layout }
+BlAnchorLayoutStrategy >> measure: anElement with: anExtentSpec [
+
+	super measure: anElement with: anExtentSpec
 ]

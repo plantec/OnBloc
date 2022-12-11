@@ -6,5 +6,7 @@ Class {
 
 { #category : #evaluating }
 BlViewTopAnchor >> value [
-	^ (view localPointToGlobal: self view layoutBounds topRight) y 
+	"^ (view localPointToGlobal: self view layoutBounds topRight) y "
+	
+	^ self view bounds inSpace bounds top
 ]
