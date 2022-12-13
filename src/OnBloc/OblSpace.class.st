@@ -1741,6 +1741,7 @@ OBlSpace >> processMouseDown: anEvent inside: anElement on: aLayer [
 
 	| evt |
 	evt := anEvent clone.
+	evt currentTarget: anElement.
 	"evt traceCr.
 	anElement traceCr."
 	aLayer childrenDo: [ :child | 
