@@ -12,24 +12,22 @@ OBlExample_ImageGallery class >> exampleGallery [
 		title: 'Gallery'.
 
 	container := BlElement new
-		layout: BlFrameLayout new;
 		background: Color veryDarkGray;
 		layout: BlLinearLayout vertical;
 		constraintsDo: [ :c |
 			c horizontal matchParent.
 			c vertical matchParent.
 			"will take 100% of the parent"
-			c linear weight: 1 ];
+			"c linear weight: 1" ];
 		yourself.	
 
 	header := BlElement new
-		layout: BlLinearLayout vertical;
-		"effect: (BlBlurBelowEffect radius: 4);"
+		layout: BlFrameLayout new;
 		background: (Color black alpha: 0.6);
 		constraintsDo: [ :c |
 			c horizontal matchParent.
 			c vertical fitContent.
-			c frame vertical alignTop.
+			c linear vertical alignTop.
 			c padding: (BlInsets top: 15 right: 0 bottom: 15 left: 0) ];
 		yourself.
 
@@ -42,8 +40,8 @@ OBlExample_ImageGallery class >> exampleGallery [
 		constraintsDo: [ :c |
 			c horizontal fitContent.
 			c vertical fitContent.
-			c linear horizontal alignCenter.
-			c linear vertical alignCenter ];
+			c frame horizontal alignCenter.
+			c frame vertical alignCenter ];
 		yourself.
 		
 	header addChild: headerText.
@@ -53,11 +51,12 @@ OBlExample_ImageGallery class >> exampleGallery [
 			c horizontal matchParent.
 			c vertical matchParent ];
 		yourself.
-list inspect.
-	container addChildren: { header. list }.
+
+	container addChildren: { list }.
+	space root addChild: header.
 	space root addChild: container.
 	space root background: Color veryVeryDarkGray.
-	space root layout: BlLinearLayout horizontal.
-	space root layout weightSum: 1.
+	space root layout: BlLinearLayout vertical.
+	"space root layout weightSum: 1."
 	space show
 ]
