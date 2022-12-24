@@ -833,19 +833,13 @@ OBlInfiniteLinearLayout >> layoutChunkContext: aBlElementBoundsUpdateContext [
 	(layoutState hasMoreItems: self state)
 		ifFalse: [ ^ aResult finished: true ].
 
-	infiniteElement telemetry
-		timeSync: [ 'Chunk add ', self class name ]
-		during: [ anElement := self layoutChunkAdd ].
+	anElement := self layoutChunkAdd.
 
-	infiniteElement telemetry
-		timeSync: [ 'Chunk measure ', anElement class name ]
-		during: [ anElementBounds := self layoutChunkMeasure: anElement result: aResult. ].
+	anElementBounds := self layoutChunkMeasure: anElement result: aResult.
 	
 	"We calculate everything with Element's bounding box (which includes decor and margins)
 	To calculate correct layout position, we subtract margins."
-	infiniteElement telemetry
-		timeSync: [ 'Chunk layout ', anElement class name ]
-		during: [ self layoutDecoratedWithMargins: anElement in: anElementBounds context: aBlElementBoundsUpdateContext ].
+	self layoutDecoratedWithMargins: anElement in: anElementBounds context: aBlElementBoundsUpdateContext.
 	
 	anInfiniteConstraints := anElement constraints infinite.
 	"Consume the available space if the element is not removed OR changed"
