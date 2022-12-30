@@ -767,58 +767,44 @@ OBlInfiniteLinearLayout >> layoutChildrenIn: aBlInfiniteRecycler state: aBlInfin
 
 { #category : #layout }
 OBlInfiniteLinearLayout >> layoutChunkAdd [
+
 	<return: #BlElement>
 	| anElement |
+	anElement := layoutState
+		             nextElement: self recycler
+		             in: infiniteElement.
 
-	infiniteElement telemetry
-		timeSync: [ 'Get next element' ]
-		during: [ anElement := layoutState nextElement: self recycler in: infiniteElement ].
-
-	self
-		assert: [ anElement isNotNil ]
-		description: [ 'Next element can not be nil if we have items to display' ].
-	
-	infiniteElement telemetry
-		timeSync: [ 'Add {1} as child' format: { anElement } ]
-		during: [
-			layoutState hasScrapList
-				ifFalse: [ (shouldReverseLayout = layoutState isLayoutStartDirection)
-					"add child as last"
-					ifTrue: [ self addChild: anElement ]
-					"add child as first"
-					ifFalse: [ self addChild: anElement at: 1 ] ]
-				ifTrue: [ (shouldReverseLayout = layoutState isLayoutStartDirection)
-					"add child as last"
-					ifTrue: [ self addDisappearingChild: anElement ]
-					"add child as first"
-					ifFalse: [ self addDisappearingChild: anElement at: 1 ] ] ].
-
-	(infiniteElement isAttachedToSceneGraph and: [ infiniteElement space notNil ])
+	layoutState hasScrapList
+		ifFalse: [ 
+			shouldReverseLayout = layoutState isLayoutStartDirection
+				ifTrue: [ "add child as first" self addChild: anElement ]
+				ifFalse: [ self addChild: anElement at: 1 ]
+			"add child as last" ]
 		ifTrue: [ 
-			(infiniteElement space needsStyleComputation: anElement)
-				ifTrue: [
-					infiniteElement telemetry
-						timeSync: [ 'Compute chunk style {1}' format: { anElement } ]
-						during: [
-							anElement ignoreRequestLayoutDuring: [
-								infiniteElement space doStyle: anElement ] ] ] ].
+			shouldReverseLayout = layoutState isLayoutStartDirection
+				ifTrue: [ "add child as first" 
+				self addDisappearingChild: anElement ]
+				ifFalse: [ self addDisappearingChild: anElement at: 1 ]
+			"add child as last" ].
+
+	(infiniteElement isAttachedToSceneGraph and: [ 
+		 infiniteElement space notNil ]) ifTrue: [ 
+		(infiniteElement space needsStyleComputation: anElement) ifTrue: [ 
+			anElement ignoreRequestLayoutDuring: [ 
+				infiniteElement space doStyle: anElement ] ] ].
 
 	"we should check if an element is attached to the scene graph again, because styles may remove it from the space"
-	(infiniteElement isAttachedToSceneGraph and: [ infiniteElement space notNil ])
-		ifTrue: [ 
-			self flag: #TODO.
-			"revisit needsPropertiesComputation:"
-			((infiniteElement space canComputeProperties: anElement) and: [ true"infiniteElement space needsPropertiesComputation: anElement" ])
-				ifTrue: [
-					infiniteElement telemetry
-						timeSync: [ 'Compute chunk properties {1}' format: { anElement } ]
-						during: [
-							infiniteElement ignoreRequestLayoutDuring: [
-								infiniteElement space doComputePropertiesOf: { anElement } ] ] ] ].
+	(infiniteElement isAttachedToSceneGraph and: [ 
+		 infiniteElement space notNil ]) ifTrue: [ 
+		self flag: #TODO.
+		"revisit needsPropertiesComputation:"
+		((infiniteElement space canComputeProperties: anElement) and: [ 
+			 true "infiniteElement space needsPropertiesComputation: anElement" ]) 
+			ifTrue: [ 
+				infiniteElement ignoreRequestLayoutDuring: [ 
+					infiniteElement space doComputePropertiesOf: { anElement } ] ] ].
 
-	infiniteElement telemetry
-		timeSync: [ 'Notify chunk added {1}' format: { anElement } ]
-		during: [ self notifyChunkAdded: anElement ].
+	self notifyChunkAdded: anElement.
 
 	^ anElement
 ]

@@ -224,6 +224,7 @@ OBlInfiniteLinearLayoutState >> nextElement: aRecycler in: anInfiniteElement [
 	Also update current item index to the next item, based on itemDirection."
 
 	<return: #BlElement>
+	
 	^ self hasScrapList
 		  ifTrue: [ self nextElementFromScrapList ]
 		  ifFalse: [ 
@@ -295,6 +296,7 @@ OBlInfiniteLinearLayoutState >> offset: aNumber [
 
 { #category : #accessing }
 OBlInfiniteLinearLayoutState >> scrapList: aCollectionOfScrappedElement [
+
 	scrapList := aCollectionOfScrappedElement
 ]
 

@@ -262,15 +262,6 @@ OBlInfiniteHolder >> saveOldPosition [
 		ifTrue: [ previousPosition := position ]
 ]
 
-{ #category : #'private - testing' }
-OBlInfiniteHolder >> shouldBeKeptAsChild [
-	"Return true if we have animations referring to this element holder or not.
-	This is inverted, a bit more domain specific version of isRecyclable"
-	<return: #Boolean>
-
-	^ 	self flags hasNotRecyclable
-]
-
 { #category : #'private - flags testing' }
 OBlInfiniteHolder >> shouldIgnore [
 	^ self flags hasIgnore
