@@ -919,7 +919,7 @@ OBlInfiniteLayout >> onItemsRemovedAt: positionStart count: itemCount [
 ]
 
 { #category : #'items - hooks' }
-OBlInfiniteLayout >> onItemsUpdatedAt: positionStart count: itemCount payload: payload [
+OBlInfiniteLayout >> onItemsUpdatedAt: positionStart count: itemCount [
 ]
 
 { #category : #'scrolling - hooks' }

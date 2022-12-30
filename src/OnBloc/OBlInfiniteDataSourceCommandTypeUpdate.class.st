@@ -22,13 +22,13 @@ OBlInfiniteDataSourceCommandTypeUpdate >> apply: aCommand in: anInfiniteElement 
 		(holder isNotNil or: [ anInfiniteElement dataSourceManager canFindInPreLayout: position  ])
 			ifTrue: [ 
 				type = command typeInvisible ifTrue: [ 
-					self dispatchOn: anInfiniteElement start: tmpStart count: tmpCount payload: command payload.
+					self dispatchOn: anInfiniteElement start: tmpStart count: tmpCount.
 					tmpCount := 0.
 					tmpStart := position ].
 				type := command typeNewOrLaidOut ]
 			ifFalse: [ 
 				type = command typeNewOrLaidOut ifTrue: [ 
-					self postponeOn: anInfiniteElement start: tmpStart count: tmpCount payload: command payload.
+					self postponeOn: anInfiniteElement start: tmpStart count: tmpCount.
 					tmpCount := 0.
 					tmpStart := position ].
 				type := command typeInvisible ].
@@ -37,13 +37,10 @@ OBlInfiniteDataSourceCommandTypeUpdate >> apply: aCommand in: anInfiniteElement 
 		position := position + 1 ].
 	
 	(tmpCount ~= command itemCount) ifTrue: [ 
-		|aPayload|
-		aPayload := command payload.
 		manager recycleCommand: command.
 		command := manager createCommand: self
 			positionStart: tmpStart
-			itemCount: tmpCount
-			payload: aPayload ].
+			itemCount: tmpCount ].
 
 	type = command typeInvisible
 		ifTrue: [ manager dispatchAndUpdateElementHolders: command on: anInfiniteElement ]
@@ -62,17 +59,16 @@ OBlInfiniteDataSourceCommandTypeUpdate >> continuous: aPosition start: start [
 
 { #category : #dispatch }
 OBlInfiniteDataSourceCommandTypeUpdate >> dispatch: aCommand toLayout: aLayout [
-	aLayout onItemsUpdatedAt: aCommand positionStart count: aCommand itemCount payload: aCommand payload
+	aLayout onItemsUpdatedAt: aCommand positionStart count: aCommand itemCount
 ]
 
 { #category : #private }
-OBlInfiniteDataSourceCommandTypeUpdate >> dispatchOn: anInfiniteElement start: aStartPosition count: anItemCount payload: anObject [
+OBlInfiniteDataSourceCommandTypeUpdate >> dispatchOn: anInfiniteElement start: aStartPosition count: anItemCount [
 	| newCommand manager |
 	manager := anInfiniteElement dataSourceManager.
 	newCommand := manager createCommand: self
 		positionStart: aStartPosition
-		itemCount: anItemCount
-		payload: anObject.
+		itemCount: anItemCount.
 	manager dispatchAndUpdateElementHolders: newCommand on: anInfiniteElement.
 ]
 
@@ -87,7 +83,6 @@ OBlInfiniteDataSourceCommandTypeUpdate >> offsetPositions: aCommand in: anInfini
 	anInfiniteElement dataSourceManager
 		markElementHoldersUpdated: aCommand positionStart
 		itemCount: aCommand itemCount
-		payload: aCommand payload
 		in: anInfiniteElement
 
 ]
@@ -98,12 +93,11 @@ OBlInfiniteDataSourceCommandTypeUpdate >> positionMultiplier [
 ]
 
 { #category : #private }
-OBlInfiniteDataSourceCommandTypeUpdate >> postponeOn: aContext start: aStartPosition count: anItemCount payload: anObject [
+OBlInfiniteDataSourceCommandTypeUpdate >> postponeOn: aContext start: aStartPosition count: anItemCount [ 
 	|newCommand|
 	newCommand := aContext dataSourceManager createCommand: self
 		positionStart: aStartPosition
-		itemCount: anItemCount
-		payload: anObject.
+		itemCount: anItemCount.
 	aContext dataSourceManager postponeAndUpdateElementHolders: newCommand on: aContext
 ]
 
@@ -113,7 +107,6 @@ OBlInfiniteDataSourceCommandTypeUpdate >> updateElementHoldersIn: anInfiniteElem
 	anInfiniteElement dataSourceManager
 		markElementHoldersUpdated: aCommand positionStart
 		itemCount: aCommand itemCount
-		payload: aCommand payload
 		in: anInfiniteElement
 ]
 
@@ -123,7 +116,6 @@ OBlInfiniteDataSourceCommandTypeUpdate >> updateElementHoldersIn: anInfiniteElem
 	anInfiniteElement dataSourceManager
 		markElementHoldersUpdated: offsetStart
 		itemCount: aCommand itemCount
-		payload: aCommand payload
 		in: anInfiniteElement
 ]
 

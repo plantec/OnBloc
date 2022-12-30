@@ -599,7 +599,7 @@ OBlInfiniteElement >> elementHolderOf: anElement [
 ]
 
 { #category : #'private - commands' }
-OBlInfiniteElement >> elementRangeUpdate: aPositionStart itemCount: anItemCount payload: anObject [
+OBlInfiniteElement >> elementRangeUpdate: aPositionStart itemCount: anItemCount [
 	"Rebind existing elements for the given range, or create new as needed"
 	| aPositionEnd |
 
@@ -614,7 +614,6 @@ OBlInfiniteElement >> elementRangeUpdate: aPositionStart itemCount: anItemCount 
 						"We re-bind these elements holders after pre-processing is complete so that
 						ElementHolders have their final positions assigned."
 						anElementHolder flags addUpdate.
-						anElementHolder addPayload: anObject.
 						anElement constraints infinite insetsDirty: true ] ] ]
 			in: self
 ]

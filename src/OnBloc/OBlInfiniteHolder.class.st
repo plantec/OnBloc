@@ -16,8 +16,7 @@ Class {
 		'preLayoutPosition',
 		'flags',
 		'isScrap',
-		'infiniteElement',
-		'payloads'
+		'infiniteElement'
 	],
 	#pools : [
 		'BlInfiniteConstants'
@@ -32,34 +31,11 @@ OBlInfiniteHolder class >> of: anElement [
 		yourself
 ]
 
-{ #category : #'accessing - payload' }
-OBlInfiniteHolder >> addEmptyPayload [
-
-	self flags addDataSourceFullUpdate
-]
-
-{ #category : #'accessing - payload' }
-OBlInfiniteHolder >> addPayload: anObject [
-
-	anObject
-		ifNil: [ ^ self addEmptyPayload ].
-
-	self flags hasDataSourceFullUpdate
-		ifFalse: [ payloads add: anObject ]
-]
-
 { #category : #'private - position' }
 OBlInfiniteHolder >> clearOldPosition [
 
 	previousPosition := NoPosition.
 	preLayoutPosition := NoPosition
-]
-
-{ #category : #'accessing - payload' }
-OBlInfiniteHolder >> clearPayload [
-
-	payloads ifNotNil: [ payloads removeAll ].
-	self flags clearDataSourceFullUpdate
 ]
 
 { #category : #'private - flags changing' }
@@ -137,8 +113,7 @@ OBlInfiniteHolder >> initialize [
 	itemId := NoId.
 	flags := BlInfiniteElementHolderFlags new.
 	itemType := BlInfiniteItemType invalid.
-	isScrap := false.
-	payloads := nil
+	isScrap := false
 ]
 
 { #category : #initialization }
@@ -247,21 +222,6 @@ OBlInfiniteHolder >> offsetPositionBy: anOffset applyToPreLayout: shouldApplyOnP
 	itemElement constraints infinite insetsDirty: true
 ]
 
-{ #category : #'accessing - payload' }
-OBlInfiniteHolder >> payloads [
-	"I return un-modifiable list of paylods taking update request into account"
-	<return: #Array>
-
-	^ self flags hasDataSourceFullUpdate
-		ifFalse: [ 
-			payloads
-				"Initial state, no update being requested"
-				ifNil: [ #() ]
-				ifNotNil: [ payloads ] ]
-			"a full update has been requested"
-		ifTrue: [ #() ]
-]
-
 { #category : #'private - position' }
 OBlInfiniteHolder >> position [
 	"For inner use ONLY! Instead try #layoutPosition or #dataSourcePosition"
@@ -307,8 +267,7 @@ OBlInfiniteHolder >> reset [
 	position := NoPosition.
 	previousPosition := NoPosition.
 	itemId := NoId.
-	preLayoutPosition := NoPosition.
-	self clearPayload
+	preLayoutPosition := NoPosition
 ]
 
 { #category : #'private - position' }

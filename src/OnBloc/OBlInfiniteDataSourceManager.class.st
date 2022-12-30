@@ -137,20 +137,19 @@ OBlInfiniteDataSourceManager >> consumePostponedCommandsIn: anInfiniteElement [
 ]
 
 { #category : #'commands recycling' }
-OBlInfiniteDataSourceManager >> createCommand: type positionStart: positionStart itemCount: itemCount payload: payload [
+OBlInfiniteDataSourceManager >> createCommand: type positionStart: positionStart itemCount: itemCount [
 	"Return a data source command with specified parameters"
 	<return: #BlInfiniteDataSourceCommand>
 	
 	^ OBlInfiniteDataSourceCommand new
 			type: type;
 			positionStart: positionStart;
-			itemCount: itemCount;
-			payload: payload
+			itemCount: itemCount
 ]
 
 { #category : #private }
 OBlInfiniteDataSourceManager >> dispatchAndUpdateElementHolders: aCommand on: anInfiniteElement [
-	| tmpStart tmpCnt offsetPositionForPartial positionMultiplier payload|
+	| tmpStart tmpCnt offsetPositionForPartial positionMultiplier |
 	tmpStart := self updatePosition: aCommand positionStart withPostponed: aCommand.
 	tmpCnt := 1.
 	offsetPositionForPartial := aCommand positionStart.
@@ -166,8 +165,7 @@ OBlInfiniteDataSourceManager >> dispatchAndUpdateElementHolders: aCommand on: an
 				| tmpCommand |
 				tmpCommand := aCommand class new
 					positionStart: tmpStart;
-					itemCount: tmpCnt;
-					payload: aCommand payload.
+					itemCount: tmpCnt.
 				
 				self dispatchFirstPassAndUpdateElementHolders: tmpCommand offset: offsetPositionForPartial in: anInfiniteElement.
 				self recycleCommand: tmpCommand.
@@ -177,15 +175,13 @@ OBlInfiniteDataSourceManager >> dispatchAndUpdateElementHolders: aCommand on: an
 				tmpStart := updatedPos.
 				tmpCnt := 1 ] ].
 
-	payload := aCommand payload.
 	self recycleCommand: aCommand.
 	
 	tmpCnt > 0 ifTrue: [ 
 		|tmpCommand|
 		tmpCommand := aCommand class new
 			positionStart: tmpStart;
-			itemCount: tmpCnt;
-			payload: payload.
+			itemCount: tmpCnt.
 		self dispatchFirstPassAndUpdateElementHolders: tmpCommand offset: offsetPositionForPartial in: anInfiniteElement.
 		self recycleCommand: tmpCommand ].
 ]
@@ -287,12 +283,11 @@ OBlInfiniteDataSourceManager >> initialize [
 ]
 
 { #category : #'manager -> element' }
-OBlInfiniteDataSourceManager >> markElementHoldersUpdated: aPositionStart itemCount: anItemCount payload: aPayloadObject in: anInfiniteElement [
+OBlInfiniteDataSourceManager >> markElementHoldersUpdated: aPositionStart itemCount: anItemCount in: anInfiniteElement [
 
 	anInfiniteElement
 		elementRangeUpdate: aPositionStart
-		itemCount: anItemCount
-		payload: aPayloadObject.
+		itemCount: anItemCount.
 		
 	anInfiniteElement markItemsChanged
 ]
@@ -348,12 +343,11 @@ OBlInfiniteDataSourceManager >> onCommandProcessed: aCommand in: anInfiniteEleme
 ]
 
 { #category : #'data source updates' }
-OBlInfiniteDataSourceManager >> onItemRangeChanged: aPositionStart itemCount: anItemCount payload: anObjectPayload [
+OBlInfiniteDataSourceManager >> onItemRangeChanged: aPositionStart itemCount: anItemCount [
 	"Enques a new update pending command.
 	I am a part of public API and should be triggered by data source (directly or indirectly)
 	when items are changed/updated (item's value, content, or value was replaced in-place).
-	Return true if pending commands need to be processed, otherwise false.
-	object payload is optional and may be nil"
+	Return true if pending commands need to be processed, otherwise false."
 	<return: #Boolean>
 
 	"If no items where updated we do nothing"
@@ -364,8 +358,7 @@ OBlInfiniteDataSourceManager >> onItemRangeChanged: aPositionStart itemCount: an
 	pendingCommands add: (self
 		createCommand: OBlInfiniteDataSourceCommandTypeUpdate instance
 		positionStart: aPositionStart
-		itemCount: anItemCount
-		payload: anObjectPayload).
+		itemCount: anItemCount).
 	existingCommandTypes addUpdate.
 
 	^ pendingCommands size = 1
@@ -385,8 +378,7 @@ OBlInfiniteDataSourceManager >> onItemRangeInserted: aPositionStart itemCount: a
 	pendingCommands add: (self
 		createCommand: OBlInfiniteDataSourceCommandTypeAdd instance
 		positionStart: aPositionStart
-		itemCount: anItemCount
-		payload: nil).
+		itemCount: anItemCount).
 	existingCommandTypes addAdd.
 
 	^ pendingCommands size = 1
@@ -409,8 +401,7 @@ OBlInfiniteDataSourceManager >> onItemRangeMoved: aPositionStart to: aPositionEn
 	pendingCommands add: (self
 		createCommand: OBlInfiniteDataSourceCommandTypeMove instance
 		positionStart: aPositionStart
-		itemCount: aPositionEnd
-		payload: nil).
+		itemCount: aPositionEnd).
 	existingCommandTypes addMove.
 
 	^ pendingCommands size = 1
@@ -430,8 +421,7 @@ OBlInfiniteDataSourceManager >> onItemRangeRemoved: aPositionStart itemCount: an
 	pendingCommands add: (self
 		createCommand: OBlInfiniteDataSourceCommandTypeRemove instance
 		positionStart: aPositionStart
-		itemCount: anItemCount
-		payload: nil).
+		itemCount: anItemCount).
 	existingCommandTypes addRemove.
 
 	^ pendingCommands size = 1
@@ -456,7 +446,7 @@ OBlInfiniteDataSourceManager >> preProcessCommandsIn: anInfiniteElement [
 
 { #category : #'commands recycling' }
 OBlInfiniteDataSourceManager >> recycleCommand: aCommand [
-	"Recycle aCommand removing any payload and if recycling enabled"
+	"Recycle aCommand if recycling enabled"
 
 ]
 

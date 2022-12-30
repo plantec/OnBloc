@@ -56,8 +56,7 @@ OBlInfiniteElementDataSourceObserver >> onItemsChanged: anEvent [
 
 	needsUpdate := infiniteElement dataSourceManager
 		onItemRangeChanged: anEvent position
-		itemCount: anEvent itemCount
-		payload: anEvent payload.
+		itemCount: anEvent itemCount.
 
 	needsUpdate
 		ifTrue: [ self triggerUpdateProcessor ]

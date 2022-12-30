@@ -34,11 +34,8 @@ OBlInfiniteDataSource >> bindHolder: anElementHolder at: aPosition [
 		clearDataSourcePositionUnknown;
 		addBound.
 
-	anElementHolder infiniteElement telemetry
-		timeSync: [ 'Bind holder {1} at {2}' format: { anElementHolder class name . aPosition } ]
-		during: [ self onBindHolder: anElementHolder at: aPosition ].
+	self onBindHolder: anElementHolder at: aPosition.
 	
-	anElementHolder clearPayload.
 	anElementHolder itemElement constraints infinite insetsDirty: true
 ]
 

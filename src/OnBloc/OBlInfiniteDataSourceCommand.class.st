@@ -16,7 +16,6 @@ Class {
 	#classTraits : 'TBlDebug classTrait',
 	#instVars : [
 		'positionStart',
-		'payload',
 		'itemCount',
 		'type'
 	],
@@ -103,16 +102,6 @@ OBlInfiniteDataSourceCommand >> itemCount: anObject [
 { #category : #commands }
 OBlInfiniteDataSourceCommand >> offsetPositionsIn: anInfiniteElement [
 	type offsetPositions: self in: anInfiniteElement
-]
-
-{ #category : #accessing }
-OBlInfiniteDataSourceCommand >> payload [
-	^ payload
-]
-
-{ #category : #accessing }
-OBlInfiniteDataSourceCommand >> payload: anObject [
-	payload := anObject
 ]
 
 { #category : #commands }

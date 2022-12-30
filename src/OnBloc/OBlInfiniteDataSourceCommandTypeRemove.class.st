@@ -43,8 +43,7 @@ OBlInfiniteDataSourceCommandTypeRemove >> apply: aCommand in: anInfiniteElement 
 		manager recycleCommand: command.
 		command := manager createCommand: self
 			positionStart: tmpStart
-			itemCount: tmpCount
-			payload: nil ].
+			itemCount: tmpCount].
 
 	type = command typeInvisible
 		ifTrue: [ manager dispatchAndUpdateElementHolders: command on: anInfiniteElement ]
@@ -83,8 +82,7 @@ OBlInfiniteDataSourceCommandTypeRemove >> dispatchOn: anInfiniteElement start: a
 	manager := anInfiniteElement dataSourceManager.
 	newCommand := manager createCommand: self
 		positionStart: aStartPosition
-		itemCount: anItemCount
-		payload: nil.
+		itemCount: anItemCount.
 	manager dispatchAndUpdateElementHolders: newCommand on: anInfiniteElement.
 ]
 
@@ -115,8 +113,7 @@ OBlInfiniteDataSourceCommandTypeRemove >> postponeIn: anInfiniteElement start: a
 	newCommand := manager
 		              createCommand: self
 		              positionStart: aStartPosition
-		              itemCount: anItemCount
-		              payload: nil.
+		              itemCount: anItemCount.
 	manager
 		postponeAndUpdateElementHolders: newCommand
 		on: anInfiniteElement
