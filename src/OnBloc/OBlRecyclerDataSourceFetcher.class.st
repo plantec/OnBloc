@@ -9,5 +9,4 @@ OBlRecyclerDataSourceFetcher >> elementFor: aPosition in: anInfiniteElement [
 
 	^ anInfiniteElement dataSource
 		  createHolder: anInfiniteElement
-		  type: (anInfiniteElement dataSource itemTypeAt: aPosition)
 ]

@@ -18,7 +18,7 @@ OBlRecyclerPositionScrapFetcher >> elementFor: aPosition in: anInfiniteElement [
 
 	| holder fromScrap |
 	fromScrap := false.
-	holder := self exactScrapFor: aPosition type: BlInfiniteItemType invalid in: anInfiniteElement.
+	holder := self exactScrapFor: aPosition in: anInfiniteElement.
 	holder ifNotNil: [ 
 		(self validateHolder: holder in: anInfiniteElement)
 			ifFalse: [ 
@@ -36,7 +36,7 @@ OBlRecyclerPositionScrapFetcher >> elementFor: aPosition in: anInfiniteElement [
 ]
 
 { #category : #private }
-OBlRecyclerPositionScrapFetcher >> exactScrapFor: aPosition type: itemType in: anInfiniteElement [
+OBlRecyclerPositionScrapFetcher >> exactScrapFor: aPosition in: anInfiniteElement [
 
 	^ anInfiniteElement recycler attachedScrap 
 		detect: [ :holder | (holder wasReturnedFromScrap not
@@ -44,11 +44,7 @@ OBlRecyclerPositionScrapFetcher >> exactScrapFor: aPosition type: itemType in: a
 				and: [ holder isInvalid not
 					and: [ anInfiniteElement state isPreLayout
 						or: [ holder isRemoved not ] ] ] ]) ]
-		ifFound: [ :holder | 
-			(itemType = BlInfiniteItemType invalid
-				or: [ holder itemType = itemType ])
-					ifFalse: [ 
-						Error signal: 'Scrap holder has wrong item type!' ].
+		ifFound: [ :holder |
 			holder flags addReturnedFromScrap.
 			holder ]
 		ifNone: [ nil ]
@@ -65,12 +61,6 @@ OBlRecyclerPositionScrapFetcher >> validateHolder: aHolder in: anInfiniteElement
 	(aHolder position <= 0 or: [ aHolder position > anInfiniteElement dataSource itemCount ])
 		ifTrue: [ Error signal: ('Holder has completely wrong position! position = {1}, count = {2}'
 			format: { aHolder position. anInfiniteElement dataSource itemCount. }) ].
-
-	anInfiniteElement state isPreLayout ifFalse: [ 
-		| type |
-		type := anInfiniteElement dataSource itemTypeAt: aHolder position.
-		type = aHolder itemType
-			ifFalse: [ ^ false ] ].
 
 	anInfiniteElement dataSource hasStableIds
 		ifTrue: [ ^ aHolder itemId = (anInfiniteElement dataSource itemIdAt: aHolder position) ].

@@ -303,13 +303,6 @@ OBlInfiniteLayout >> childPositionOf: anElement [
 ]
 
 { #category : #'children - accessing' }
-OBlInfiniteLayout >> childTypeOf: anElement [
-	"Returns the element type defined by the datasource"
-
-	^ (self elementHolderOf: anElement) itemType
-]
-
-{ #category : #'children - accessing' }
 OBlInfiniteLayout >> childrenCount [
 	"Return the current number of child elements attached to the parent infinite element.
 	This does not include children that were temporarily detached and/or scrapped."

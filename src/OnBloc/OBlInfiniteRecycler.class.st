@@ -76,7 +76,7 @@ OBlInfiniteRecycler >> elementFor: aPosition in: anInfiniteElement [
 	"I do a hard work obtaining element for the data at a position in data source.
 	@see elementFor: for more information"
 	<return: #BlElement>
-	| holder fromScrap fetchedResult bound itemElement anInfiniteConstraints |
+	| holder fromScrap bound itemElement anInfiniteConstraints |
 
 	(aPosition < 1 or: [ aPosition > anInfiniteElement  dataSource itemCount ])
 		ifTrue: [ Error signal: 'Position is out of bounds!' ].

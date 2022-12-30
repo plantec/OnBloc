@@ -12,7 +12,6 @@ Class {
 		'position',
 		'previousPosition',
 		'itemId',
-		'itemType',
 		'preLayoutPosition',
 		'flags',
 		'isScrap',
@@ -112,7 +111,6 @@ OBlInfiniteHolder >> initialize [
 	preLayoutPosition := NoPosition.
 	itemId := NoId.
 	flags := BlInfiniteElementHolderFlags new.
-	itemType := BlInfiniteItemType invalid.
 	isScrap := false
 ]
 
@@ -176,19 +174,6 @@ OBlInfiniteHolder >> itemId [
 { #category : #'private - accessing' }
 OBlInfiniteHolder >> itemId: anIdemId [
 	itemId := anIdemId
-]
-
-{ #category : #accessing }
-OBlInfiniteHolder >> itemType [
-	"Return view type of this ElementHolder"
-	<return: #BlInfiniteItemType>
-
-	^ itemType
-]
-
-{ #category : #'private - accessing' }
-OBlInfiniteHolder >> itemType: anItemType [
-	itemType := anItemType
 ]
 
 { #category : #accessing }

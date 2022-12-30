@@ -40,11 +40,8 @@ OBlInfiniteDataSource >> bindHolder: anElementHolder at: aPosition [
 ]
 
 { #category : #'instance creation' }
-OBlInfiniteDataSource >> createHolder: anInfiniteElement type: anItemType [
-	| anElementHolder |
-	anElementHolder := self onCreateHolder: anInfiniteElement type: anItemType.
-	anElementHolder itemType: anItemType.
-	^ anElementHolder
+OBlInfiniteDataSource >> createHolder: anInfiniteElement [ 
+	^ self onCreateHolder: anInfiniteElement
 ]
 
 { #category : #'event management accessing' }
@@ -97,16 +94,6 @@ OBlInfiniteDataSource >> itemIdAt: aPosition [
 	<return: #Number>
 
 	^ NoId
-]
-
-{ #category : #accessing }
-OBlInfiniteDataSource >> itemTypeAt: aPosition [
-	"Return the element type of the item at aPosition for the purposes of element recycling.
-	The default implementation of this method returns ===BlInfiniteItemType invalid===,
-	making the assumption of a single element type for the data source."
-	<return: #BlInfiniteItemType>
-
-	^ BlInfiniteItemType invalid
 ]
 
 { #category : #'event firing' }
@@ -211,7 +198,7 @@ OBlInfiniteDataSource >> onBindHolder: anElementHolder at: aPosition [
 ]
 
 { #category : #'instance creation' }
-OBlInfiniteDataSource >> onCreateHolder: anInfiniteElement type: anItemType [
+OBlInfiniteDataSource >> onCreateHolder: anInfiniteElement [ 
 	"Override to create an ElementHolder for an item type.
 	use ===BlElementHolder of: element=== to create a holder for an element".
 	^ self subclassResponsibility
