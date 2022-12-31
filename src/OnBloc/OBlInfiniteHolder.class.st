@@ -10,7 +10,6 @@ Class {
 	#instVars : [
 		'itemElement',
 		'position',
-		'previousPosition',
 		'itemId',
 		'preLayoutPosition',
 		'flags',
@@ -33,7 +32,6 @@ OBlInfiniteHolder class >> of: anElement [
 { #category : #'private - position' }
 OBlInfiniteHolder >> clearOldPosition [
 
-	previousPosition := NoPosition.
 	preLayoutPosition := NoPosition
 ]
 
@@ -97,7 +95,6 @@ OBlInfiniteHolder >> infiniteElement [
 OBlInfiniteHolder >> infiniteElement: anInfiniteElement [
 	"Set an infinite element a child of which a hold.
 	anInfiniteElement must not be nil"
-	self assert: anInfiniteElement isNotNil.
 	
 	infiniteElement := anInfiniteElement
 ]
@@ -107,7 +104,6 @@ OBlInfiniteHolder >> initialize [
 	super initialize.
 	
 	position := NoPosition.
-	previousPosition := NoPosition.
 	preLayoutPosition := NoPosition.
 	itemId := NoId.
 	flags := BlInfiniteElementHolderFlags new.
@@ -194,9 +190,6 @@ OBlInfiniteHolder >> needsUpdate [
 { #category : #private }
 OBlInfiniteHolder >> offsetPositionBy: anOffset applyToPreLayout: shouldApplyOnPreLayout [
 	
-	previousPosition = NoPosition
-		ifTrue: [ previousPosition := position ].
-	
 	preLayoutPosition = NoPosition
 		ifTrue: [ preLayoutPosition := position ].
 	
@@ -233,33 +226,13 @@ OBlInfiniteHolder >> preLayoutPosition: aPosition [
 	preLayoutPosition := aPosition
 ]
 
-{ #category : #'private - position' }
-OBlInfiniteHolder >> previousPosition [
-	"For inner use ONLY! Instead try #layoutPosition or #dataSourcePosition"
-	^ previousPosition
-]
-
-{ #category : #'private - position' }
-OBlInfiniteHolder >> previousPosition: aNumber [
-	"For inner use ONLY! Instead try #layoutPosition or #dataSourcePosition"
-	previousPosition := aNumber
-]
-
 { #category : #'private - invalidate' }
 OBlInfiniteHolder >> reset [
 
 	flags clear.
 	position := NoPosition.
-	previousPosition := NoPosition.
 	itemId := NoId.
 	preLayoutPosition := NoPosition
-]
-
-{ #category : #'private - position' }
-OBlInfiniteHolder >> saveOldPosition [
-
-	previousPosition = NoPosition
-		ifTrue: [ previousPosition := position ]
 ]
 
 { #category : #'private - flags testing' }

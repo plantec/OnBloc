@@ -180,18 +180,20 @@ OBlInfiniteRecycler >> scrapCount [
 { #category : #recycling }
 OBlInfiniteRecycler >> scrapElement: anElement in: anInfiniteElement [
 
-	| anElementHolder |
-	anElementHolder := anInfiniteElement elementHolderOf: anElement.
-
-	(anElementHolder isRemoved or: [ 
-		 anElementHolder isInvalid or: [ anElementHolder isUpdated not ] ]) 
-		ifFalse: [ ^ self ].
-
+	"
 	(anElementHolder isInvalid and: [ 
 		 anElementHolder isRemoved not and: [ 
 			 anInfiniteElement dataSource hasStableIds not ] ]) ifTrue: [ 
 		self error:
 			'Can not scrap invalid elements, because they can not be reused from scrap and should be rebound from recycler pool instead' ].
+	"
+
+	| anElementHolder |
+	anElementHolder := anInfiniteElement elementHolderOf: anElement.
+
+	(anElementHolder isRemoved or: [ anElementHolder isInvalid or: [ anElementHolder isUpdated not ] ]) 
+		ifFalse: [ ^ self ].
+			
 	anElementHolder detachRecycler.
 	attachedScrap add: anElementHolder
 ]
