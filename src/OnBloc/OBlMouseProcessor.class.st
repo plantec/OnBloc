@@ -11,7 +11,8 @@ Class {
 		'dragStartMask',
 		'pressedButtons',
 		'dragState',
-		'previousMouseDownEvent'
+		'previousMouseDownEvent',
+		'lastMouseMoveEvent'
 	],
 	#category : #'OnBloc-Space - Events'
 }
@@ -213,6 +214,13 @@ OBlMouseProcessor >> generateEvents [
 		ifFalse: [ lastClickEvent := nil ]
 ]
 
+{ #category : #'mouse move' }
+OBlMouseProcessor >> handleLastMouseMove [
+
+	lastMouseMoveEvent ifNil: [ ^ self ].
+	self handleMouseMove: lastMouseMoveEvent.
+]
+
 { #category : #'mouse down' }
 OBlMouseProcessor >> handleMouseDown: aMouseDownEvent [
 	| aTargetElement |
@@ -358,6 +366,12 @@ OBlMouseProcessor >> lastClickEvent [
 ]
 
 { #category : #accessing }
+OBlMouseProcessor >> lastMouseMoveEvent [
+
+	^ lastMouseMoveEvent
+]
+
+{ #category : #accessing }
 OBlMouseProcessor >> lastOverTarget [
 	<return: #BlElement>
 
@@ -451,9 +465,8 @@ OBlMouseProcessor >> processMouseDownPicking: aMouseEvent [
 
 	<return: #BlElement>
 	| aTargetElement |
-	(lastOverTarget isNotNil and: [ 
-		 lastOverTarget isAttachedToSceneGraph not ]) ifTrue: [ 
-		lastOverTarget := nil ].
+	
+	self checkLastOverTarget.
 
 	"if the last over target contains the point we can start picking from it"
 	aTargetElement := self space findMouseDownEventTarget: aMouseEvent.
@@ -495,6 +508,9 @@ OBlMouseProcessor >> processMouseEnterLeaveEvent: aMouseEvent [
 
 { #category : #'mouse move' }
 OBlMouseProcessor >> processMouseMove: aMouseMoveEvent [
+
+	lastMouseMoveEvent := aMouseMoveEvent.
+
 	self processMouseEnterLeaveEvent: aMouseMoveEvent.
 
 	self fireEvent: aMouseMoveEvent.
