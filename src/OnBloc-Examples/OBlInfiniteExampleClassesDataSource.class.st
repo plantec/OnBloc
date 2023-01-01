@@ -22,14 +22,6 @@ OBlInfiniteExampleClassesDataSource >> itemCount [
 	^ classes size
 ]
 
-{ #category : #accessing }
-OBlInfiniteExampleClassesDataSource >> itemTypeAt: aPosition [
-	"All my items are homogene, it is enough to use a named item type"
-	<return: #BlInfiniteItemType>
-
-	^ BlInfiniteNamedItemType named: #class
-]
-
 { #category : #'instance creation' }
 OBlInfiniteExampleClassesDataSource >> onBindHolder: anElementHolder at: aPosition [
 	"Update holder's model"
@@ -37,6 +29,6 @@ OBlInfiniteExampleClassesDataSource >> onBindHolder: anElementHolder at: aPositi
 ]
 
 { #category : #'instance creation' }
-OBlInfiniteExampleClassesDataSource >> onCreateHolder: anInfiniteElement type: anItemType [
-	^ BlInfiniteExampleClassesElementHolder new
+OBlInfiniteExampleClassesDataSource >> onCreateHolder: anInfiniteElement [ 
+	^ OBlInfiniteExampleClassesElementHolder new
 ]

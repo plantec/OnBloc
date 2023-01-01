@@ -37,7 +37,7 @@ OBlInfiniteExampleGalleryDataSource >> onBindHolder: anElementHolder at: aPositi
 ]
 
 { #category : #'instance creation' }
-OBlInfiniteExampleGalleryDataSource >> onCreateHolder: anInfiniteElement type: anItemType [
+OBlInfiniteExampleGalleryDataSource >> onCreateHolder: anInfiniteElement [ 
 	^ OBlInfiniteExampleGalleryElementHolder new
 ]
 
