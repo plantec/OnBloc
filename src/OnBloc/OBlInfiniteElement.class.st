@@ -46,7 +46,7 @@ Class {
 	#pools : [
 		'BlInfiniteConstants'
 	],
-	#category : #'OnBloc-Infinite-! Core'
+	#category : #'OnBloc-Infinite'
 }
 
 { #category : #'private - assertions' }
@@ -1663,6 +1663,12 @@ OBlInfiniteElement >> withDecoration: aDecorationClass [
 			self invalidateItemDecorations ]
 ]
 
+{ #category : #'view - configuration' }
+OBlInfiniteElement >> withRowNumbers [
+
+	self withDecoration: OBlRowNumberDecoration
+]
+
 { #category : #'accessing - decoration' }
 OBlInfiniteElement >> withoutDecoration: aDecorationClass [
 
@@ -1672,4 +1678,10 @@ OBlInfiniteElement >> withoutDecoration: aDecorationClass [
 				                   self invalidateItemDecorations.
 				                   true ]
 			                   ifFalse: [ false ] ]
+]
+
+{ #category : #'view - configuration' }
+OBlInfiniteElement >> withoutRowNumbers [
+
+	self withoutDecoration: OBlRowNumberDecoration
 ]

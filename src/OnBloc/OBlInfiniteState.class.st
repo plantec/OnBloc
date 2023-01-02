@@ -21,7 +21,7 @@ Class {
 	#pools : [
 		'BlInfiniteConstants'
 	],
-	#category : #'OnBloc-Infinite-! Core'
+	#category : #'OnBloc-Infinite'
 }
 
 { #category : #asserting }

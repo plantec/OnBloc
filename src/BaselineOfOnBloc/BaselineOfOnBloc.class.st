@@ -17,7 +17,8 @@ BaselineOfOnBloc >> baseline: spec [
 			with: [ 
 				spec repository: 'github://pharo-graphics/bloc-pac:dev-1.0/src' ].
 
-		spec package: #OnBloc with: [ 
+		spec package: 'OnBloc' with: [ 
 			spec repository: 'github://plantec/OnBloc/src'.
-			spec requires: #( #Bloc #BlocPac ) ] ]
+			spec requires: #( #Bloc #BlocPac ) ].
+		spec package: 'OnBloc-Alexandrie']
 ]
