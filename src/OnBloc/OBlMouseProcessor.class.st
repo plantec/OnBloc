@@ -217,8 +217,12 @@ OBlMouseProcessor >> generateEvents [
 { #category : #'mouse move' }
 OBlMouseProcessor >> handleLastMouseMove [
 
+	| target |
 	lastMouseMoveEvent ifNil: [ ^ self ].
-	self handleMouseMove: lastMouseMoveEvent.
+	target := self processPicking: lastMouseMoveEvent.	
+	lastMouseMoveEvent target: target.
+	lastMouseMoveEvent button: (pressedButtons ifEmpty: [ nil ] ifNotEmpty: [ pressedButtons anyOne ]).
+	self processMouseMove: lastMouseMoveEvent.
 ]
 
 { #category : #'mouse down' }
