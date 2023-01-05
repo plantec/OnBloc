@@ -9,7 +9,7 @@ Class {
 
 { #category : #initialization }
 OBlRowNumberDecoration >> defaultWidth [
-	^ 10
+	^ 22
 ]
 
 { #category : #initialization }
