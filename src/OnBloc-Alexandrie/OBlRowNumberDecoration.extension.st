@@ -52,7 +52,7 @@ OBlRowNumberDecoration >> aeDrawBeneathOn: aeCanvas in: anInfiniteElement [
 ]
 
 { #category : #'*OnBloc-Alexandrie' }
-OBlRowNumberDecoration >> aeMeasureActualWidthOn: aeCanvas in: anInfiniteElement [
+OBlRowNumberDecoration >> aeMeasureActualWidthFor: aNumber on: aeCanvas in: anInfiniteElement [
 
 	"Draw the background beneath "
 
@@ -61,7 +61,15 @@ OBlRowNumberDecoration >> aeMeasureActualWidthOn: aeCanvas in: anInfiniteElement
 	holder := anInfiniteElement childHolderOf: anInfiniteElement children last.
 	cairoScaledFont := self aeCairoScaledFontOn: aeCanvas.
 	fontExtents := cairoScaledFont extents.
-	cairoGlyphsArray := cairoScaledFont glyphArrayForString: holder layoutPosition asString.
+	cairoGlyphsArray := cairoScaledFont glyphArrayForString: aNumber asString.
 	aeCanvas textExtentsFor: cairoGlyphsArray scaledFont: cairoScaledFont do: [ :aTextExtents | 
 		self onActualWidthChangeWith: aTextExtents width + 10 do: [ anInfiniteElement requestLayout ] ]
+]
+
+{ #category : #'*OnBloc-Alexandrie' }
+OBlRowNumberDecoration >> aeMeasureActualWidthOn: aeCanvas in: anInfiniteElement [
+
+	| nb |
+	nb := anInfiniteElement hasChildren ifTrue: [ (anInfiniteElement childHolderOf: anInfiniteElement children last) layoutPosition ] ifFalse: [ 99 ].
+	self aeMeasureActualWidthFor: nb asString on: aeCanvas in: anInfiniteElement
 ]
