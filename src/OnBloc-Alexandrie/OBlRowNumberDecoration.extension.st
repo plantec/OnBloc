@@ -12,16 +12,15 @@ OBlRowNumberDecoration >> aeCairoScaledFontOn: aeCanvas [
 { #category : #'*OnBloc-Alexandrie' }
 OBlRowNumberDecoration >> aeDraw: anItemElement overOn: aeCanvas in: anInfiniteElement [
 
-	| holder index cairoScaledFont cairoGlyphsArray fontExtents |
+	| holder index cairoScaledFont cairoGlyphsArray fontExtents h |
 	super aeDraw: anItemElement overOn: aeCanvas in: anInfiniteElement.
 	aeCanvas restoreContextAfter: [ 
-		aeCanvas pathTranslate: self computedBounds left - anInfiniteElement border width @ anItemElement bounds inParent top.
 		holder := anInfiniteElement childHolderOf: anItemElement.
 		index := holder layoutPosition.
-
 		cairoScaledFont := self aeCairoScaledFontOn: aeCanvas.
 		fontExtents := cairoScaledFont extents.
-		aeCanvas pathTranslate: 6 @ fontExtents ascent.
+		h := (anItemElement height - fontExtents height) / 2.
+		aeCanvas pathTranslate: 4 @ (anItemElement bounds inParent top +  fontExtents ascent + h).
 		aeCanvas setSourceColor: Color gray darker.
 		cairoGlyphsArray := cairoScaledFont glyphArrayForString: index asString.
 		aeCanvas drawText: cairoGlyphsArray font: cairoScaledFont ]
@@ -64,5 +63,5 @@ OBlRowNumberDecoration >> aeMeasureActualWidthOn: aeCanvas in: anInfiniteElement
 	fontExtents := cairoScaledFont extents.
 	cairoGlyphsArray := cairoScaledFont glyphArrayForString: holder layoutPosition asString.
 	aeCanvas textExtentsFor: cairoGlyphsArray scaledFont: cairoScaledFont do: [ :aTextExtents | 
-		self onActualWidthChangeWith: aTextExtents width do: [ anInfiniteElement requestLayout ] ]
+		self onActualWidthChangeWith: aTextExtents width + 10 do: [ anInfiniteElement requestLayout ] ]
 ]

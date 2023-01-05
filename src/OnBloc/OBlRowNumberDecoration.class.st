@@ -8,13 +8,8 @@ Class {
 }
 
 { #category : #initialization }
-OBlRowNumberDecoration >> defaultMaxAtRight [
-	^ 12
-]
-
-{ #category : #initialization }
 OBlRowNumberDecoration >> defaultWidth [
-	^ 17
+	^ 10
 ]
 
 { #category : #initialization }
@@ -42,5 +37,5 @@ OBlRowNumberDecoration >> requiredInsetsOfChildElement: anElement in: anInfinite
 { #category : #geometry }
 OBlRowNumberDecoration >> requiredWidth [
 
-	^ (actualWidth + self defaultMaxAtRight - (actualWidth \\ self defaultMaxAtRight)) + 5
+	^ actualWidth  
 ]
