@@ -20,7 +20,7 @@ Class {
 { #category : #accessing }
 OBlMouseProcessor class >> dblClickDelay [
 	<return: #Duration>
-	^ 600 milliSeconds
+	^ 400 milliSeconds
 ]
 
 { #category : #'event testing' }
@@ -36,8 +36,8 @@ OBlMouseProcessor >> canBeDblClickEvent: aMouseUpEvent [
 	self flag: 'testing aMouseUpEvent target = lastClickEvent target is in fact needed, however, it breaks the Phlow list'.
 	self flag: 'https://github.com/feenkcom/gtoolkit/issues/708'.
 
-	^ lastClickEvent isNotNil
-				and: [ aMouseUpEvent timestamp - lastClickEvent timestamp < self dblClickDelay ]
+	^ lastClickEvent isNotNil and: [  aMouseUpEvent target = lastClickEvent target 
+				and: [ aMouseUpEvent timestamp - lastClickEvent timestamp < self dblClickDelay ] ]
 ]
 
 { #category : #'event testing' }
