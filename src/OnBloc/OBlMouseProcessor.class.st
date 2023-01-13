@@ -25,9 +25,10 @@ OBlMouseProcessor class >> dblClickDelay [
 
 { #category : #'event testing' }
 OBlMouseProcessor >> canBeClickEvent: aMouseUpEvent [
+
 	^ dndInProgress not
 		and: [ (previousMouseDownEvent isNotNil and: [ previousMouseDownEvent primaryButtonPressed ])
-				and: [ aMouseUpEvent target = previousMouseDownEvent target ] ]
+				and: [ aMouseUpEvent target = previousMouseDownEvent target  ] ]
 ]
 
 { #category : #'event testing' }
@@ -36,7 +37,7 @@ OBlMouseProcessor >> canBeDblClickEvent: aMouseUpEvent [
 	self flag: 'testing aMouseUpEvent target = lastClickEvent target is in fact needed, however, it breaks the Phlow list'.
 	self flag: 'https://github.com/feenkcom/gtoolkit/issues/708'.
 
-	^ lastClickEvent isNotNil and: [  aMouseUpEvent target = lastClickEvent target 
+	^ lastClickEvent isNotNil and: [  aMouseUpEvent target = lastClickEvent target
 				and: [ aMouseUpEvent timestamp - lastClickEvent timestamp < self dblClickDelay ] ]
 ]
 
@@ -359,6 +360,7 @@ OBlMouseProcessor >> isMouseEventValid: anEvent [
 
 { #category : #'event testing' }
 OBlMouseProcessor >> isValidDragTarget: aEvent [
+
 	^ (aEvent target = self space root) not
 ]
 
@@ -540,10 +542,9 @@ OBlMouseProcessor >> processMouseUp: aMouseUpEvent [
 	self updateCursorFrom: aMouseUpEvent target.
 
 	(self canBeClickEvent: aMouseUpEvent)
-		ifTrue: [ 
+		ifTrue: [  
 			(self canBeDblClickEvent: aMouseUpEvent)
 				ifTrue: [ 
-					lastClickEvent := nil.
 					self fireEvent: aMouseUpEvent asDoubleClickEvent ]
 				ifFalse: [ 
 					| aClickEvent | 
