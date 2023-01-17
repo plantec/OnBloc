@@ -62,7 +62,8 @@ Class {
 		'contextMenuLayer',
 		'popupLayer',
 		'rootLayer',
-		'layerHolder'
+		'layerHolder',
+		'overlayLayer'
 	],
 	#classVars : [
 		'UniqueIdGenerator'
@@ -595,6 +596,26 @@ OBlSpace >> defaultLayerHolder [
 	^ BlElement new
 		  layout: BlFrameLayout new;
 		  labeled: 'Top';
+		  yourself
+]
+
+{ #category : #initialization }
+OBlSpace >> defaultOverlayElevation [
+
+	^ 40
+]
+
+{ #category : #initialization }
+OBlSpace >> defaultOverlayLayer [
+
+	^ BlElement new
+		  background: Color transparent;
+		  constraintsDo: [ :c | 
+			  c horizontal matchParent.
+			  c vertical matchParent ];
+		  elevation:
+			  (BlRelativeElevation elevation: self defaultOverlayElevation);
+		  labeled: 'Overlay layer';
 		  yourself
 ]
 
@@ -1439,6 +1460,7 @@ OBlSpace >> initialize [
 	telemetry := BlNullTelemetry uniqueInstance.
 
 	layerHolder := self defaultLayerHolder.
+	overlayLayer := self defaultOverlayLayer.
 	popupLayer := self defaultPopupLayer.
 	contextMenuLayer := self defaultContextMenuLayer.
 	rootLayer := self defaultRoot.
@@ -1456,6 +1478,7 @@ OBlSpace >> initialize [
 
 	self layerHolder space: self.
 	self layerHolder addChild: self root.
+	self layerHolder addChild: self overlayLayer.
 	self layerHolder addChild: self contextMenuLayer.
 	self layerHolder addChild: self popupLayer
 
@@ -1698,6 +1721,14 @@ OBlSpace >> onSessionChanged: aNewSession [
 	self requestNextPulse.
 	
 	self layerHolder onSessionChanged: aNewSession
+]
+
+{ #category : #accessing }
+OBlSpace >> overlayLayer [
+	"Return my current root element.
+	root can not be nil"
+	
+	^ overlayLayer
 ]
 
 { #category : #accessing }
