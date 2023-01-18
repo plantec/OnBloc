@@ -314,7 +314,10 @@ OBlMouseProcessor >> handleMouseUp: aMouseUpEvent [
 	"we need to unregister a button"
 	self pressedButtons remove: aMouseUpEvent button.
 
-	aTargetElement := self processPicking: aMouseUpEvent.
+	
+	(aMouseUpEvent secondaryButtonPressed and: [previousMouseDownEvent notNil]) 
+		ifTrue: [ aTargetElement := previousMouseDownEvent target].
+	aTargetElement ifNil: [aTargetElement := self processPicking: aMouseUpEvent].
 	aMouseUpEvent target: aTargetElement.
 
 	"depending on whether drag and drop is in process handle mouse up either
@@ -552,7 +555,7 @@ OBlMouseProcessor >> processMouseUp: aMouseUpEvent [
 					self fireEvent: aClickEvent.
 					lastClickEvent := aClickEvent copy ] ]
 		ifFalse: [ 
-			previousMouseDownEvent ifNotNil: [ 
+			(previousMouseDownEvent notNil and: [ previousMouseDownEvent secondaryButtonPressed not]) ifTrue: [ 
 				self fireEvent:	(previousMouseDownEvent asClickCandidateEvent mouseUpEvent: aMouseUpEvent) ] ]
 ]
 
