@@ -11,8 +11,18 @@ OBlAjacentRectanglesGeometry class >> oppositeDelimiterBackgroundColor [
 
 { #category : #accessing }
 OBlAjacentRectanglesGeometry >> adjacentRectangles: aCollection [
-
+	aCollection ifEmpty: [ ^ self ].
 	self vertices: (self verticesFromRectangles: aCollection)
+]
+
+{ #category : #geometry }
+OBlAjacentRectanglesGeometry >> matchElement: anElement [
+
+	| bnds |
+	bnds := Array streamContents: [ :aStream | 
+		anElement children accountedByLayout do: [ :childElement | 
+		aStream nextPut: ((childElement bounds inParent asRectangle expandBy: childElement margin asMargin) expandBy: anElement margin asMargin) ] ].
+	self adjacentRectangles: bnds
 ]
 
 { #category : #'private - vertices computing' }
