@@ -21,6 +21,13 @@ OBlRowNumberDecoration >> initialize [
 ]
 
 { #category : #geometry }
+OBlRowNumberDecoration >> numberVerticalHeightIn: anItemElement fontHeight: fontHeight [
+
+	" By default, the row number is centered vertically"
+	^ (anItemElement height - fontHeight) / 2
+]
+
+{ #category : #geometry }
 OBlRowNumberDecoration >> onActualWidthChangeWith: anInteger do: aBlock [
 
 	anInteger <= actualWidth ifTrue: [ ^ self ].

@@ -19,7 +19,7 @@ OBlRowNumberDecoration >> aeDraw: anItemElement overOn: aeCanvas in: anInfiniteE
 		index := holder layoutPosition.
 		cairoScaledFont := self aeCairoScaledFontOn: aeCanvas.
 		fontExtents := cairoScaledFont extents.
-		h := (anItemElement height - fontExtents height) / 2.
+		h := self numberVerticalHeightIn: anItemElement fontHeight: fontExtents height.
 		aeCanvas pathTranslate: 4 @ (anItemElement bounds inParent top +  fontExtents ascent + h).
 		aeCanvas setSourceColor: Color gray darker.
 		cairoGlyphsArray := cairoScaledFont glyphArrayForString: index asString.
