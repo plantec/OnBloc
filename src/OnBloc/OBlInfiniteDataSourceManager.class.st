@@ -292,7 +292,7 @@ OBlInfiniteDataSourceManager >> markElementHoldersUpdated: aPositionStart itemCo
 	anInfiniteElement markItemsChanged
 ]
 
-{ #category : #adding }
+{ #category : #'commands processing' }
 OBlInfiniteDataSourceManager >> offsetPositions: aStartPosition forAdd: anItemCount in: anInfiniteElement [
 	
 	anInfiniteElement
@@ -302,7 +302,7 @@ OBlInfiniteDataSourceManager >> offsetPositions: aStartPosition forAdd: anItemCo
 	anInfiniteElement markItemsAddedOrRemoved
 ]
 
-{ #category : #'manager -> element' }
+{ #category : #'commands processing' }
 OBlInfiniteDataSourceManager >> offsetPositions: aStartPosition forRemovingInvisible: anItemCount in: anInfiniteElement [
 	| newDeletedCount |
 
@@ -317,7 +317,7 @@ OBlInfiniteDataSourceManager >> offsetPositions: aStartPosition forRemovingInvis
 	anInfiniteElement state deletedInvisibleItemCountSincePreviousLayout: newDeletedCount
 ]
 
-{ #category : #'manager -> element' }
+{ #category : #'commands processing' }
 OBlInfiniteDataSourceManager >> offsetPositions: aStartPosition forRemovingLaidOutOrNewElement: anItemCount in: anInfiniteElement [
 
 	anInfiniteElement
@@ -328,7 +328,7 @@ OBlInfiniteDataSourceManager >> offsetPositions: aStartPosition forRemovingLaidO
 	anInfiniteElement markItemsAddedOrRemoved
 ]
 
-{ #category : #'manager -> element' }
+{ #category : #'commands processing' }
 OBlInfiniteDataSourceManager >> offsetPositionsForMove: aFromPosition to: aToPosition in: anInfiniteElement [
 
 	anInfiniteElement
@@ -340,6 +340,7 @@ OBlInfiniteDataSourceManager >> offsetPositionsForMove: aFromPosition to: aToPos
 
 { #category : #'commands processing' }
 OBlInfiniteDataSourceManager >> onCommandProcessed: aCommand in: anInfiniteElement [
+
 ]
 
 { #category : #'data source updates' }

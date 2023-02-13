@@ -215,12 +215,6 @@ OBlInfiniteHolder >> position: aPosition [
 ]
 
 { #category : #'private - position' }
-OBlInfiniteHolder >> preLayoutPosition [
-	"For inner use ONLY! Instead try #layoutPosition or #dataSourcePosition"
-	^ preLayoutPosition
-]
-
-{ #category : #'private - position' }
 OBlInfiniteHolder >> preLayoutPosition: aPosition [
 	"For inner use ONLY!"
 	preLayoutPosition := aPosition

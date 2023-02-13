@@ -12,7 +12,9 @@ Class {
 		'pressedTextColor',
 		'defaultBackgroundColor',
 		'hoveredTextColor',
-		'textHighlightColor'
+		'textHighlightColor',
+		'hoveredBackgroundColor',
+		'pressedBackgroundColor'
 	],
 	#category : #'OnBloc-Theme'
 }
@@ -78,6 +80,16 @@ OBlDefaultButtonTheme >> disabledTextColor: anObject [
 ]
 
 { #category : #accessing }
+OBlDefaultButtonTheme >> hoveredBackgroundColor [
+	^ hoveredBackgroundColor
+]
+
+{ #category : #accessing }
+OBlDefaultButtonTheme >> hoveredBackgroundColor: anObject [
+	hoveredBackgroundColor := anObject
+]
+
+{ #category : #accessing }
 OBlDefaultButtonTheme >> hoveredBorderColor [
 	^ hoveredBorderColor
 ]
@@ -100,19 +112,29 @@ OBlDefaultButtonTheme >> hoveredTextColor: anObject [
 { #category : #initialization }
 OBlDefaultButtonTheme >> initialize [
 	super initialize.
-	disabledBackgroundColor := OBlDefaultColors
-		disabledButtonBackgroundColor.
+	disabledBackgroundColor := OBlDefaultColors disabledButtonBackgroundColor.
 	disabledTextColor := OBlDefaultColors disabledButtonTextColor.
 	disabledBorderColor := OBlDefaultColors disabledButtonBorderColor.
 	pressedBorderColor := OBlDefaultColors pressedButtonBorderColor.
+	pressedBackgroundColor := OBlDefaultColors pressedButtonBackgroundColor.
 	defaultBorderColor := OBlDefaultColors defaultButtonBorderColor.
 	defaultTextColor := OBlDefaultColors defaultButtonTextColor.
 	hoveredBorderColor := OBlDefaultColors hoveredButtonBorderColor.
+	hoveredBackgroundColor := OBlDefaultColors hoveredButtonBackgroundColor.
 	pressedTextColor := OBlDefaultColors pressedButtonTextColor.
-	defaultBackgroundColor := OBlDefaultColors
-		defaultButtonBackgroundColor.
+	defaultBackgroundColor := OBlDefaultColors defaultButtonBackgroundColor.
 	hoveredTextColor := OBlDefaultColors hoveredButtonTextColor.
 	textHighlightColor := OBlDefaultColors textHighlightColor
+]
+
+{ #category : #accessing }
+OBlDefaultButtonTheme >> pressedBackgroundColor [
+	^ pressedBackgroundColor
+]
+
+{ #category : #accessing }
+OBlDefaultButtonTheme >> pressedBackgroundColor: aColor [
+	pressedBackgroundColor := aColor
 ]
 
 { #category : #accessing }

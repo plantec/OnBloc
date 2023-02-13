@@ -6,6 +6,8 @@ Class {
 		'BackdropColor',
 		'ButtonBackgroundColor',
 		'ButtonBorderColor',
+		'ButtonHoveredBackgroundColor',
+		'ButtonPressedBackgroundColor',
 		'ButtonTextColor',
 		'DarkBorderColor',
 		'DeselectedListItemBackgroundColor',
@@ -303,6 +305,12 @@ OBlDefaultColors class >> focusedListItemBorder [
 	^ self primaryBorderColor
 ]
 
+{ #category : #'button - background' }
+OBlDefaultColors class >> hoveredButtonBackgroundColor [
+
+	^ ButtonHoveredBackgroundColor
+]
+
 { #category : #'button - border' }
 OBlDefaultColors class >> hoveredButtonBorderColor [
 	^ HoveredButtonBorderColor
@@ -354,6 +362,8 @@ OBlDefaultColors class >> initialize [
 	"buttons - background"
 	ButtonBackgroundColor := Color white.
 	DisabledButtonBackgroundColor := Color fromHexString: #f5f5f5 "grey-3".
+	ButtonHoveredBackgroundColor := Color white darker.
+	ButtonPressedBackgroundColor := ButtonHoveredBackgroundColor darker.
 
 	"status - background"
 	PaleErrorBackgroundColor := Color fromHexString: #'#ffccc7' "red-2".
@@ -434,6 +444,12 @@ OBlDefaultColors class >> newsBackgroundColor [
 { #category : #'status - background' }
 OBlDefaultColors class >> paleErrorBackgroundColor [
 	^ PaleErrorBackgroundColor
+]
+
+{ #category : #'button - background' }
+OBlDefaultColors class >> pressedButtonBackgroundColor [
+
+	^ ButtonPressedBackgroundColor
 ]
 
 { #category : #'button - border' }

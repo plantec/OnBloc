@@ -114,3 +114,12 @@ OBlInfiniteChildrenManager >> unfilteredChildrenDo: aBlock in: anInfiniteElement
 	1 to: aChildCount do: [ :anIndex |
 		aBlock value: (self unfilteredChildAt: anIndex in: anInfiniteElement) ]
 ]
+
+{ #category : #'children accessing' }
+OBlInfiniteChildrenManager >> unfilteredChildrenReverseDo: aBlock in: anInfiniteElement [
+	"Do not remove children in a Block!"
+	| aChildCount |
+	aChildCount := self unfilteredChildrenCountIn: anInfiniteElement.
+	aChildCount to: 1 by: -1 do: [ :anIndex |
+		aBlock value: (self unfilteredChildAt: anIndex in: anInfiniteElement) ]
+]

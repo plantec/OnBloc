@@ -442,7 +442,7 @@ OBlInfiniteElement >> didChildPositionsRangeChange: anInterval [
 { #category : #dispatching }
 OBlInfiniteElement >> dispatchChildAttached: anElement [
 	"I am used by
-		- ChildrenController's addChild:at:"
+		- ChildrenManager's addChild:at:in:"
 	| anElementHolder |
 	
 	anElementHolder := self elementHolderOf: anElement.
@@ -1060,7 +1060,7 @@ OBlInfiniteElement >> offsetChildrenVerticallyBy: aNumber [
 OBlInfiniteElement >> offsetPositionRecordsForInsert: aStartPosition itemCount: anItemCount [
 
 	childrenManager
-		unfilteredChildrenDo: [ :anElement | 
+		unfilteredChildrenReverseDo: [ :anElement | 
 			| anElementHolder |
 			anElementHolder := self elementHolderOf: anElement.
 			(anElementHolder shouldIgnore not and: [ 
@@ -1069,10 +1069,7 @@ OBlInfiniteElement >> offsetPositionRecordsForInsert: aStartPosition itemCount: 
 					offsetPositionBy: anItemCount
 					applyToPreLayout: false.
 				state structureChanged: true ] ]
-		in: self.
-
-
-	self requestLayout
+		in: self
 ]
 
 { #category : #'private - commands' }
@@ -1104,9 +1101,7 @@ OBlInfiniteElement >> offsetPositionRecordsForMove: aFromPosition to: aToPositio
 							offsetPositionBy: anInBetweenOffset
 							applyToPreLayout: false ].
 				state structureChanged: true ] ]
-		in: self.
-
-	self requestLayout
+		in: self
 ]
 
 { #category : #'private - commands' }
@@ -1133,9 +1128,7 @@ OBlInfiniteElement >> offsetPositionRecordsForRemove: aPositionStart itemCount: 
 								by: anItemCount negated
 								applyToPreLayout: applyToPreLayout.
 							state structureChanged: true ] ] ] ]
-		in: self.
-
-	self requestLayout
+		in: self
 ]
 
 { #category : #'hooks - children' }
