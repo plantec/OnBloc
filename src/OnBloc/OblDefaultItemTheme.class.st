@@ -7,7 +7,9 @@ Class {
 		'hoveredColor',
 		'defaultColor',
 		'focusedBorderColor',
-		'pressedColor'
+		'pressedColor',
+		'hoveredBorderColor',
+		'pressedBorderColor'
 	],
 	#category : #'OnBloc-Theme'
 }
@@ -43,6 +45,11 @@ OBlDefaultItemTheme >> focusedBorderColor: anObject [
 ]
 
 { #category : #accessing }
+OBlDefaultItemTheme >> hoveredBorderColor [
+	^ hoveredBorderColor
+]
+
+{ #category : #accessing }
 OBlDefaultItemTheme >> hoveredColor [
 	^ hoveredColor
 ]
@@ -58,9 +65,23 @@ OBlDefaultItemTheme >> initialize [
 	selectedColor := OBlDefaultColors selectedListItemColor.
 	deselectedColor := OBlDefaultColors deselectedListItemColor.
 	hoveredColor := OBlDefaultColors hoveredListItemColor.
+	hoveredBorderColor := OBlDefaultColors hoveredListItemBorderColor.
 	defaultColor := OBlDefaultColors defaultListItemColor.
 	focusedBorderColor := OBlDefaultColors focusedListItemBorder.
+	pressedBorderColor := OBlDefaultColors pressedListItemBorderColor.
 	pressedColor := OBlDefaultColors pressedListItemColor
+]
+
+{ #category : #accessing }
+OBlDefaultItemTheme >> pressedBorderColor [
+
+	^ pressedBorderColor
+]
+
+{ #category : #accessing }
+OBlDefaultItemTheme >> pressedBorderColor: aColor [
+
+	pressedBorderColor := aColor
 ]
 
 { #category : #accessing }

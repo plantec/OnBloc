@@ -27,6 +27,7 @@ Class {
 		'HoveredButtonBorderColor',
 		'HoveredButtonTextColor',
 		'HoveredListItemBackgroundColor',
+		'HoveredListItemBorderColor',
 		'LightBorderColor',
 		'LinkColor',
 		'LinkWithErrorColor',
@@ -36,6 +37,7 @@ Class {
 		'PressedButtonBorderColor',
 		'PressedButtonTextColor',
 		'PressedListItemBackgroundColor',
+		'PressedListItemBorderColor',
 		'PrimaryBorderColor',
 		'SecondaryHeaderBackgroundColor',
 		'SelectedListItemBackgroundColor',
@@ -331,6 +333,12 @@ OBlDefaultColors class >> hoveredButtonTextColor: anObject [
 	HoveredButtonTextColor := anObject
 ]
 
+{ #category : #'list and tree items - border' }
+OBlDefaultColors class >> hoveredListItemBorderColor [
+
+	^ HoveredListItemBorderColor
+]
+
 { #category : #'list and tree items - background' }
 OBlDefaultColors class >> hoveredListItemColor [
 	^ HoveredListItemBackgroundColor
@@ -398,8 +406,10 @@ OBlDefaultColors class >> initialize [
 	"list and tree items"
 	DeselectedListItemBackgroundColor := Color transparent.
 	HoveredListItemBackgroundColor := Color gray alpha: 0.1.
-	SelectedListItemBackgroundColor := (Color fromHexString: #'69ABFD') alpha: 0.34.
+	HoveredListItemBorderColor := Color gray alpha: 0.3.
+	SelectedListItemBackgroundColor := Color gray alpha: 0.4.
 	PressedListItemBackgroundColor := Color gray alpha: 0.2. 
+	PressedListItemBorderColor := Color gray alpha: 0.4. 
 	ExpandCollapseTriangleBackgroundColor := Color fromHexString: #'d9d9d9'. "grey-5"
 
 	"editors"
@@ -470,6 +480,12 @@ OBlDefaultColors class >> pressedButtonTextColor [
 { #category : #'button - text' }
 OBlDefaultColors class >> pressedButtonTextColor: anObject [
 	PressedButtonTextColor := anObject
+]
+
+{ #category : #'list and tree items - border' }
+OBlDefaultColors class >> pressedListItemBorderColor [
+
+	^ PressedListItemBorderColor
 ]
 
 { #category : #'list and tree items - background' }
