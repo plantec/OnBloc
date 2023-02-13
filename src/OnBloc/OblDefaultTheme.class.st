@@ -4,7 +4,6 @@ Class {
 	#instVars : [
 		'link',
 		'status',
-		'default',
 		'editor',
 		'button',
 		'item',
@@ -21,16 +20,6 @@ OBlDefaultTheme >> button [
 { #category : #accessing }
 OBlDefaultTheme >> button: anObject [
 	button := anObject
-]
-
-{ #category : #accessing }
-OBlDefaultTheme >> default [
-	^ default
-]
-
-{ #category : #accessing }
-OBlDefaultTheme >> default: anObject [
-	default := anObject
 ]
 
 { #category : #accessing }
@@ -58,7 +47,6 @@ OBlDefaultTheme >> initialize [
 	super initialize.
 	link := OBlDefaultLinkTheme new.
 	status := OBlDefaultStatusTheme new.
-	default := OBlDefaultDefaultTheme new.
 	editor := OBlDefaultEditorTheme new.
 	button := OBlDefaultButtonTheme new.
 	item := OBlDefaultItemTheme new.

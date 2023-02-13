@@ -1059,17 +1059,15 @@ OBlInfiniteElement >> offsetChildrenVerticallyBy: aNumber [
 { #category : #'private - commands' }
 OBlInfiniteElement >> offsetPositionRecordsForInsert: aStartPosition itemCount: anItemCount [
 
-	childrenManager
-		unfilteredChildrenReverseDo: [ :anElement | 
-			| anElementHolder |
-			anElementHolder := self elementHolderOf: anElement.
-			(anElementHolder shouldIgnore not and: [ 
-				 anElementHolder position >= aStartPosition ]) ifTrue: [ 
-				anElementHolder
-					offsetPositionBy: anItemCount
-					applyToPreLayout: false.
+	childrenManager unfilteredChildrenDo: [ :anElement |
+		| anElementHolder |
+		anElementHolder := self elementHolderOf: anElement.
+		(anElementHolder shouldIgnore not and: [ anElementHolder position >= aStartPosition ])
+			ifTrue: [ 
+				anElementHolder offsetPositionBy: anItemCount applyToPreLayout: false.
 				state structureChanged: true ] ]
-		in: self
+		in: self.
+	self requestLayout
 ]
 
 { #category : #'private - commands' }

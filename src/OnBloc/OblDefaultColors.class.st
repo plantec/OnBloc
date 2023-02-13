@@ -405,7 +405,7 @@ OBlDefaultColors class >> initialize [
 	
 	"list and tree items"
 	DeselectedListItemBackgroundColor := Color transparent.
-	HoveredListItemBackgroundColor := Color gray alpha: 0.1.
+	HoveredListItemBackgroundColor := Color veryVeryLightGray alpha: 0.1.
 	HoveredListItemBorderColor := Color gray alpha: 0.3.
 	SelectedListItemBackgroundColor := Color gray alpha: 0.4.
 	PressedListItemBackgroundColor := Color gray alpha: 0.2. 
