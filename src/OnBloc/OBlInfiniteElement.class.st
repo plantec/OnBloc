@@ -993,7 +993,7 @@ OBlInfiniteElement >> minFlingVelocity [
 OBlInfiniteElement >> notifyChildAttached: anElement [
 	"Notify all event handlers that element is attached to InfiniteElement"
 
-	self fireEvent: (BlInfiniteElementAttachedEvent element: anElement)
+	self dispatchEvent: (BlInfiniteElementAttachedEvent element: anElement)
 ]
 
 { #category : #notifying }
@@ -1346,7 +1346,7 @@ OBlInfiniteElement >> recycler [
 ]
 
 { #category : #'children - add/remove' }
-OBlInfiniteElement >> removeDetachedChild: anElement animate: shouldAnimate [
+OBlInfiniteElement >> removeDetachedChild: anElement [
 	| anElementHolder |
 	
 	anElementHolder := self elementHolderOf: anElement.
@@ -1357,7 +1357,7 @@ OBlInfiniteElement >> removeDetachedChild: anElement animate: shouldAnimate [
 			ifFalse: [ self error: 'Trying to removeDetachedChild: which is not flagged as temporary detached!' ] ].
 	
 	self dispatchChildDetached: anElement.
-	self removeDetachedChild: anElement
+	super removeDetachedChild: anElement
 ]
 
 { #category : #'children - add/remove' }

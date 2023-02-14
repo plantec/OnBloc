@@ -1042,7 +1042,7 @@ OBlInfiniteLayout >> removeAndRecycleScrap [
 				Since removeDetachedChild: may use a user API, a common mistake (ending animations on
 				the element) may recycle it too, so we guard it before we use user APIs."
 				anElementHolder isTmpDetached
-					ifTrue: [ infiniteElement removeDetachedChild: aScrappedElement animate: false ].
+					ifTrue: [ infiniteElement removeDetachedChild: aScrappedElement].
 				self recycler quickRecycleScrap: aScrappedElement	] ].
 	"we used quick recycling mechanism in the loop and have to clear scrap manually"
 	self recycler clearScrap.
@@ -1077,7 +1077,7 @@ OBlInfiniteLayout >> removeChildAt: anIndex [
 OBlInfiniteLayout >> removeDetachedChild: anElement [
 	"Finish removing a child element that was previously temporarily detached"
 
-	infiniteElement removeDetachedChild: anElement animate: false
+	infiniteElement removeDetachedChild: anElement
 ]
 
 { #category : #layout }
