@@ -108,16 +108,16 @@ OBlInfiniteLinearLayout >> computeExtraLayoutSpace [
 	I find an anchor coordinate and an anchor item position"
 	<return: #Point>
 	| anExtraSpace anExtraForStart anExtraForEnd |
-	
+
 	anExtraForStart := anExtraForEnd := 0.
-	
+
 	"Linear layout may decide to layout items for 'extra' pixels to account for scrolling target,
 	caching or predictive animations."
 	anExtraSpace := self extraLayoutSpace.
-	
+
 	" If the previous scroll delta was less than zero, the extra space should be laid out
 		at the start. Otherwise, it should be at the end"
-	
+
 	layoutState lastScrolledDelta >= 0
 		ifTrue: [
 			anExtraForStart := 0.
@@ -125,14 +125,14 @@ OBlInfiniteLinearLayout >> computeExtraLayoutSpace [
 		ifFalse: [
 			anExtraForStart := anExtraSpace.
 			anExtraForEnd := 0 ].
-		
+
 	anExtraForStart := anExtraForStart + self orientation startWithPadding.
 	anExtraForEnd := anExtraForEnd + self orientation paddingEnd.
-	
+
 	(self state isPreLayout and: [
 		self hasPendingScrollPosition and: [
 			self hasPendingScrollPositionOffset ] ])
-		ifTrue: [ 
+		ifTrue: [
 			"if the child is visible and we are going to move it around, we should layout
 			extra items in the opposite direction to make sure new items animate nicely
 			instead of just fading in"
@@ -140,19 +140,19 @@ OBlInfiniteLinearLayout >> computeExtraLayoutSpace [
 				| aCurrentOffset anUpcomingOffset |
 				aCurrentOffset := 0.
 				anUpcomingOffset := 0.
-				
+
 				shouldReverseLayout
-					ifTrue: [ 
+					ifTrue: [
 						aCurrentOffset := self orientation endWithPadding - (self orientation decoratedEnd: anElement).
 						anUpcomingOffset := aCurrentOffset - pendingScrollPositionOffset ]
-					ifFalse: [ 
+					ifFalse: [
 						aCurrentOffset := (self orientation decoratedStart: anElement) - self orientation startWithPadding.
 						anUpcomingOffset := pendingScrollPositionOffset - aCurrentOffset ].
-					
+
 					anUpcomingOffset > 0
 						ifTrue: [ anExtraForStart := anExtraForStart + anUpcomingOffset ]
 						ifFalse: [ anExtraForEnd := anExtraForEnd - anUpcomingOffset ] ] ].
-	
+
 	^ anExtraForStart @ anExtraForEnd
 ]
 
@@ -660,16 +660,16 @@ OBlInfiniteLinearLayout >> layoutChildrenFillFromStart: anExtraSpace [
 
 	anExtraForStart := anExtraSpace x.
 	anExtraForEnd := anExtraSpace y.
-	
+
 	"fill towards end"
 	self updateLayoutStateToFillEnd: anchorInfo.
 	layoutState extraSpace: anExtraForEnd.
 	self fillLayout: false.
-	anEndOffset := layoutState offset. 
+	anEndOffset := layoutState offset.
 	aLastElementPosition := layoutState currentPosition.
 	layoutState availableSpace > 0
 		ifTrue: [ anExtraForStart := anExtraForStart + layoutState availableSpace ].
-	
+
 	"fill towards start"
 	self updateLayoutStateToFillStart: anchorInfo.
 	layoutState extraSpace: anExtraForStart.
@@ -677,14 +677,14 @@ OBlInfiniteLinearLayout >> layoutChildrenFillFromStart: anExtraSpace [
 	self fillLayout: false.
 	aStartOffset := layoutState offset.
 	layoutState availableSpace > 0
-		ifTrue: [ 
+		ifTrue: [
 			"end could not consume all. add more items towards start"
 			anExtraForEnd := layoutState availableSpace.
 			self updateLayoutStateToFillEnd: aLastElementPosition offset: anEndOffset.
 			layoutState extraSpace: anExtraForEnd.
 			self fillLayout: false.
 			anEndOffset := layoutState offset	].
-			
+
 	^ aStartOffset @ anEndOffset
 ]
 
@@ -1253,7 +1253,7 @@ OBlInfiniteLinearLayout >> scrollToPosition: aPositionInDataSource offset: anOff
 OBlInfiniteLinearLayout >> scrollVerticallyBy: aNumber [
 	"@see BlInfiniteLayout>>#scrollVerticallyBy:"
 	<return: #Number>
-	
+
 	self orientation isHorizontal
 		ifTrue: [ ^ 0 ].
 
@@ -1262,8 +1262,8 @@ OBlInfiniteLinearLayout >> scrollVerticallyBy: aNumber [
 
 { #category : #testing }
 OBlInfiniteLinearLayout >> shouldMeasureTwice [
-	^ self heightSpec isExact not and: [ 
-		self widthSpec isExact not and: [ 
+	^ self heightSpec isExact not and: [
+		self widthSpec isExact not and: [
 			self hasFlexibleChildInBothOrientations ] ]
 ]
 
@@ -1365,7 +1365,7 @@ OBlInfiniteLinearLayout >> updateAnchorFromChildren: anAnchorInfo recycler: aBlI
 	If a child has focus, it is given priority"
 	<return: #Boolean>
 	| aFocusedElement aReferenceElement |
-	
+
 	self hasChildren
 		ifFalse: [ ^ false ].
 
@@ -1384,7 +1384,7 @@ OBlInfiniteLinearLayout >> updateAnchorFromChildren: anAnchorInfo recycler: aBlI
 		ifFalse: [ self referenceChildClosestToStartIn: aBlInfiniteRecycler state: aBlInfiniteState ] ).
 
 	aReferenceElement
-		ifNotNil: [ 
+		ifNotNil: [
 			self updateAnchor: anAnchorInfo fromReferenceChild: aReferenceElement.
 			^ true ].
 
@@ -1552,9 +1552,9 @@ OBlInfiniteLinearLayout >> updateLayoutStateToFillStart: anAnchorInfo [
 { #category : #'layout - state' }
 OBlInfiniteLinearLayout >> updateLayoutStateToFillStart: aPosition offset: anOffset [
 	| anAvailableSpace |
-	
+
 	anAvailableSpace := anOffset - self orientation startWithPadding.
-	
+
 	layoutState availableSpace: anAvailableSpace in: self.
 	layoutState itemDirection: (shouldReverseLayout
 		ifTrue: [ BlInfiniteLinearLayoutItemDirection tail ]
