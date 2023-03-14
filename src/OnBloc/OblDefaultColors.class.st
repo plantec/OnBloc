@@ -10,10 +10,14 @@ Class {
 		'ButtonPressedBackgroundColor',
 		'ButtonTextColor',
 		'DarkBorderColor',
+		'DefaultDividerBackgroundColor',
+		'DefaultDividerBorderColor',
 		'DeselectedListItemBackgroundColor',
 		'DisabledButtonBackgroundColor',
 		'DisabledButtonBorderColor',
 		'DisabledButtonTextColor',
+		'DisabledDividerBackgroundColor',
+		'DisabledDividerBorderColor',
 		'DisabledHeaderTextColor',
 		'EditorBorderColor',
 		'ErrorBackgroundColor',
@@ -26,6 +30,8 @@ Class {
 		'HeaderTextColor',
 		'HoveredButtonBorderColor',
 		'HoveredButtonTextColor',
+		'HoveredDividerBackgroundColor',
+		'HoveredDividerBorderColor',
 		'HoveredListItemBackgroundColor',
 		'HoveredListItemBorderColor',
 		'LightBorderColor',
@@ -36,6 +42,8 @@ Class {
 		'PaleErrorBackgroundColor',
 		'PressedButtonBorderColor',
 		'PressedButtonTextColor',
+		'PressedDividerBackgroundColor',
+		'PressedDividerBorderColor',
 		'PressedListItemBackgroundColor',
 		'PressedListItemBorderColor',
 		'PrimaryBorderColor',
@@ -93,6 +101,30 @@ OBlDefaultColors class >> defaultButtonTextColor [
 { #category : #'button - text' }
 OBlDefaultColors class >> defaultButtonTextColor: anObject [
 	ButtonTextColor := anObject
+]
+
+{ #category : #divider }
+OBlDefaultColors class >> defaultDividerBackgroundColor [
+
+	^ DefaultDividerBackgroundColor
+]
+
+{ #category : #divider }
+OBlDefaultColors class >> defaultDividerBackgroundColor: aColor [
+
+	DefaultDividerBackgroundColor := aColor
+]
+
+{ #category : #divider }
+OBlDefaultColors class >> defaultDividerBorderColor [
+
+	^ DefaultDividerBorderColor
+]
+
+{ #category : #divider }
+OBlDefaultColors class >> defaultDividerBorderColor: aColor [
+
+	DefaultDividerBorderColor := aColor
 ]
 
 { #category : #'header - background' }
@@ -153,6 +185,30 @@ OBlDefaultColors class >> disabledButtonTextColor [
 { #category : #'button - text' }
 OBlDefaultColors class >> disabledButtonTextColor: anObject [
 	DisabledButtonTextColor := anObject
+]
+
+{ #category : #divider }
+OBlDefaultColors class >> disabledDividerBackgroundColor [
+
+	^ DisabledDividerBackgroundColor
+]
+
+{ #category : #divider }
+OBlDefaultColors class >> disabledDividerBackgroundColor: aColor [
+
+	DisabledDividerBackgroundColor := aColor
+]
+
+{ #category : #divider }
+OBlDefaultColors class >> disabledDividerBorderColor [
+
+	^ DisabledDividerBorderColor
+]
+
+{ #category : #divider }
+OBlDefaultColors class >> disabledDividerBorderColor: aColor [
+
+	DisabledDividerBorderColor := aColor
 ]
 
 { #category : #'header - text' }
@@ -333,6 +389,30 @@ OBlDefaultColors class >> hoveredButtonTextColor: anObject [
 	HoveredButtonTextColor := anObject
 ]
 
+{ #category : #divider }
+OBlDefaultColors class >> hoveredDividerBackgroundColor [
+
+	^ HoveredDividerBackgroundColor
+]
+
+{ #category : #divider }
+OBlDefaultColors class >> hoveredDividerBackgroundColor: aColor [
+
+	HoveredDividerBackgroundColor := aColor
+]
+
+{ #category : #divider }
+OBlDefaultColors class >> hoveredDividerBorderColor [
+
+	^ HoveredDividerBorderColor
+]
+
+{ #category : #divider }
+OBlDefaultColors class >> hoveredDividerBorderColor: aColor [
+
+	HoveredDividerBorderColor := aColor
+]
+
 { #category : #'list and tree items - border' }
 OBlDefaultColors class >> hoveredListItemBorderColor [
 
@@ -416,6 +496,16 @@ OBlDefaultColors class >> initialize [
 	EditorBorderColor := LightBorderColor.
 	FocusedEditorBorderColor := PrimaryBorderColor.
 	
+	" dividers "
+	DisabledDividerBackgroundColor := Color transparent.
+	DisabledDividerBorderColor := Color transparent.
+	PressedDividerBorderColor := Color transparent.
+	PressedDividerBackgroundColor := Color lightGray.
+	DefaultDividerBorderColor := Color transparent.
+	HoveredDividerBorderColor := Color transparent.
+	HoveredDividerBackgroundColor := Color veryLightGray.
+	DefaultDividerBackgroundColor := Color transparent.
+	
 	"others"
 	LinkColor := Color fromHexString: #'096dd9'.
 	LinkWithErrorColor := Color fromHexString: #cf1322.
@@ -480,6 +570,30 @@ OBlDefaultColors class >> pressedButtonTextColor [
 { #category : #'button - text' }
 OBlDefaultColors class >> pressedButtonTextColor: anObject [
 	PressedButtonTextColor := anObject
+]
+
+{ #category : #divider }
+OBlDefaultColors class >> pressedDividerBackgroundColor [
+
+	^ PressedDividerBackgroundColor
+]
+
+{ #category : #divider }
+OBlDefaultColors class >> pressedDividerBackgroundColor: aColor [
+
+	PressedDividerBackgroundColor := aColor
+]
+
+{ #category : #divider }
+OBlDefaultColors class >> pressedDividerBorderColor [
+
+	^ PressedDividerBorderColor
+]
+
+{ #category : #divider }
+OBlDefaultColors class >> pressedDividerBorderColor: aColor [
+
+	PressedDividerBorderColor := aColor
 ]
 
 { #category : #'list and tree items - border' }

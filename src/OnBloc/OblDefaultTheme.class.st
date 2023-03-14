@@ -7,7 +7,8 @@ Class {
 		'editor',
 		'button',
 		'item',
-		'header'
+		'header',
+		'divider'
 	],
 	#category : #'OnBloc-Theme'
 }
@@ -20,6 +21,18 @@ OBlDefaultTheme >> button [
 { #category : #accessing }
 OBlDefaultTheme >> button: anObject [
 	button := anObject
+]
+
+{ #category : #accessing }
+OBlDefaultTheme >> divider [
+
+	^ divider
+]
+
+{ #category : #accessing }
+OBlDefaultTheme >> divider: aDividerTheme [
+
+	divider := aDividerTheme
 ]
 
 { #category : #accessing }
@@ -50,7 +63,8 @@ OBlDefaultTheme >> initialize [
 	editor := OBlDefaultEditorTheme new.
 	button := OBlDefaultButtonTheme new.
 	item := OBlDefaultItemTheme new.
-	header := OBlDefaultHeaderTheme new
+	header := OBlDefaultHeaderTheme new.
+	divider := OBlDefaultDividerTheme new
 ]
 
 { #category : #accessing }
