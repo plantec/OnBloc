@@ -77,14 +77,15 @@ OBlDefaultDividerTheme >> hoveredBorderColor: anObject [
 { #category : #initialization }
 OBlDefaultDividerTheme >> initialize [
 	super initialize.
+	defaultBorderColor := OBlDefaultColors defaultDividerBorderColor.
+	defaultBackgroundColor := OBlDefaultColors defaultDividerBackgroundColor.
 	disabledBackgroundColor := OBlDefaultColors disabledDividerBackgroundColor.
 	disabledBorderColor := OBlDefaultColors disabledDividerBorderColor.
 	pressedBorderColor := OBlDefaultColors pressedDividerBorderColor.
 	pressedBackgroundColor := OBlDefaultColors pressedDividerBackgroundColor.
-	defaultBorderColor := OBlDefaultColors defaultDividerBorderColor.
 	hoveredBorderColor := OBlDefaultColors hoveredDividerBorderColor.
 	hoveredBackgroundColor := OBlDefaultColors hoveredDividerBackgroundColor.
-	defaultBackgroundColor := OBlDefaultColors defaultDividerBackgroundColor
+
 ]
 
 { #category : #accessing }

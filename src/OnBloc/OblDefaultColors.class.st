@@ -497,14 +497,14 @@ OBlDefaultColors class >> initialize [
 	FocusedEditorBorderColor := PrimaryBorderColor.
 	
 	" dividers "
+	DefaultDividerBorderColor := Color veryLightGray muchLighter.
+	DefaultDividerBackgroundColor := Color veryLightGray muchLighter.
 	DisabledDividerBackgroundColor := Color transparent.
 	DisabledDividerBorderColor := Color transparent.
 	PressedDividerBorderColor := Color transparent.
 	PressedDividerBackgroundColor := Color lightGray.
-	DefaultDividerBorderColor := Color transparent.
 	HoveredDividerBorderColor := Color transparent.
 	HoveredDividerBackgroundColor := Color veryLightGray.
-	DefaultDividerBackgroundColor := Color transparent.
 	
 	"others"
 	LinkColor := Color fromHexString: #'096dd9'.

@@ -40,5 +40,6 @@ OBlTheme class >> default: aTheme [
 
 { #category : #accessing }
 OBlTheme class >> resetDefault [
+	<script>
 	default := nil.
 ]
