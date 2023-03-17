@@ -40,7 +40,7 @@ Class {
 
 { #category : #constraints }
 OBlInfiniteLayout class >> constraints [
-	^ BlInfiniteLayoutConstraints new
+	^ OBlInfiniteLayoutConstraints new
 ]
 
 { #category : #'children - add/remove' }

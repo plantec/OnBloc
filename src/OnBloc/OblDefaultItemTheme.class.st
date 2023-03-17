@@ -9,10 +9,17 @@ Class {
 		'focusedBorderColor',
 		'pressedColor',
 		'hoveredBorderColor',
-		'pressedBorderColor'
+		'pressedBorderColor',
+		'alternatingColorArray'
 	],
 	#category : #'OnBloc-Theme'
 }
+
+{ #category : #accessing }
+OBlDefaultItemTheme >> alternatingColorArray [
+
+	^ alternatingColorArray
+]
 
 { #category : #accessing }
 OBlDefaultItemTheme >> defaultColor [
@@ -67,6 +74,7 @@ OBlDefaultItemTheme >> initialize [
 	hoveredColor := OBlDefaultColors hoveredListItemColor.
 	hoveredBorderColor := OBlDefaultColors hoveredListItemBorderColor.
 	defaultColor := OBlDefaultColors defaultListItemColor.
+	alternatingColorArray := { Color veryLightGray muchLighter. Color white }.
 	focusedBorderColor := OBlDefaultColors focusedListItemBorder.
 	pressedBorderColor := OBlDefaultColors pressedListItemBorderColor.
 	pressedColor := OBlDefaultColors pressedListItemColor

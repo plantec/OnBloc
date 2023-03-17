@@ -22,11 +22,16 @@ Class {
 	#category : #'OnBloc-Infinite'
 }
 
-{ #category : #'instance creation' }
-OBlInfiniteHolder class >> of: anElement [
-	^ self new
-		initializeWith: anElement;
-		yourself
+{ #category : #'debug - asserting' }
+OBlInfiniteHolder class >> infiniteElement: anInfiniteElement [
+
+	^ self basicNew infiniteElement: anInfiniteElement; initialize; yourself
+]
+
+{ #category : #'debug - asserting' }
+OBlInfiniteHolder class >> new [
+
+	^ self error: 'Use infiniteElement: instead'
 ]
 
 { #category : #'private - position' }
@@ -108,12 +113,6 @@ OBlInfiniteHolder >> initialize [
 	itemId := NoId.
 	flags := BlInfiniteElementHolderFlags new.
 	isScrap := false
-]
-
-{ #category : #initialization }
-OBlInfiniteHolder >> initializeWith: anElement [
-	
-	itemElement := anElement
 ]
 
 { #category : #'private - flags testing' }
