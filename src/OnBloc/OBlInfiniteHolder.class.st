@@ -22,18 +22,6 @@ Class {
 	#category : #'OnBloc-Infinite'
 }
 
-{ #category : #'debug - asserting' }
-OBlInfiniteHolder class >> infiniteElement: anInfiniteElement [
-
-	^ self basicNew infiniteElement: anInfiniteElement; initialize; yourself
-]
-
-{ #category : #'debug - asserting' }
-OBlInfiniteHolder class >> new [
-
-	^ self error: 'Use infiniteElement: instead'
-]
-
 { #category : #'private - position' }
 OBlInfiniteHolder >> clearOldPosition [
 
