@@ -487,7 +487,7 @@ OBlDefaultColors class >> initialize [
 	DeselectedListItemBackgroundColor := Color transparent.
 	HoveredListItemBackgroundColor := Color veryVeryLightGray alpha: 0.1.
 	HoveredListItemBorderColor := Color gray alpha: 0.3.
-	SelectedListItemBackgroundColor := Color gray alpha: 0.4.
+	SelectedListItemBackgroundColor := Color gray darker.
 	PressedListItemBackgroundColor := Color gray alpha: 0.2. 
 	PressedListItemBorderColor := Color gray alpha: 0.4. 
 	ExpandCollapseTriangleBackgroundColor := Color fromHexString: #'d9d9d9'. "grey-5"
