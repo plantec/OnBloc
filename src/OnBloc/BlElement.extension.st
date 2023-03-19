@@ -39,12 +39,3 @@ BlElement >> theme: aTheme [
 				theme: aTheme;
 				yourself)
 ]
-
-{ #category : #'*OnBloc' }
-BlElement >> widgetContent [
-
-	^ self
-		  directChildNamed: #content
-		  ifFound: [ :anElement | anElement ]
-		  ifNone: [ self ]
-]
