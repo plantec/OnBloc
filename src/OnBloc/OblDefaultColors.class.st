@@ -138,7 +138,7 @@ OBlDefaultColors class >> defaultHeaderTextColor [
 ]
 
 { #category : #'list and tree items - background' }
-OBlDefaultColors class >> defaultListItemColor [
+OBlDefaultColors class >> defaultListItemBackgroundColor [
 	^ self deselectedListItemColor
 ]
 
@@ -413,20 +413,20 @@ OBlDefaultColors class >> hoveredDividerBorderColor: aColor [
 	HoveredDividerBorderColor := aColor
 ]
 
-{ #category : #'list and tree items - border' }
-OBlDefaultColors class >> hoveredListItemBorderColor [
-
-	^ HoveredListItemBorderColor
-]
-
 { #category : #'list and tree items - background' }
-OBlDefaultColors class >> hoveredListItemColor [
+OBlDefaultColors class >> hoveredListItemBackgroundColor [
 	^ HoveredListItemBackgroundColor
 ]
 
 { #category : #'list and tree items - background' }
-OBlDefaultColors class >> hoveredListItemColor: aColor [
+OBlDefaultColors class >> hoveredListItemBackgroundColor: aColor [
 	HoveredListItemBackgroundColor := aColor
+]
+
+{ #category : #'list and tree items - border' }
+OBlDefaultColors class >> hoveredListItemBorderColor [
+
+	^ HoveredListItemBorderColor
 ]
 
 { #category : #initialization }

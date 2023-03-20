@@ -4,31 +4,30 @@ Class {
 	#instVars : [
 		'selectedColor',
 		'deselectedColor',
-		'hoveredColor',
-		'defaultColor',
 		'focusedBorderColor',
-		'pressedColor',
 		'hoveredBorderColor',
 		'pressedBorderColor',
-		'alternatingColorArray'
+		'hoveredBackgroundColor',
+		'defaultBackgroundColor',
+		'pressedBackgroundColor'
 	],
 	#category : #'OnBloc-Theme'
 }
 
 { #category : #accessing }
-OBlDefaultItemTheme >> alternatingColorArray [
-
-	^ alternatingColorArray
+OBlDefaultItemTheme >> defaultBackgroundColor [
+	^ defaultBackgroundColor
 ]
 
 { #category : #accessing }
-OBlDefaultItemTheme >> defaultColor [
-	^ defaultColor
+OBlDefaultItemTheme >> defaultBackgroundColor: anObject [
+	defaultBackgroundColor := anObject
 ]
 
-{ #category : #accessing }
-OBlDefaultItemTheme >> defaultColor: anObject [
-	defaultColor := anObject
+{ #category : #initialization }
+OBlDefaultItemTheme >> defaultBorderColor [
+
+	^ self deselectedColor 
 ]
 
 { #category : #accessing }
@@ -52,18 +51,18 @@ OBlDefaultItemTheme >> focusedBorderColor: anObject [
 ]
 
 { #category : #accessing }
+OBlDefaultItemTheme >> hoveredBackgroundColor [
+	^ hoveredBackgroundColor
+]
+
+{ #category : #accessing }
+OBlDefaultItemTheme >> hoveredBackgroundColor: anObject [
+	hoveredBackgroundColor := anObject
+]
+
+{ #category : #accessing }
 OBlDefaultItemTheme >> hoveredBorderColor [
 	^ hoveredBorderColor
-]
-
-{ #category : #accessing }
-OBlDefaultItemTheme >> hoveredColor [
-	^ hoveredColor
-]
-
-{ #category : #accessing }
-OBlDefaultItemTheme >> hoveredColor: anObject [
-	hoveredColor := anObject
 ]
 
 { #category : #initialization }
@@ -71,13 +70,22 @@ OBlDefaultItemTheme >> initialize [
 	super initialize.
 	selectedColor := OBlDefaultColors selectedListItemColor.
 	deselectedColor := OBlDefaultColors deselectedListItemColor.
-	hoveredColor := OBlDefaultColors hoveredListItemColor.
+	hoveredBackgroundColor := OBlDefaultColors hoveredListItemBackgroundColor.
 	hoveredBorderColor := OBlDefaultColors hoveredListItemBorderColor.
-	defaultColor := OBlDefaultColors defaultListItemColor.
-	alternatingColorArray := { Color veryLightGray muchLighter. Color white }.
+	defaultBackgroundColor := OBlDefaultColors defaultListItemBackgroundColor.
 	focusedBorderColor := OBlDefaultColors focusedListItemBorder.
 	pressedBorderColor := OBlDefaultColors pressedListItemBorderColor.
-	pressedColor := OBlDefaultColors pressedListItemColor
+	pressedBackgroundColor := OBlDefaultColors pressedListItemColor
+]
+
+{ #category : #accessing }
+OBlDefaultItemTheme >> pressedBackgroundColor [
+	^ pressedBackgroundColor
+]
+
+{ #category : #accessing }
+OBlDefaultItemTheme >> pressedBackgroundColor: anObject [
+	pressedBackgroundColor := anObject
 ]
 
 { #category : #accessing }
@@ -90,16 +98,6 @@ OBlDefaultItemTheme >> pressedBorderColor [
 OBlDefaultItemTheme >> pressedBorderColor: aColor [
 
 	pressedBorderColor := aColor
-]
-
-{ #category : #accessing }
-OBlDefaultItemTheme >> pressedColor [
-	^ pressedColor
-]
-
-{ #category : #accessing }
-OBlDefaultItemTheme >> pressedColor: anObject [
-	pressedColor := anObject
 ]
 
 { #category : #accessing }
