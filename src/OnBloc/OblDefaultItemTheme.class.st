@@ -101,6 +101,11 @@ OBlDefaultItemTheme >> pressedBorderColor: aColor [
 ]
 
 { #category : #accessing }
+OBlDefaultItemTheme >> selectedBlurredColor [
+	^ self selectedColor muchLighter 
+]
+
+{ #category : #accessing }
 OBlDefaultItemTheme >> selectedColor [
 	^ selectedColor
 ]
