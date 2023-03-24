@@ -1773,8 +1773,6 @@ OBlSpace >> processMouseDown: anEvent inside: anElement on: aLayer [
 	| evt |
 	evt := anEvent clone.
 	evt currentTarget: anElement.
-	"evt traceCr.
-	anElement traceCr."
 	aLayer childrenDo: [ :child | 
 		(anElement isNil or: [ (child == anElement or: [ anElement hasParent: child ]) not ]) 
 			ifTrue: [ 
@@ -2082,18 +2080,6 @@ OBlSpace >> universe [
 OBlSpace >> updateCursor: aBlCursor [
 
 	self hostSpaceDo: [ :aHostSpace | aHostSpace cursor: aBlCursor ]
-]
-
-{ #category : #drawing }
-OBlSpace >> useAlexandrieMorphicWindowHost [
-	
-	self host: BAMorphicWindowHost new
-]
-
-{ #category : #drawing }
-OBlSpace >> useAlexandrieOSWindowSDL2Host [
-	
-	self host: BAOSWindowSDL2Host new
 ]
 
 { #category : #'host dependent - ToDo' }
