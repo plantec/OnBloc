@@ -3,8 +3,8 @@ Class {
 	#superclass : #OBlTheme,
 	#instVars : [
 		'deselectedPageTitleBackgroundColor',
-		'headerBackgroundColor',
-		'selectedPageTitleBackgroundColor'
+		'selectedPageTitleBackgroundColor',
+		'backgroundColor'
 	],
 	#category : #'OnBloc-Theme'
 }
@@ -12,7 +12,13 @@ Class {
 { #category : #accessing }
 OBlDefaultNotebookTheme >> backgroundColor [
 
-	^ headerBackgroundColor
+	^ backgroundColor
+]
+
+{ #category : #accessing }
+OBlDefaultNotebookTheme >> backgroundColor: aColor [
+
+	backgroundColor := aColor
 ]
 
 { #category : #accessing }
@@ -27,20 +33,14 @@ OBlDefaultNotebookTheme >> deselectedPageTitleBackgroundColor: aColor [
 	deselectedPageTitleBackgroundColor := aColor
 ]
 
-{ #category : #accessing }
-OBlDefaultNotebookTheme >> headerBackgroundColor: aColor [
-
-	headerBackgroundColor := aColor
-]
-
 { #category : #initialization }
 OBlDefaultNotebookTheme >> initialize [
 
 	super initialize.
 	
-	selectedPageTitleBackgroundColor := OBlDefaultColors pressedButtonBackgroundColor.
+	selectedPageTitleBackgroundColor := OBlDefaultColors textHighlightColor.
 	deselectedPageTitleBackgroundColor := OBlDefaultColors defaultButtonBackgroundColor.
-	headerBackgroundColor := OBlDefaultColors neutralBackgroundColor
+	backgroundColor := OBlDefaultColors neutralBackgroundColor
 ]
 
 { #category : #accessing }

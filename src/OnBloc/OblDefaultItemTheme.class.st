@@ -102,6 +102,7 @@ OBlDefaultItemTheme >> pressedBorderColor: aColor [
 
 { #category : #accessing }
 OBlDefaultItemTheme >> selectedColor [
+
 	^ selectedColor
 ]
 
