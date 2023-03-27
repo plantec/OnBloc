@@ -9,7 +9,8 @@ Class {
 		'pressedBorderColor',
 		'hoveredBackgroundColor',
 		'defaultBackgroundColor',
-		'pressedBackgroundColor'
+		'pressedBackgroundColor',
+		'selectedBlurredColor'
 	],
 	#category : #'OnBloc-Theme'
 }
@@ -102,7 +103,7 @@ OBlDefaultItemTheme >> pressedBorderColor: aColor [
 
 { #category : #accessing }
 OBlDefaultItemTheme >> selectedBlurredColor [
-	^ self selectedColor muchLighter 
+	^ selectedBlurredColor ifNil: [selectedBlurredColor := self selectedColor muchLighter ]
 ]
 
 { #category : #accessing }
