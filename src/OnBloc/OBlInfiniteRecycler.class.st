@@ -140,10 +140,8 @@ OBlInfiniteRecycler >> recycleElement: anElement in: anInfiniteElement [
 	Notice: I try to make element recycle-able since layout intended to recycle this element (e.g. even if it is in scrap or change cache)"
 	| anElementHolder |
 	anElementHolder := anInfiniteElement elementHolderOf: anElement.	
-	anElementHolder isScrap
-		ifTrue: [ self unscrapHolder: anElementHolder ]
-		ifFalse: [ anElementHolder wasReturnedFromScrap
-			ifTrue: [ anElementHolder clearReturnedFromScrap ] ].
+	anElementHolder wasReturnedFromScrap
+		ifTrue: [ anElementHolder clearReturnedFromScrap ]
 ]
 
 { #category : #recycling }

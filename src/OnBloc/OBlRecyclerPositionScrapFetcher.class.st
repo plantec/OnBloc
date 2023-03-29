@@ -16,23 +16,15 @@ OBlRecyclerPositionScrapFetcher >> defaultNext [
 { #category : #'element fetching' }
 OBlRecyclerPositionScrapFetcher >> elementFor: aPosition in: anInfiniteElement [
 
-	| holder fromScrap |
-	fromScrap := false.
-	holder := self exactScrapFor: aPosition in: anInfiniteElement.
-	holder ifNotNil: [ 
-		(self validateHolder: holder in: anInfiniteElement)
-			ifFalse: [ 
-				holder flags addInvalid.
-				holder isScrap
-					ifTrue: [ 
-						self childRemoved: holder itemElement in: holder infiniteElement.
-						holder itemElement dispatchRemovedFromParent: holder infiniteElement.
-						anInfiniteElement recycler unscrapHolder: holder ]
-					ifFalse: [ holder wasReturnedFromScrap ifTrue: [ holder clearReturnedFromScrap ] ].
-				holder := nil ]
-			ifTrue: [ fromScrap := true ] ].
+	(self exactScrapFor: aPosition in: anInfiniteElement)
+		ifNotNil: [ :found |
+			(self validateHolder: found in: anInfiniteElement)
+				ifTrue: [ ^ found ]
+				ifFalse: [ 
+					found flags addInvalid.
+					found wasReturnedFromScrap ifTrue: [ found clearReturnedFromScrap ] ] ].
 
-	^ holder ifNil: [ self nextFetcher elementFor: aPosition in: anInfiniteElement ]
+	^ self nextFetcher elementFor: aPosition in: anInfiniteElement
 ]
 
 { #category : #private }

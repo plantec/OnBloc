@@ -13,7 +13,6 @@ Class {
 		'itemId',
 		'preLayoutPosition',
 		'flags',
-		'isScrap',
 		'infiniteElement'
 	],
 	#pools : [
@@ -54,10 +53,7 @@ OBlInfiniteHolder >> detachInfiniteElement [
 
 { #category : #private }
 OBlInfiniteHolder >> detachRecycler [
-	"Detaches recycler setting it to nil and isInChangeScrap to false.
-	Additionally set returned from scrap flag to false"
-	"recycler := nil."
-	isScrap := false.
+	"Set returned from scrap flag to false"
 	self clearReturnedFromScrap
 ]
 
@@ -99,8 +95,7 @@ OBlInfiniteHolder >> initialize [
 	position := NoPosition.
 	preLayoutPosition := NoPosition.
 	itemId := NoId.
-	flags := BlInfiniteElementHolderFlags new.
-	isScrap := false
+	flags := BlInfiniteElementHolderFlags new
 ]
 
 { #category : #'private - flags testing' }
@@ -121,14 +116,6 @@ OBlInfiniteHolder >> isInvalid [
 { #category : #'private - flags testing' }
 OBlInfiniteHolder >> isRemoved [
 	^ self flags hasRemoved
-]
-
-{ #category : #'private - flags testing' }
-OBlInfiniteHolder >> isScrap [
-	"Return true if an item I represent is added to scrap, false otherwise"
-	<return: #Boolean>
-
-	^ isScrap
 ]
 
 { #category : #'private - flags testing' }

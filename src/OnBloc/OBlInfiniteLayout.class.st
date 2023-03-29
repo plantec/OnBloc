@@ -68,11 +68,9 @@ OBlInfiniteLayout >> addChild: anElement at: anIndex disappearing: isDisappearin
 
 	anInfiniteConstraints := anElement constraints infinite.
 
-	(anElementHolder wasReturnedFromScrap or: [ anElementHolder isScrap ])
+	(anElementHolder wasReturnedFromScrap )
 		ifTrue: [ 
-			anElementHolder isScrap
-				ifTrue: [ self recycler unscrapHolder: anElementHolder ]
-				ifFalse: [ anElementHolder clearReturnedFromScrap ].
+			anElementHolder clearReturnedFromScrap.
 			infiniteElement childrenManager attachChild: anElement at: anIndex in: infiniteElement ]
 		ifFalse: [ 
 			anElement parent == infiniteElement
