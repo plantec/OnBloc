@@ -8,7 +8,8 @@ Class {
 		'button',
 		'item',
 		'header',
-		'divider'
+		'divider',
+		'notebook'
 	],
 	#category : #'OnBloc-Theme'
 }
@@ -64,7 +65,8 @@ OBlDefaultTheme >> initialize [
 	button := OBlDefaultButtonTheme new.
 	item := OBlDefaultItemTheme new.
 	header := OBlDefaultHeaderTheme new.
-	divider := OBlDefaultDividerTheme new
+	divider := OBlDefaultDividerTheme new.
+	notebook := OBlDefaultNotebookTheme new.
 ]
 
 { #category : #accessing }
@@ -85,6 +87,18 @@ OBlDefaultTheme >> link [
 { #category : #accessing }
 OBlDefaultTheme >> link: anObject [
 	link := anObject
+]
+
+{ #category : #accessing }
+OBlDefaultTheme >> notebook [
+
+	^ notebook
+]
+
+{ #category : #accessing }
+OBlDefaultTheme >> notebook: anObject [
+
+	notebook := anObject
 ]
 
 { #category : #accessing }

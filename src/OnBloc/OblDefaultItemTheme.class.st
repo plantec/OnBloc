@@ -108,6 +108,7 @@ OBlDefaultItemTheme >> selectedBlurredColor [
 
 { #category : #accessing }
 OBlDefaultItemTheme >> selectedColor [
+
 	^ selectedColor
 ]
 
