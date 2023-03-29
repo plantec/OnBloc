@@ -235,13 +235,6 @@ OBlInfiniteHolder >> stopIgnoring [
 	self flags clearIgnore
 ]
 
-{ #category : #private }
-OBlInfiniteHolder >> unscrap [
-	"Unscrap me from recycler detaching it from me as result"
-	self deprecated: 'Because recycler inst var should be removed to avoid bi-directionnal reference between BlInfiniteHolder and the recycler. use Recycler>>#unscrapHolder: instead'.
-	"recycler unscrapHolder: self"
-]
-
 { #category : #'private - flags testing' }
 OBlInfiniteHolder >> wasReturnedFromScrap [
 	<return: #Boolean>
