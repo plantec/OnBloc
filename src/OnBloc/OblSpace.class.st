@@ -49,9 +49,7 @@ Class {
 		'layoutError',
 		'tasks',
 		'time',
-		'touchProcessor',
 		'frame',
-		'gestureProcessor',
 		'elementsNeedingPaint',
 		'elementsNeedingLayout',
 		'telemetry',
@@ -1255,13 +1253,6 @@ OBlSpace >> fullsize: aBoolean [
 	 self hostSpaceDo: [ :aHostSpace | aHostSpace fullsize: aBoolean ]
 ]
 
-{ #category : #'accessing - processors' }
-OBlSpace >> gestureProcessor [
-	<return: #BlGestureProcessor>
-
-	^ gestureProcessor
-]
-
 { #category : #'focus managing' }
 OBlSpace >> grabFocus [
 	self focused: true
@@ -1451,8 +1442,6 @@ OBlSpace >> initialize [
 	mouseProcessor := OBlMouseProcessor space: self.
 	focusProcessor := BlFocusProcessor space: self.
 	keyboardProcessor := BlKeyboardProcessor space: self.
-	touchProcessor := BlTouchProcessor space: self.
-	gestureProcessor := BlGestureProcessor space: self.
 
 	tasks := BlSpaceTaskQueue space: self.
 	time := BlTime real.
@@ -2055,13 +2044,6 @@ OBlSpace >> toFront [
 { #category : #accessing }
 OBlSpace >> topMostParent [
 	^ self root
-]
-
-{ #category : #'accessing - processors' }
-OBlSpace >> touchProcessor [
-	<return: #BlTouchProcessor>
-
-	^ touchProcessor
 ]
 
 { #category : #'focus managing' }
