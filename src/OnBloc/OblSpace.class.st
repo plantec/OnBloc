@@ -411,13 +411,6 @@ OBlSpace class >> spaceWithId: aSpaceId do: aBlock [
 		ifNone: [ nil ]
 ]
 
-{ #category : #'api - adding children' }
-OBlSpace >> addChild: anElement [
-	"Add a given element as a direct child to the space root"
-	
-	self root addChild: anElement
-]
-
 { #category : #drawing }
 OBlSpace >> aeAsForm [
 
@@ -436,13 +429,6 @@ OBlSpace >> asReference [
 	<return: #BlSpaceReference>
 
 	^ reference ifNil: [ reference := BlAttachedCachedSpaceReference forSpace: self ]
-]
-
-{ #category : #'-- extensions-sparta --' }
-OBlSpace >> asSpartaForm [
-	<return: #Form>
-
-	^ self layerHolder asSpartaForm
 ]
 
 { #category : #'change - rendering' }
@@ -480,7 +466,7 @@ OBlSpace >> bounds [
 	^ BlBounds origin: self position extent: self extent
 ]
 
-{ #category : #'change - properties' }
+{ #category : #'NOT-USED-change - properties' }
 OBlSpace >> canComputeProperties: anElement [
 	"Return true if properties of the given element can be computed"
 	<return: #Boolean>
@@ -518,7 +504,7 @@ OBlSpace >> close [
 	(BlParallelUniverse forHost: self host class) closeSpace: self
 ]
 
-{ #category : #'api - painting' }
+{ #category : #'NOT-USED-composition layer' }
 OBlSpace >> compositionLayer [
 	"Return my composition layer if I have one or nil otherwise"
 	<return: #BlCompositionLayer or: nil>
@@ -733,7 +719,7 @@ OBlSpace >> dispatchTimeEvent: aSpaceStepEventClass during: aBlock [
 				yourself)
 ]
 
-{ #category : #'change - properties' }
+{ #category : #'NOT-USED-change - properties' }
 OBlSpace >> doComputeProperties [
 	| theElementToProcess |
 	
@@ -757,7 +743,7 @@ OBlSpace >> doComputeProperties [
 		ifFalse: [ self doComputePropertiesOf: theElementToProcess ]
 ]
 
-{ #category : #'change - properties' }
+{ #category : #'NOT-USED-change - properties' }
 OBlSpace >> doComputeProperties: anElement withGlobalProperties: aGlobalResolvedProperties [
 	self
 		assert: [ anElement hasParent ]
@@ -773,7 +759,7 @@ OBlSpace >> doComputeProperties: anElement withGlobalProperties: aGlobalResolved
 		withGlobalProperties: aGlobalResolvedProperties
 ]
 
-{ #category : #'change - properties' }
+{ #category : #'NOT-USED-change - properties' }
 OBlSpace >> doComputeProperties: anElement withParentProperties: aParentResolvedProperties withGlobalProperties: aGlobalResolvedProperties [
 	| theResolvedProperties thePropagatableProperties |
 
@@ -806,7 +792,7 @@ OBlSpace >> doComputeProperties: anElement withParentProperties: aParentResolved
 	anElement properties flushPropertiesToRemove
 ]
 
-{ #category : #'change - properties' }
+{ #category : #'NOT-USED-change - properties' }
 OBlSpace >> doComputePropertiesFromRoot: aRootElement [
 	| theGlobalResolvedProperties |
 
@@ -822,7 +808,7 @@ OBlSpace >> doComputePropertiesFromRoot: aRootElement [
 		withGlobalProperties: theGlobalResolvedProperties
 ]
 
-{ #category : #'change - properties' }
+{ #category : #'NOT-USED-change - properties' }
 OBlSpace >> doComputePropertiesOf: aCollectionOfElements [
 	| theGlobalResolvedProperties |
 
@@ -843,32 +829,33 @@ OBlSpace >> doComputePropertiesOf: aCollectionOfElements [
 
 { #category : #'change - layout' }
 OBlSpace >> doLayout [
-	| layoutCounter maxLayoutCount |
 
-	self
-		assert: [ self isLayoutRequested ]
-		description: [ 'Root element must request layout in order to update it' ].
+	self isLayoutRequested ifFalse: [ ^ self ].
 
 	[
-		layoutCounter := 0.
-		maxLayoutCount := 100.
+	| layoutCounter maxLayoutCount |
+	layoutCounter := 0.
+	maxLayoutCount := 100.
 
-		[ self hasLayoutError not and: [ self isLayoutRequested and: [ layoutCounter < maxLayoutCount ] ] ]
-			whileTrue: [
-				self doUpdateLayout.
-				layoutCounter := layoutCounter + 1.
-				layoutCounter = 50
-					ifTrue: [ 'Warning: Layout was performed 50 times per frame!' traceCr ] ].
+	[
+	self hasLayoutError not and: [
+		self isLayoutRequested and: [ layoutCounter < maxLayoutCount ] ] ]
+		whileTrue: [
+			self doUpdateLayout.
+			layoutCounter := layoutCounter + 1.
+			layoutCounter = 50 ifTrue: [
+				'Warning: Layout was performed 50 times per frame!' traceCr ] ].
 
-		self layerHolder dispatchLayoutDone
+	self layerHolder dispatchLayoutDone
 
-	"I prevent infinite spawn of debuggers"
-	] on: Error do: [ :anError |
-		layoutError := anError.
-		[ layoutError debug ] ensure: [ layoutError := nil ] ].
+	"I prevent infinite spawn of debuggers" ]
+		on: Error
+		do: [ :anError |
+			layoutError := anError.
+			[ layoutError debug ] ensure: [ layoutError := nil ] ]
 ]
 
-{ #category : #'change - style' }
+{ #category : #'NOT-USED-change - style' }
 OBlSpace >> doStyle [
 	| theElementsToStyle |
 	
@@ -889,9 +876,9 @@ OBlSpace >> doStyle [
 	theElementsToStyle do: [ :eachElement | self doStyle: eachElement ]
 ]
 
-{ #category : #'change - style' }
+{ #category : #'NOT-USED-change - style' }
 OBlSpace >> doStyle: anElement [
-	anElement applyStyles
+	"anElement applyStyles"
 ]
 
 { #category : #'focus managing' }
@@ -1006,12 +993,12 @@ OBlSpace >> elementsNeedingPaint [
 	^ elementsNeedingPaint
 ]
 
-{ #category : #'change - layout' }
+{ #category : #'NOT-USED-change - properties' }
 OBlSpace >> elementsNeedingPropertiesComputation [
 	^ elementsNeedingPropertiesComputation ifNil: [ elementsNeedingPropertiesComputation := Set new ]
 ]
 
-{ #category : #'change - layout' }
+{ #category : #'NOT-USED-change - style' }
 OBlSpace >> elementsNeedingStyle [
 	^ elementsNeedingStyle
 		ifNil: [ elementsNeedingStyle := Set new ]
@@ -1026,6 +1013,8 @@ OBlSpace >> enqueueTask: aBlTask [
 
 { #category : #'api - tasks' }
 OBlSpace >> enqueueTasksFrom: aTaskQueue [
+
+	aTaskQueue isEmpty ifTrue: [ ^ self ].
 	aTaskQueue tasks do: [ :eachTask | eachTask onEnqueued: self ].	
 	self taskQueue enqueueFrom: aTaskQueue.
 	self requestNextPulse
@@ -1080,14 +1069,14 @@ OBlSpace >> extent: aNewExtent [
 	self windowExtent: aNewExtent
 ]
 
-{ #category : #'private - change' }
+{ #category : #'NOT-USED-private-change' }
 OBlSpace >> extractAttachedElements: aSetOfElements [
 	^ aSetOfElements select: [ :eachElement |
 		eachElement isAttachedToSceneGraph
 			and: [ eachElement space == self ] ]
 ]
 
-{ #category : #'private - change' }
+{ #category : #'NOT-USED-private-change' }
 OBlSpace >> extractParents: aSetOfElements suchThat: aConditionBlock [
 	| theElementToProcess |
 
@@ -1107,14 +1096,14 @@ OBlSpace >> extractRoots: aSetOfElements [
 	^ self class extractRoots: aSetOfElements
 ]
 
-{ #category : #'change - properties' }
+{ #category : #'NOT-USED-change - properties' }
 OBlSpace >> extractUnresolvedToComputeProperties: aSetOfElements [
 	^ self
 		extractParents: aSetOfElements
 		suchThat: [ :eachParent | eachParent needsPropertiesComputation ]
 ]
 
-{ #category : #'change - style' }
+{ #category : #'NOT-USED-change - style' }
 OBlSpace >> extractUnstyled: aSetOfElements [
 	^ self
 		extractParents: aSetOfElements
@@ -1193,7 +1182,7 @@ OBlSpace >> focused: aBoolean [
 
 { #category : #accessing }
 OBlSpace >> frame [
-	<return: #BlSpaceFrame>
+	<return: #OBlSpaceFrame>
 
 	^ frame
 ]
@@ -1202,12 +1191,6 @@ OBlSpace >> frame [
 OBlSpace >> fullDrawOn: anCanvas [
 
 	anCanvas fullDraw: self layerHolder
-]
-
-{ #category : #'-- extensions-bloc-dev-tool --' }
-OBlSpace >> fullPaintWithTransformOn: aCompositorPainter offset: anOffset [
-
-	self layerHolder fullPaintWithTransformOn: aCompositorPainter offset: anOffset
 ]
 
 { #category : #'window - properties' }
@@ -1258,10 +1241,11 @@ OBlSpace >> grabFocus [
 	self focused: true
 ]
 
-{ #category : #'-- extensions-bloc-dev-tool --' }
+{ #category : #'NOT-USED-composition layer' }
 OBlSpace >> hasCompositionLayer [
 
-	^ self layerHolder hasCompositionLayer
+	"^ self layerHolder hasCompositionLayer"
+	^ false
 ]
 
 { #category : #testing }
@@ -1445,7 +1429,7 @@ OBlSpace >> initialize [
 
 	tasks := BlSpaceTaskQueue space: self.
 	time := BlTime real.
-	frame := BlSpaceFrame new.
+	frame := OBlSpaceFrame new.
 	telemetry := BlNullTelemetry uniqueInstance.
 
 	layerHolder := self defaultLayerHolder.
@@ -1470,7 +1454,6 @@ OBlSpace >> initialize [
 	self layerHolder addChild: self overlayLayer.
 	self layerHolder addChild: self contextMenuLayer.
 	self layerHolder addChild: self popupLayer
-
 
 ]
 
@@ -1501,13 +1484,6 @@ OBlSpace >> invalidRect: aBlBounds from: anElement [
 	self requestNextPulse.
 
 	self hostSpaceDo: [ :aHostSpace | aHostSpace requestRedraw ]
-]
-
-{ #category : #'change reporting' }
-OBlSpace >> invalidationBounds [
-	<return: #Rectangle>
-
-	^ self layerHolder invalidationBounds
 ]
 
 { #category : #testing }
@@ -1636,13 +1612,6 @@ OBlSpace >> measureTextParagraph: aBlTextParagraph [
 	host offscreenMeasureTextParagraph: aBlTextParagraph
 ]
 
-{ #category : #pulse }
-OBlSpace >> measureTextParagraph: aBlTextParagraph ifNotAvailable: aBlock [
-	self
-		hostSpaceDo: [ :aHostSpace | aHostSpace measureTextParagraph: aBlTextParagraph ]
-		ifAbsent: aBlock
-]
-
 { #category : #'api - displaying' }
 OBlSpace >> minimize [
 	self hostSpace ifNotNil: [ :hw | hw minimize ]
@@ -1666,7 +1635,7 @@ OBlSpace >> mouseProcessor: aMouseProcessor [
 	mouseProcessor := aMouseProcessor
 ]
 
-{ #category : #'change - properties' }
+{ #category : #'NOT-USED-change - properties' }
 OBlSpace >> needsPropertiesComputation [
 	<return: #Boolean>
 	
@@ -1674,7 +1643,7 @@ OBlSpace >> needsPropertiesComputation [
 		or: [ self layerHolder needsPropertiesComputation ]
 ]
 
-{ #category : #'change - properties' }
+{ #category : #'NOT-USED-change - properties' }
 OBlSpace >> needsPropertiesComputation: anElement [
 	"Return true if a given element or any of its children wants properties computation"
 	<return: #Boolean>
@@ -1687,14 +1656,14 @@ OBlSpace >> needsPropertiesComputation: anElement [
 						and: [ anElement parent needsPropertiesComputation not ] ] ]
 ]
 
-{ #category : #'change - style' }
+{ #category : #'NOT-USED-change - style' }
 OBlSpace >> needsStyleComputation [
 	<return: #Boolean>
 	
 	^ self elementsNeedingStyle isNotEmpty
 ]
 
-{ #category : #'change - style' }
+{ #category : #'NOT-USED-change - style' }
 OBlSpace >> needsStyleComputation: anElement [
 	"Return true if a given element or any of its children wants style computation"
 	<return: #Boolean>
@@ -1779,12 +1748,7 @@ OBlSpace >> processPulse [
 	
 	"flip to false beforehand to be able to know if the next pulse was needed during the frame"
 	nextPulseRequested := false.
-
-	self telemetry
-		reset;
-		timeSync: 'Frame'
-			during: [ self frame runOn: self ];
-		emit.
+	self frame runOn: self
 ]
 
 { #category : #pulse }
@@ -1799,13 +1763,6 @@ OBlSpace >> pulseRequested [
 
 	<return: #Boolean>
 	^ nextPulseRequested
-]
-
-{ #category : #'api - adding children' }
-OBlSpace >> removeChild: anElement [
-	"Remove a given element from the space root"
-	
-	self root removeChild: anElement
 ]
 
 { #category : #pulse }
@@ -1840,13 +1797,13 @@ OBlSpace >> requestNextPulse [
 	nextPulseRequested := true
 ]
 
-{ #category : #'change - properties' }
+{ #category : #'NOT-USED-change - properties' }
 OBlSpace >> requestPropertiesComputation: anElement [
 	self elementsNeedingPropertiesComputation add: anElement.
 	self requestNextPulse
 ]
 
-{ #category : #'change - style' }
+{ #category : #'NOT-USED-change - style' }
 OBlSpace >> requestStyle: anElement [		
 	self elementsNeedingStyle add: anElement.
 	self requestNextPulse
@@ -1989,14 +1946,14 @@ OBlSpace >> taskQueue [
 	^ tasks
 ]
 
-{ #category : #accessing }
+{ #category : #'NOT-USED-telemetry' }
 OBlSpace >> telemetry [
 	<return: #BlTelemetry>
 	
 	^ telemetry
 ]
 
-{ #category : #accessing }
+{ #category : #'NOT-USED-telemetry' }
 OBlSpace >> telemetry: aBlTelemetry [
 	telemetry := aBlTelemetry
 ]
@@ -2064,16 +2021,11 @@ OBlSpace >> updateCursor: aBlCursor [
 	self hostSpaceDo: [ :aHostSpace | aHostSpace cursor: aBlCursor ]
 ]
 
-{ #category : #'host dependent - ToDo' }
-OBlSpace >> visualBoundsOf: aBlElement [
-
-	^ host visualBoundsOf: aBlElement
-]
-
-{ #category : #'-- extensions-bloc-dev-tool --' }
+{ #category : #'NOT-USED-composition layer' }
 OBlSpace >> wantsSeparateCompositingLayer [
 
-	^ self layerHolder wantsSeparateCompositingLayer
+	"^ self layerHolder wantsSeparateCompositingLayer"
+	^ false
 ]
 
 { #category : #'window - properties' }
@@ -2130,5 +2082,5 @@ OBlSpace >> withAllChildrenBreadthFirstDo: aBlock [
 
 { #category : #'-- extensions-bloc-dev-tool --' }
 OBlSpace >> withHalos [
-	"self root addEventFilter: BlDevHalosEventListener new"
+	self root addEventFilter: BlDevHalosEventListener new
 ]

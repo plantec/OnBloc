@@ -1,11 +1,6 @@
 Extension { #name : #BlElement }
 
 { #category : #'*OnBloc' }
-BlElement >> applyStyles [
-	self styles applyStylesForStates: self states allStates.
-]
-
-{ #category : #'*OnBloc' }
 BlElement >> asStencil [
 	^ self
 ]

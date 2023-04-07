@@ -14,7 +14,7 @@ My main collaborators are:
 "
 Class {
 	#name : #OBlInfiniteElement,
-	#superclass : #BlElement,
+	#superclass : #OBlElement,
 	#traits : 'TBlScrollable',
 	#classTraits : 'TBlScrollable classTrait',
 	#instVars : [
