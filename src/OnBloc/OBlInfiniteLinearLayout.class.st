@@ -1583,6 +1583,9 @@ OBlInfiniteLinearLayout >> validateChildrenOrder [
 	"I am a class invariant"
 
 	| aLastPosition aLastScreenLocation |
+	
+	Bloc debugModeEnabled ifFalse: [ ^self ].
+	
 	self hasChildren ifFalse: [ ^ self ].
 
 	aLastPosition := self childPositionOf: (self childAt: 1).
