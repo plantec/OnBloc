@@ -304,6 +304,14 @@ OBlInfiniteLinearLayout >> defaultStackFromEnd [
 	^ false
 ]
 
+{ #category : #dispatching }
+OBlInfiniteLinearLayout >> dispatchScrolledWhileFilling [
+
+	layoutState scrolledWhileFilling ifFalse: [ ^ self ].
+	infiniteElement dispatchEvent: OBlInfiniteScrolledWhileFilling new.
+	layoutState scrolledWhileFilling: false
+]
+
 { #category : #'layout - geometry' }
 OBlInfiniteLinearLayout >> extraLayoutSpace [
 	"Return the amount of extra space that should be laid out by InfiniteLayout.
@@ -357,7 +365,8 @@ OBlInfiniteLinearLayout >> fillLayout: shouldStopOnFocusable [
 	self validateChildrenOrder.
 	
 	aBoundsUpdater commitChanges.
-	
+	aBoundsUpdater hasChanges 
+		ifTrue: [ layoutState scrolledWhileFilling: true ].
 	^ aStart - layoutState availableSpace
 ]
 
@@ -753,8 +762,10 @@ OBlInfiniteLinearLayout >> layoutChildrenIn: aBlInfiniteRecycler state: aBlInfin
 	layoutState isInfinite: self resolveIsInfinite.
 	layoutState isPreLayout: self state isPreLayout.
 
+	layoutState scrolledWhileFilling: false.
 	anOffsetSpace := self layoutChildrenFill: anExtraSpace.
 	anOffsetSpace := self layoutChildrenFixGaps: anOffsetSpace.
+	self dispatchScrolledWhileFilling.
 	"self layoutChildrenForPredictiveAnimations: anOffsetSpace."
 	
 	self state isPreLayout

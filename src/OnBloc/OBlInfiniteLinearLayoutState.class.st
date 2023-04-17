@@ -13,7 +13,8 @@ Class {
 		'scrollingOffset',
 		'isInfinite',
 		'layoutDirection',
-		'offset'
+		'offset',
+		'scrolledWhileFilling'
 	],
 	#pools : [
 		'BlInfiniteConstants'
@@ -141,7 +142,8 @@ OBlInfiniteLinearLayoutState >> initialize [
 	offset := 0.
 	availableSpace := 0.
 	isPreLayout := false.
-	lastScrolledDelta := 0
+	lastScrolledDelta := 0.
+	scrolledWhileFilling := false
 ]
 
 { #category : #accessing }
@@ -298,6 +300,18 @@ OBlInfiniteLinearLayoutState >> offset: aNumber [
 OBlInfiniteLinearLayoutState >> scrapList: aCollectionOfScrappedElement [
 
 	scrapList := aCollectionOfScrappedElement
+]
+
+{ #category : #accessing }
+OBlInfiniteLinearLayoutState >> scrolledWhileFilling [
+
+	^ scrolledWhileFilling
+]
+
+{ #category : #accessing }
+OBlInfiniteLinearLayoutState >> scrolledWhileFilling: aBoolean [
+
+	scrolledWhileFilling := aBoolean
 ]
 
 { #category : #accessing }
