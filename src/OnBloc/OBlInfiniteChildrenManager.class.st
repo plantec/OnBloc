@@ -7,7 +7,7 @@ Class {
 	#superclass : #Object,
 	#traits : 'TBlDebug',
 	#classTraits : 'TBlDebug classTrait',
-	#category : #'OnBloc-Infinite-Children'
+	#category : #'OnBloc-Infinite'
 }
 
 { #category : #'children add/remove' }

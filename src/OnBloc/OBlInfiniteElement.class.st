@@ -44,7 +44,7 @@ Class {
 		'overScrollMode'
 	],
 	#pools : [
-		'BlInfiniteConstants'
+		'OBlInfiniteConstants'
 	],
 	#category : #'OnBloc-Infinite'
 }
