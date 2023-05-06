@@ -493,7 +493,7 @@ OBlInfiniteElement >> dispatchLayoutFirstStep [
 		- save information about current child elements
 		- If necessary, run predictive layout and save its information"
 
-	self state assertLayoutStep: BlInfiniteLayoutStepFlags Start.
+	self state assertLayoutStep: OBlInfiniteLayoutStepFlags Start.
 	self state isMeasuring: false.
 	self eatRequestLayout.
 	self onEnterLayoutOrScroll.
@@ -519,7 +519,7 @@ OBlInfiniteElement >> dispatchLayoutSecondStep [
 	self eatRequestLayout.
 	self onEnterLayoutOrScroll.
 	
-	self state assertLayoutStep: BlInfiniteLayoutStepFlags Layout or: BlInfiniteLayoutStepFlags Animations.
+	self state assertLayoutStep: OBlInfiniteLayoutStepFlags Layout or: OBlInfiniteLayoutStepFlags Animations.
 	
 	dataSourceManager consumeCommandsInOnePassIn: self.
 	self state itemCount: dataSource itemCount.
@@ -540,7 +540,7 @@ OBlInfiniteElement >> dispatchLayoutThirdStep [
 	"The final step of the layout where we save the information about elements for animations,
 	trigger animations and do any necessary cleanup."
 
-	self state assertLayoutStep: BlInfiniteLayoutStepFlags Animations.
+	self state assertLayoutStep: OBlInfiniteLayoutStepFlags Animations.
 	
 	self eatRequestLayout.
 	self onEnterLayoutOrScroll.
