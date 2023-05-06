@@ -44,7 +44,6 @@ OBlInfiniteLinearLayout >> beVertical [
 { #category : #'scrolling - testing' }
 OBlInfiniteLinearLayout >> canScrollHorizontally [
 	"@see BlInfiniteLayout>>canScrollHorizontally"
-	<return: #Boolean>
 
 	^ self orientation isHorizontal
 ]

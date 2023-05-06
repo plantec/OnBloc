@@ -239,7 +239,6 @@ OBlInfiniteLayout >> calculateSize: aMeasurementSpec desired: aDesiredSize min: 
 { #category : #'scrolling - testing' }
 OBlInfiniteLayout >> canScrollHorizontally [
 	"Return true if I can scroll the current contents horizontally, false otherwise"
-	<return: #Boolean>
 
 	^ false
 ]
