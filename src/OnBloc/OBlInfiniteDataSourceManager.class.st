@@ -279,7 +279,7 @@ OBlInfiniteDataSourceManager >> initialize [
 	postponedCommands := OrderedCollection new.
 	pendingCommands := OrderedCollection new.
 	"commandsReorderer := self defaultCommandsReorderer dataSourceManager: self."
-	existingCommandTypes := BlInfiniteDataSourceCommandTypeFlags new
+	existingCommandTypes := OBlInfiniteDataSourceCommandTypeFlags new
 ]
 
 { #category : #'manager -> element' }
