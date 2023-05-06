@@ -379,7 +379,7 @@ OBlInfiniteElement >> defaultChildrenManager [
 { #category : #initialization }
 OBlInfiniteElement >> defaultChildrenUpdateRunnable [
 	"Return class, actual instantiation happens in initialize"
-	^ BlInfiniteChildrenUpdateRunnable
+	^ OBlInfiniteChildrenUpdateRunnable
 ]
 
 { #category : #initialization }
