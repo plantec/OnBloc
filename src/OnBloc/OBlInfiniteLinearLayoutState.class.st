@@ -17,7 +17,7 @@ Class {
 		'scrolledWhileFilling'
 	],
 	#pools : [
-		'BlInfiniteConstants'
+		'OBlInfiniteConstants'
 	],
 	#category : #'OnBloc-Infinite-Layouts-Linear'
 }

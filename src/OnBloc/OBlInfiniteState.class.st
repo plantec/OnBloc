@@ -19,7 +19,7 @@ Class {
 		'focusedSubChild'
 	],
 	#pools : [
-		'BlInfiniteConstants'
+		'OBlInfiniteConstants'
 	],
 	#category : #'OnBloc-Infinite'
 }

@@ -16,7 +16,7 @@ Class {
 		'infiniteElement'
 	],
 	#pools : [
-		'BlInfiniteConstants'
+		'OBlInfiniteConstants'
 	],
 	#category : #'OnBloc-Infinite'
 }

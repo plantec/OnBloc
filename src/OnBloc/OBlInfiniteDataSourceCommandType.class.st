@@ -8,7 +8,7 @@ Class {
 	#name : #OBlInfiniteDataSourceCommandType,
 	#superclass : #Object,
 	#pools : [
-		'BlInfiniteConstants'
+		'OBlInfiniteConstants'
 	],
 	#classInstVars : [
 		'instance'

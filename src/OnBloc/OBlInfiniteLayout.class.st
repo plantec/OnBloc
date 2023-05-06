@@ -33,7 +33,7 @@ Class {
 		'announcer'
 	],
 	#pools : [
-		'BlInfiniteConstants'
+		'OBlInfiniteConstants'
 	],
 	#category : #'OnBloc-Infinite'
 }

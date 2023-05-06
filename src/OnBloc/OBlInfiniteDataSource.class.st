@@ -12,7 +12,7 @@ Class {
 		'hasStableIds'
 	],
 	#pools : [
-		'BlInfiniteConstants'
+		'OBlInfiniteConstants'
 	],
 	#category : #'OnBloc-Infinite-DataSource'
 }
