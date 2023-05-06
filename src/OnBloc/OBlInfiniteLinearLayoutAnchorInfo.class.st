@@ -8,7 +8,7 @@ Class {
 		'valid'
 	],
 	#pools : [
-		'BlInfiniteConstants'
+		'OBlInfiniteConstants'
 	],
 	#category : #'OnBloc-Infinite-Layouts-Linear-Utilities'
 }
