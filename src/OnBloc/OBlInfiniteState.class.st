@@ -77,7 +77,7 @@ OBlInfiniteState >> beStepStart [
 { #category : #initialization }
 OBlInfiniteState >> defaultLayoutStep [
 
-	^ BlInfiniteLayoutStepFlags new
+	^ OBlInfiniteLayoutStepFlags new
 		addStart;
 		yourself
 ]
