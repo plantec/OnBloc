@@ -95,7 +95,7 @@ OBlInfiniteHolder >> initialize [
 	position := NoPosition.
 	preLayoutPosition := NoPosition.
 	itemId := NoId.
-	flags := BlInfiniteElementHolderFlags new
+	flags := OBlInfiniteElementHolderFlags new
 ]
 
 { #category : #'private - flags testing' }
