@@ -112,7 +112,7 @@ OBlInfiniteScrollbarHelper >> isReversedLayout: aBoolean [
 
 { #category : #accessing }
 OBlInfiniteScrollbarHelper >> layout [
-	<return: #BlInfiniteLayout>
+	<return: #OBlInfiniteLayout>
 
 	^ layout
 ]
