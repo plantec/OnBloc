@@ -412,7 +412,7 @@ OBlInfiniteElement >> defaultLayoutCommonConstraints [
 
 { #category : #initialization }
 OBlInfiniteElement >> defaultMouseScrollEventHandler [
-	^ BlInfiniteMouseScrollListener new
+	^ OBlInfiniteMouseScrollListener new
 ]
 
 { #category : #initialization }
