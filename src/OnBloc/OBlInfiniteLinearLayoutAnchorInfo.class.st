@@ -14,7 +14,7 @@ Class {
 }
 
 { #category : #initialization }
-OBlInfiniteLinearLayoutAnchorInfo >> assignCoordinateFromPaddingIn: aLinearLayout [
+OBlInfiniteLinearLayoutAnchorInfo >> assignCoordinateFromPaddingIn: aLinearLayout [ 
 	| anOrientation |
 	
 	anOrientation := aLinearLayout orientation.
@@ -25,7 +25,7 @@ OBlInfiniteLinearLayoutAnchorInfo >> assignCoordinateFromPaddingIn: aLinearLayou
 
 { #category : #initialization }
 OBlInfiniteLinearLayoutAnchorInfo >> assignFromElement: anElement in: aLinearLayout [
-	| anOrientation |
+	| anOrientation | 
 	anOrientation := aLinearLayout orientation.
 	
 	coordinate := layoutFromEnd
@@ -36,7 +36,7 @@ OBlInfiniteLinearLayoutAnchorInfo >> assignFromElement: anElement in: aLinearLay
 ]
 
 { #category : #initialization }
-OBlInfiniteLinearLayoutAnchorInfo >> assignFromElementAndKeepVisible: anElement in: aLinearLayout [
+OBlInfiniteLinearLayoutAnchorInfo >> assignFromElementAndKeepVisible: anElement in: aLinearLayout [ 
 
 	aLinearLayout orientation totalSpaceChange >= 0
 		ifTrue: [ ^ self assignFromElement: anElement in: aLinearLayout ].
@@ -49,7 +49,7 @@ OBlInfiniteLinearLayoutAnchorInfo >> assignFromElementAndKeepVisible: anElement 
 ]
 
 { #category : #private }
-OBlInfiniteLinearLayoutAnchorInfo >> assignFromElementAndKeepVisibleFromEnd: anElement in: aLinearLayout [
+OBlInfiniteLinearLayoutAnchorInfo >> assignFromElementAndKeepVisibleFromEnd: anElement in: aLinearLayout [ 
 	| anOrientation aPreviousLayoutEnd aChildEnd aPreviousEndMargin |
 	
 	anOrientation := aLinearLayout orientation.
@@ -77,7 +77,7 @@ OBlInfiniteLinearLayoutAnchorInfo >> assignFromElementAndKeepVisibleFromEnd: anE
 ]
 
 { #category : #private }
-OBlInfiniteLinearLayoutAnchorInfo >> assignFromElementAndKeepVisibleFromStart: anElement in: aLinearLayout [
+OBlInfiniteLinearLayoutAnchorInfo >> assignFromElementAndKeepVisibleFromStart: anElement in: aLinearLayout [ 
 	| anOrientation aChildStart aStartMargin |
 	
 	anOrientation := aLinearLayout orientation.
@@ -101,19 +101,19 @@ OBlInfiniteLinearLayoutAnchorInfo >> assignFromElementAndKeepVisibleFromStart: a
 
 { #category : #accessing }
 OBlInfiniteLinearLayoutAnchorInfo >> coordinate [
-	^ coordinate
+	^ coordinate 
 ]
 
 { #category : #accessing }
 OBlInfiniteLinearLayoutAnchorInfo >> coordinate: aNumber [
-	coordinate := aNumber
+	coordinate := aNumber 
 ]
 
 { #category : #initialization }
 OBlInfiniteLinearLayoutAnchorInfo >> initialize [
 	super initialize.
 	
-	self reset
+	self reset 
 ]
 
 { #category : #testing }
@@ -123,45 +123,45 @@ OBlInfiniteLinearLayoutAnchorInfo >> isElementValidAsAnchor: anElement state: an
 	anInfiniteConstraints := anElement constraints infinite.
 	^ anInfiniteConstraints isItemRemoved not and: [
 		anInfiniteConstraints elementLayoutPosition
-			between: 1
+			between: 1 
 			and: anInfiniteState itemCount ]
 ]
 
 { #category : #accessing }
 OBlInfiniteLinearLayoutAnchorInfo >> isValid [
-	^ valid
+	^ valid 
 ]
 
 { #category : #accessing }
-OBlInfiniteLinearLayoutAnchorInfo >> isValid: aBoolean [
+OBlInfiniteLinearLayoutAnchorInfo >> isValid: aBoolean [ 
 
 	valid := aBoolean
 ]
 
 { #category : #accessing }
 OBlInfiniteLinearLayoutAnchorInfo >> layoutFromEnd [
-	^ layoutFromEnd
+	^ layoutFromEnd 
 ]
 
 { #category : #accessing }
 OBlInfiniteLinearLayoutAnchorInfo >> layoutFromEnd: aBoolean [
-	layoutFromEnd := aBoolean
+	layoutFromEnd := aBoolean 
 ]
 
 { #category : #accessing }
 OBlInfiniteLinearLayoutAnchorInfo >> position [
-	^ position
+	^ position 
 ]
 
 { #category : #accessing }
 OBlInfiniteLinearLayoutAnchorInfo >> position: aNumber [
-	position := aNumber
+	position := aNumber 
 ]
 
 { #category : #initialization }
 OBlInfiniteLinearLayoutAnchorInfo >> reset [
 	position := NoPosition.
 	coordinate := BlInfiniteLinearLayout invalidOffset.
-	layoutFromEnd := false.
+	layoutFromEnd := false. 
 	valid := false
 ]
