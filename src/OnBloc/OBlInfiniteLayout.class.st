@@ -564,8 +564,8 @@ OBlInfiniteLayout >> infoRemoveHolder: anElementHolder [
 OBlInfiniteLayout >> initialize [
 	super initialize.
 	
-	horizontalChildFinder := BlInfiniteHorizontalChildBoundsBasedFinder new layout: self.
-	verticalChildFinder := BlInfiniteVerticalChildBoundsBasedFinder new layout: self.
+	horizontalChildFinder := OBlInfiniteHorizontalChildBoundsBasedFinder new layout: self.
+	verticalChildFinder := OBlInfiniteVerticalChildBoundsBasedFinder new layout: self.
 	
 	autoMeasure := self defaultAutoMeasure.
 

@@ -33,12 +33,12 @@ OBlInfiniteLinearLayout class >> vertical [
 
 { #category : #orientation }
 OBlInfiniteLinearLayout >> beHorizontal [
-	self orientation: BlInfiniteHorizontalOrientation new
+	self orientation: OBlInfiniteHorizontalOrientation new
 ]
 
 { #category : #orientation }
 OBlInfiniteLinearLayout >> beVertical [
-	self orientation: BlInfiniteVerticalOrientation new
+	self orientation: OBlInfiniteVerticalOrientation new
 ]
 
 { #category : #'scrolling - testing' }
@@ -280,7 +280,7 @@ OBlInfiniteLinearLayout >> defaultLayoutState [
 
 { #category : #initialization }
 OBlInfiniteLinearLayout >> defaultOrientation [
-	^ BlInfiniteVerticalOrientation new
+	^ OBlInfiniteVerticalOrientation new
 ]
 
 { #category : #initialization }

@@ -401,7 +401,7 @@ OBlInfiniteElement >> defaultDataSourceObserver [
 
 { #category : #initialization }
 OBlInfiniteElement >> defaultLayout [
-	^ BlInfiniteBasicLayout new
+	^ OBlInfiniteBasicLayout new
 ]
 
 { #category : #initialization }
