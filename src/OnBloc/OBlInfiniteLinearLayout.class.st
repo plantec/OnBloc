@@ -261,7 +261,7 @@ OBlInfiniteLinearLayout >> createScrollbarHelper [
 
 { #category : #initialization }
 OBlInfiniteLinearLayout >> defaultAnchorInfo [
-	^ BlInfiniteLinearLayoutAnchorInfo new
+	^ OBlInfiniteLinearLayoutAnchorInfo new
 ]
 
 { #category : #initialization }
