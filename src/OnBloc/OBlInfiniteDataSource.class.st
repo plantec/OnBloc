@@ -107,7 +107,7 @@ OBlInfiniteDataSource >> notifyChanged [
 	any observers to assume that all existing items and structure may no longer be valid.
 	InfiniteLayout will be forced to fully rebind and relayout all visible elements."
 
-	self notifyWithEvent: (BlInfiniteDataSourceChanged new
+	self notifyWithEvent: (OBlInfiniteDataSourceChanged new
 		dataSource: self;
 		yourself)
 ]
@@ -120,7 +120,7 @@ OBlInfiniteDataSource >> notifyItemMoved: aFromPosition to: aToPosition [
 	data set are still considered up to date and will not be rebound, though their
 	positions may be altered"
 
-	self notifyWithEvent: (BlInfiniteDataSourceItemRangeMoved
+	self notifyWithEvent: (OBlInfiniteDataSourceItemRangeMoved
 		from: aFromPosition
 		to: aToPosition)
 ]
@@ -129,7 +129,7 @@ OBlInfiniteDataSource >> notifyItemMoved: aFromPosition to: aToPosition [
 OBlInfiniteDataSource >> notifyItems: anInterval event: anEvent [
 	"Notify any registered event handlers that the itemCount items starting at aPosition should receive a given event"
 	
-	self notifyWithEvent: (BlInfiniteDataSourceItemRangeEvent new
+	self notifyWithEvent: (OBlInfiniteDataSourceItemRangeEvent new
 		position: anInterval first;
 		itemCount: anInterval size;
 		event: anEvent)
@@ -142,7 +142,7 @@ OBlInfiniteDataSource >> notifyItemsChanged: anInterval [
 	any reflection of the data in the given position range is out of date and should
 	be updated. The items in the given range retain the same identity"
 	
-	self notifyWithEvent: (BlInfiniteDataSourceItemRangeChanged
+	self notifyWithEvent: (OBlInfiniteDataSourceItemRangeChanged
 		position: anInterval first
 		itemCount: anInterval size)
 ]
@@ -157,7 +157,7 @@ OBlInfiniteDataSource >> notifyItemsInserted: anInterval [
 	data set are still considered up to date and will not be rebound, though their positions
 	may be altered"
 
-	self notifyWithEvent: (BlInfiniteDataSourceItemRangeInserted
+	self notifyWithEvent: (OBlInfiniteDataSourceItemRangeInserted
 		position: anInterval first
 		itemCount: anInterval size)
 ]
@@ -171,7 +171,7 @@ OBlInfiniteDataSource >> notifyItemsRemoved: anInterval [
 	set are still considered up to date and will not be rebound, though their positions
  	may be altered."
 
-	self notifyWithEvent: (BlInfiniteDataSourceItemRangeRemoved
+	self notifyWithEvent: (OBlInfiniteDataSourceItemRangeRemoved
 		position: anInterval first
 		itemCount: anInterval size)
 ]

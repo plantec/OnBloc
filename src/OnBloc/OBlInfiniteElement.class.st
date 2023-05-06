@@ -1007,21 +1007,21 @@ OBlInfiniteElement >> minFlingVelocity [
 OBlInfiniteElement >> notifyChildAttached: anElement [
 	"Notify all event handlers that element is attached to InfiniteElement"
 
-	self dispatchEvent: (BlInfiniteElementAttachedEvent element: anElement)
+	self dispatchEvent: (OBlInfiniteElementAttachedEvent element: anElement)
 ]
 
 { #category : #notifying }
 OBlInfiniteElement >> notifyChildDetached: anElement [
 	"Notify all event handlers that element is detached from InfiniteElement"
 
-	self fireEvent: (BlInfiniteElementDetachedEvent element: anElement)
+	self fireEvent: (OBlInfiniteElementDetachedEvent element: anElement)
 ]
 
 { #category : #notifying }
 OBlInfiniteElement >> notifyScrollStateChanged: aScrollState [
 	"Notify all event handlers that scroll state of InfiniteElement has been changed"
 
-	self fireEvent: (BlInfiniteScrollChangedEvent scrollState: aScrollState)
+	self fireEvent: (OBlInfiniteScrollChangedEvent scrollState: aScrollState)
 ]
 
 { #category : #'api - scrolling notifying' }

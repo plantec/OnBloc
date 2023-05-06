@@ -9,7 +9,7 @@ Class {
 
 { #category : #events }
 OBlInfiniteDataSourceObserver >> eventClass [
-	^ BlInfiniteDataSourceEvent
+	^ OBlInfiniteDataSourceEvent
 ]
 
 { #category : #events }
