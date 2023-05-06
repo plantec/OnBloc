@@ -417,7 +417,7 @@ OBlInfiniteElement >> defaultMouseScrollEventHandler [
 
 { #category : #initialization }
 OBlInfiniteElement >> defaultOverScrollMode [
-	^ BlOverScrollMode never
+	^ OBlOverScrollMode never
 ]
 
 { #category : #initialization }
