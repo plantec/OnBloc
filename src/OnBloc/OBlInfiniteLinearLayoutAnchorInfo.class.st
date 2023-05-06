@@ -161,7 +161,7 @@ OBlInfiniteLinearLayoutAnchorInfo >> position: aNumber [
 { #category : #initialization }
 OBlInfiniteLinearLayoutAnchorInfo >> reset [
 	position := NoPosition.
-	coordinate := BlInfiniteLinearLayout invalidOffset.
+	coordinate := OBlInfiniteLinearLayout invalidOffset.
 	layoutFromEnd := false. 
 	valid := false
 ]

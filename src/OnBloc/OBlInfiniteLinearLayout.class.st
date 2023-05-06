@@ -925,12 +925,12 @@ OBlInfiniteLinearLayout >> mouseWheelEvent: anEvent [
 
 { #category : #'layout - notifying' }
 OBlInfiniteLinearLayout >> notifyAvailableSpaceChanged: aNumber [
-	self announcer announce: (BlInfiniteLinearLayoutAvailableSpaceChanged new availableSpace: aNumber)
+	self announcer announce: (OBlInfiniteLinearLayoutAvailableSpaceChanged new availableSpace: aNumber)
 ]
 
 { #category : #'layout - notifying' }
 OBlInfiniteLinearLayout >> notifyChunkAdded: anElement [
-	self announcer announce: (BlInfiniteLinearLayoutChunkAdded new element: anElement)
+	self announcer announce: (OBlInfiniteLinearLayoutChunkAdded new element: anElement)
 ]
 
 { #category : #'layout - hooks' }
