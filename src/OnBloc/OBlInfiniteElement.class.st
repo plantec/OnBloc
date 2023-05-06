@@ -15,8 +15,8 @@ My main collaborators are:
 Class {
 	#name : #OBlInfiniteElement,
 	#superclass : #OBlElement,
-	#traits : 'TBlScrollable',
-	#classTraits : 'TBlScrollable classTrait',
+	#traits : 'TOBlScrollable',
+	#classTraits : 'TOBlScrollable classTrait',
 	#instVars : [
 		'dataSource',
 		'dataSourceManager',
@@ -428,7 +428,7 @@ OBlInfiniteElement >> defaultRecycler [
 { #category : #initialization }
 OBlInfiniteElement >> defaultScrollFlinger [
 	"Return class, actuall instantiation happens in initialize"
-	^ BlInfiniteScrollFlinger
+	^ OBlInfiniteScrollFlinger
 ]
 
 { #category : #initialization }
@@ -1497,10 +1497,7 @@ OBlInfiniteElement >> scrollByInternal: aDeltaPoint from: anEventPoint [
 	self resumeRequestLayout: false.
 	
 	self overScrollMode ~= BlOverScrollMode never
-		ifTrue: [ 
-			anEventPoint ifNotNil: [ 
-				self pullGlows: anEventPoint overscroll: unconsumedX @ unconsumedY ].
-			self considerReleasingGlowsOnScroll: aDeltaPoint ].
+		ifTrue: [].
 	
 	(consumedX isZero and: [ consumedY isZero ])
 		ifFalse: [ self dispatchOnScrolled: consumedX @ consumedY ].

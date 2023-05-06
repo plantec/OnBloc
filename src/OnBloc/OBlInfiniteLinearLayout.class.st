@@ -249,7 +249,7 @@ OBlInfiniteLinearLayout >> computeVerticalScrollRange [
 OBlInfiniteLinearLayout >> createScrollbarHelper [
 	<return: #BlInfiniteScrollbarHelper>
 
-	^ BlInfiniteScrollbarHelper new
+	^ OBlInfiniteScrollbarHelper new
 		state: infiniteElement state;
 		orientation: orientation;
 		startElement: (self findFirstVisibleChildClosestToStartCompletelyVisible: smoothScrollbarEnabled not acceptPartiallyVisible: true);

@@ -4,6 +4,18 @@ Class {
 	#category : #'OnBloc-Basic'
 }
 
+{ #category : #converting }
+OBlElement >> asScrollableElement [
+	| scrollable |
+	self removeFromParent.
+	scrollable := self newScrollableParent.
+	scrollable constraintsDo: [ :c |
+		c horizontal matchParent.
+		c vertical matchParent ].
+	scrollable addChild: self.
+	^ scrollable
+]
+
 { #category : #'api - space' }
 OBlElement >> attachSpace [
 	spaceReference := BlAttachedSpaceReference uniqueInstance.
@@ -32,6 +44,12 @@ OBlElement >> attachSpace [
 
 	self needsPropertiesComputation
 		ifTrue: [ self requestPropertiesComputation ]"
+]
+
+{ #category : #converting }
+OBlElement >> newScrollableParent [
+
+	^ OBlScrollableElement new
 ]
 
 { #category : #accessing }
