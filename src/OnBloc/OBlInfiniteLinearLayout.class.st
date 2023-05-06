@@ -824,7 +824,7 @@ OBlInfiniteLinearLayout >> layoutChunkContext: aBlElementBoundsUpdateContext [
 	<return: #BlInfiniteLinearLayoutChunkResult>
 	| aResult anElement anElementBounds anInfiniteConstraints |
 	
-	aResult := BlInfiniteLinearLayoutChunkResult new.
+	aResult := OBlInfiniteLinearLayoutChunkResult new.
 
 	(layoutState hasMoreItems: self state)
 		ifFalse: [ ^ aResult finished: true ].
@@ -982,11 +982,11 @@ OBlInfiniteLinearLayout >> prepareAnchorInfo: anAnchorInfo recycler: aBlInfinite
 
 	aFirstLayoutItemDirection := (anAnchorInfo layoutFromEnd
 		ifTrue: [ shouldReverseLayout
-			ifTrue: [ BlInfiniteLinearLayoutItemDirection tail ]
-			ifFalse: [ BlInfiniteLinearLayoutItemDirection head ] ]
+			ifTrue: [ OBlInfiniteLinearLayoutItemDirection tail ]
+			ifFalse: [ OBlInfiniteLinearLayoutItemDirection head ] ]
 		ifFalse: [ shouldReverseLayout
-			ifTrue: [ BlInfiniteLinearLayoutItemDirection head ]
-			ifFalse: [ BlInfiniteLinearLayoutItemDirection tail ] ]).
+			ifTrue: [ OBlInfiniteLinearLayoutItemDirection head ]
+			ifFalse: [ OBlInfiniteLinearLayoutItemDirection tail ] ]).
 	
 	
 	self onAnchorReady: anAnchorInfo firstLayoutItemDirection: aFirstLayoutItemDirection
@@ -1199,8 +1199,8 @@ OBlInfiniteLinearLayout >> scrollBy: aNumber [
 
 	layoutState allowRecycling: true.
 	aLayoutDirection := aNumber > 0
-		ifTrue: [ BlInfiniteLinearLayoutDirection end ]
-		ifFalse: [ BlInfiniteLinearLayoutDirection start ].
+		ifTrue: [ OBlInfiniteLinearLayoutDirection end ]
+		ifFalse: [ OBlInfiniteLinearLayoutDirection start ].
 	anAbsoluteDelta := aNumber abs.
 
 	self
@@ -1499,8 +1499,8 @@ OBlInfiniteLinearLayout >> updateLayoutStateEnd [
 
 	"the direction in which we are traversing children"
 	layoutState itemDirection: (shouldReverseLayout
-		ifTrue: [ BlInfiniteLinearLayoutItemDirection head ]
-		ifFalse: [ BlInfiniteLinearLayoutItemDirection tail ]).
+		ifTrue: [ OBlInfiniteLinearLayoutItemDirection head ]
+		ifFalse: [ OBlInfiniteLinearLayoutItemDirection tail ]).
 	
 	layoutState currentPosition: (self childPositionOf: anElement) + layoutState itemDirection multiplier.
 	layoutState offset: (self orientation decoratedEnd: anElement).
@@ -1519,8 +1519,8 @@ OBlInfiniteLinearLayout >> updateLayoutStateStart [
 
 	"the direction in which we are traversing children"
 	layoutState itemDirection: (shouldReverseLayout
-		ifTrue: [ BlInfiniteLinearLayoutItemDirection tail ]
-		ifFalse: [ BlInfiniteLinearLayoutItemDirection head ]).
+		ifTrue: [ OBlInfiniteLinearLayoutItemDirection tail ]
+		ifFalse: [ OBlInfiniteLinearLayoutItemDirection head ]).
 	
 	layoutState currentPosition: (self childPositionOf: anElement) + layoutState itemDirection multiplier.
 	layoutState offset: (self orientation decoratedStart: anElement).
@@ -1545,11 +1545,11 @@ OBlInfiniteLinearLayout >> updateLayoutStateToFillEnd: aPosition offset: anOffse
 	layoutState availableSpace: anAvailableSpace in: self.
 
 	layoutState itemDirection: (shouldReverseLayout
-		ifTrue: [ BlInfiniteLinearLayoutItemDirection head ]
-		ifFalse: [ BlInfiniteLinearLayoutItemDirection tail ]).
+		ifTrue: [ OBlInfiniteLinearLayoutItemDirection head ]
+		ifFalse: [ OBlInfiniteLinearLayoutItemDirection tail ]).
 
 	layoutState currentPosition: aPosition.
-	layoutState layoutDirection: BlInfiniteLinearLayoutDirection end.
+	layoutState layoutDirection: OBlInfiniteLinearLayoutDirection end.
 	layoutState offset: anOffset.
 	layoutState clearScrollingOffset
 ]
@@ -1567,11 +1567,11 @@ OBlInfiniteLinearLayout >> updateLayoutStateToFillStart: aPosition offset: anOff
 
 	layoutState availableSpace: anAvailableSpace in: self.
 	layoutState itemDirection: (shouldReverseLayout
-		ifTrue: [ BlInfiniteLinearLayoutItemDirection tail ]
-		ifFalse: [ BlInfiniteLinearLayoutItemDirection head ]).
+		ifTrue: [ OBlInfiniteLinearLayoutItemDirection tail ]
+		ifFalse: [ OBlInfiniteLinearLayoutItemDirection head ]).
 
 	layoutState currentPosition: aPosition.
-	layoutState layoutDirection: BlInfiniteLinearLayoutDirection start.
+	layoutState layoutDirection: OBlInfiniteLinearLayoutDirection start.
 	layoutState offset: anOffset.
 	layoutState clearScrollingOffset
 ]

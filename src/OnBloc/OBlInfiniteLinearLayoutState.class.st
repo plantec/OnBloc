@@ -19,7 +19,7 @@ Class {
 	#pools : [
 		'OBlInfiniteConstants'
 	],
-	#category : #'OnBloc-Infinite-Layouts-Linear'
+	#category : #'OnBloc-Infinite-Layouts-Linear-Utilities'
 }
 
 { #category : #accessing }
