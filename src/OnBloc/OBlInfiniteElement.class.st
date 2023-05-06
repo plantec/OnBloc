@@ -385,7 +385,7 @@ OBlInfiniteElement >> defaultChildrenUpdateRunnable [
 { #category : #initialization }
 OBlInfiniteElement >> defaultDataSource [
 
-	^ BlInfiniteBasicDataSource new
+	^ OBlInfiniteBasicDataSource new
 ]
 
 { #category : #initialization }
