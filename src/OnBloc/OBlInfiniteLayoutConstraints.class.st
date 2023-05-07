@@ -20,6 +20,12 @@ OBlInfiniteLayoutConstraints >> decorationInsets: aBlInsets [
 	decorationInsets := aBlInsets
 ]
 
+{ #category : #'initialize-release' }
+OBlInfiniteLayoutConstraints >> defaultHolder [
+
+	^ OBlInfiniteHolder new
+]
+
 { #category : #'accessing - position' }
 OBlInfiniteLayoutConstraints >> elementDataSourcePosition [
 	"Returns the up-to-date datasource position that the element I am attached to corresponds to"
@@ -60,6 +66,8 @@ OBlInfiniteLayoutConstraints >> holder: anElementHolder [
 { #category : #'initialize-release' }
 OBlInfiniteLayoutConstraints >> initialize [
 	super initialize.
+	
+	holder := self defaultHolder.
 	insertsDirty := true.
 	pendingInvalidate := false
 ]
