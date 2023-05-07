@@ -1,6 +1,6 @@
 Class {
 	#name : #OBlInfiniteBasicLayout,
-	#superclass : #BlInfiniteLayout,
+	#superclass : #OBlInfiniteLayout,
 	#category : #'OnBloc-Infinite-Layout'
 }
 
