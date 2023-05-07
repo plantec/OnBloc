@@ -1496,7 +1496,7 @@ OBlInfiniteElement >> scrollByInternal: aDeltaPoint from: anEventPoint [
 	self onExitLayoutOrScroll.
 	self resumeRequestLayout: false.
 	
-	self overScrollMode ~= BlOverScrollMode never
+	self overScrollMode ~= OBlOverScrollMode never
 		ifTrue: [].
 	
 	(consumedX isZero and: [ consumedY isZero ])
