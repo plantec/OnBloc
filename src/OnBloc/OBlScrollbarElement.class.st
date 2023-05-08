@@ -53,7 +53,7 @@ OBlScrollbarElement >> defaultPullHandler [
 
 { #category : #initialization }
 OBlScrollbarElement >> defaultThumb [
-	"Answer a `BlElement` that represents the default thimb."
+	"Answer a `BlElement` that represents the default thumb."
 
 	^ self subclassResponsibility
 ]

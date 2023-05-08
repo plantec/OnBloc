@@ -39,8 +39,9 @@ OBlHorizontalScrollbarElement >> defaultTrack [
 
 { #category : #initialization }
 OBlHorizontalScrollbarElement >> initialize [
+
 	super initialize.
-	
+
 	self constraintsDo: [ :c |
 		c vertical fitContent.
 		c horizontal matchParent ]
@@ -48,8 +49,8 @@ OBlHorizontalScrollbarElement >> initialize [
 
 { #category : #'private - scrolling' }
 OBlHorizontalScrollbarElement >> scrollTo: aPoint [
+
 	| scrollingBy |
-	
 	scrollingBy := self
 		computeScrollDeltaFrom: dragPosition x
 		to: aPoint x
@@ -57,8 +58,7 @@ OBlHorizontalScrollbarElement >> scrollTo: aPoint [
 		range: scrollable computeHorizontalScrollRange
 		length: self width.
 
-	scrollingBy isZero
-		ifTrue: [ ^ self ].
+	scrollingBy isZero ifTrue: [ ^ self ].
 
 	scrollable scrollBy: scrollingBy @ 0.
 	
@@ -71,8 +71,7 @@ OBlHorizontalScrollbarElement >> updateScrollPosition [
 	| horizontalContentLength horizontalScrollOffset horizontalScrollExtent realThumbWeight thumbLeft |
 	horizontalContentLength := scrollable computeHorizontalScrollRange.
 	
-	horizontalContentLength isZero
-		ifTrue: [ ^ self ].
+	horizontalContentLength isZero ifTrue: [ ^ self ].
 	
 	horizontalScrollOffset := scrollable computeHorizontalScrollOffset.
 	horizontalScrollExtent := scrollable computeHorizontalScrollExtent.

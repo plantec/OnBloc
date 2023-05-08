@@ -58,8 +58,7 @@ OBlVerticalScrollbarElement >> scrollTo: aPoint [
 		range: scrollable computeVerticalScrollRange
 		length: self height.
 
-	scrollingBy isZero
-		ifTrue: [ ^ self ].
+	scrollingBy isZero ifTrue: [ ^ self ].
 
 	scrollable scrollBy: 0.0 @ scrollingBy.
 	
@@ -72,8 +71,7 @@ OBlVerticalScrollbarElement >> updateScrollPosition [
 	| verticalContentLength verticalScrollOffset verticalScrollExtent realThumbWeight thumbTop |
 	verticalContentLength := scrollable computeVerticalScrollRange.
 	
-	verticalContentLength isZero
-		ifTrue: [ ^ self ].
+	verticalContentLength isZero ifTrue: [ ^ self ].
 	
 	verticalScrollOffset := scrollable computeVerticalScrollOffset.
 	verticalScrollExtent := scrollable computeVerticalScrollExtent.
