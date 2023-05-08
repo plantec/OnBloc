@@ -178,32 +178,26 @@ OBlInfiniteLinearLayout >> computeHorizontalScrollRange [
 
 { #category : #'private - scrolling' }
 OBlInfiniteLinearLayout >> computeScrollExtent [
-	<return: #Number>
 	
-	self hasChildren
-		ifFalse: [ ^ 0 ].
+	self hasChildren ifFalse: [ ^ 0 ].
 	
-	^ self createScrollbarHelper computeScrollExtent
+	^ self newScrollbarHelper computeScrollExtent
 ]
 
 { #category : #'private - scrolling' }
 OBlInfiniteLinearLayout >> computeScrollOffset [
-	<return: #Number>
 	
-	self hasChildren
-		ifFalse: [ ^ 0 ].
+	self hasChildren ifFalse: [ ^ 0 ].
 	
-	^ self createScrollbarHelper computeScrollOffset
+	^ self newScrollbarHelper computeScrollOffset
 ]
 
 { #category : #'private - scrolling' }
 OBlInfiniteLinearLayout >> computeScrollRange [
-	<return: #Number>
 	
-	self hasChildren
-		ifFalse: [ ^ 0 ].
+	self hasChildren ifFalse: [ ^ 0 ].
 	
-	^ self createScrollbarHelper computeScrollRange
+	^ self newScrollbarHelper computeScrollRange
 ]
 
 { #category : #scrolling }
@@ -243,20 +237,6 @@ OBlInfiniteLinearLayout >> computeVerticalScrollRange [
 	<return: #Number>
 
 	^ self computeScrollRange
-]
-
-{ #category : #'private - scrolling' }
-OBlInfiniteLinearLayout >> createScrollbarHelper [
-	<return: #BlInfiniteScrollbarHelper>
-
-	^ OBlInfiniteScrollbarHelper new
-		state: infiniteElement state;
-		orientation: orientation;
-		startElement: (self findFirstVisibleChildClosestToStartCompletelyVisible: smoothScrollbarEnabled not acceptPartiallyVisible: true);
-		endElement: (self findFirstVisibleChildClosestToEndCompletelyVisible: smoothScrollbarEnabled not acceptPartiallyVisible: true);
-		layout: self;
-		smoothScrollbarEnabled: smoothScrollbarEnabled;
-		isReversedLayout: shouldReverseLayout
 ]
 
 { #category : #initialization }
@@ -458,8 +438,8 @@ OBlInfiniteLinearLayout >> findVisibleChildFrom: aFromIndex to: aToIndex complet
 	fully visible depending on the arguments provided. Completely invisible children are not acceptable by this method,
 	but could be returned using #findOnePartiallyOrCompletelyInvisibleChild"
 	<return: #BlElement or: nil>
+
 	| preferredConstraints acceptableConstraints |
-	
 	preferredConstraints := BlBoundsMatcherConstraints new.
 	acceptableConstraints := BlBoundsMatcherConstraints new.
 	
@@ -474,13 +454,13 @@ OBlInfiniteLinearLayout >> findVisibleChildFrom: aFromIndex to: aToIndex complet
 			preferredConstraints
 				addChildStartLessThanParentEnd;
 				addChildEndGreaterThanParentStart ].
-			
+	
 	shouldAcceptPartiallyVisible
 		ifTrue: [
 			acceptableConstraints
 				addChildStartLessThanParentEnd;
 				addChildEndGreaterThanParentStart ].
-			
+	
 	^ self orientation isHorizontal
 		ifTrue: [
 			horizontalChildFinder
@@ -921,6 +901,20 @@ OBlInfiniteLinearLayout >> mouseWheelEvent: anEvent [
 	"${method:BlInfiniteMouseScrollOrientationLimitedListener>>#mouseWheelEvent:}$
 	dispatches mouse wheel event processing to layouts. Layouts decides whether and how to scroll items."
 	self orientation mouseWheelEvent: anEvent
+]
+
+{ #category : #'private - scrolling' }
+OBlInfiniteLinearLayout >> newScrollbarHelper [
+
+	^ OBlInfiniteScrollbarHelper new
+		state: infiniteElement state;
+		orientation: orientation;
+		startElement: (self findFirstVisibleChildClosestToStartCompletelyVisible: smoothScrollbarEnabled not acceptPartiallyVisible: true);
+		endElement: (self findFirstVisibleChildClosestToEndCompletelyVisible: smoothScrollbarEnabled not acceptPartiallyVisible: true);
+		layout: self;
+		smoothScrollbarEnabled: smoothScrollbarEnabled;
+		isReversedLayout: shouldReverseLayout;
+		yourself
 ]
 
 { #category : #'layout - notifying' }
