@@ -6,35 +6,42 @@ Class {
 
 { #category : #initialization }
 OBlVerticalScrollbarElement >> defaultPullHandler [
-	^ BlPullHandler new disallowOutOfBounds beVertical
+
+	^ BlPullHandler new
+		  disallowOutOfBounds;
+		  beVertical;
+		  yourself
 ]
 
 { #category : #initialization }
 OBlVerticalScrollbarElement >> defaultThumb [
+
 	^ BlElement new
-		width: 8;		
-		constraintsDo: [ :c |
-			c minHeight: 20.0.
-			c vertical matchParent ];
-		background: Color gray
+		  width: 8;
+		  constraintsDo: [ :c |
+			  c minHeight: 20.0.
+			  c vertical matchParent ];
+		  background: Color gray;
+		yourself
 ]
 
 { #category : #initialization }
 OBlVerticalScrollbarElement >> defaultTrack [
-	<return: #BlElement>
-	
-	^ (BlElement new
-		background: (Color black alpha: 0.25);
-		constraintsDo: [ :c |
-			c horizontal exact: 1.
-			c vertical matchParent.
-			c frame horizontal alignCenter ])
+
+	^ BlElement new
+		  background: (Color black alpha: 0.25);
+		  constraintsDo: [ :c |
+			  c horizontal exact: 1.
+			  c vertical matchParent.
+			  c frame horizontal alignCenter ];
+		  yourself
 ]
 
 { #category : #initialization }
 OBlVerticalScrollbarElement >> initialize [
+
 	super initialize.
-	
+
 	self constraintsDo: [ :c |
 		c horizontal fitContent.
 		c vertical matchParent ]
@@ -42,8 +49,8 @@ OBlVerticalScrollbarElement >> initialize [
 
 { #category : #'private - scrolling' }
 OBlVerticalScrollbarElement >> scrollTo: aPoint [
+
 	| scrollingBy |
-	
 	scrollingBy := self
 		computeScrollDeltaFrom: dragPosition y
 		to: aPoint y
@@ -61,8 +68,8 @@ OBlVerticalScrollbarElement >> scrollTo: aPoint [
 
 { #category : #'private - scrolling' }
 OBlVerticalScrollbarElement >> updateScrollPosition [
+
 	| verticalContentLength verticalScrollOffset verticalScrollExtent realThumbWeight thumbTop |
-		
 	verticalContentLength := scrollable computeVerticalScrollRange.
 	
 	verticalContentLength isZero

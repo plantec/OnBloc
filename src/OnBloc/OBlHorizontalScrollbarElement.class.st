@@ -6,29 +6,35 @@ Class {
 
 { #category : #initialization }
 OBlHorizontalScrollbarElement >> defaultPullHandler [
-	^ BlPullHandler new disallowOutOfBounds beHorizontal
+
+	^ BlPullHandler new
+		  disallowOutOfBounds;
+		  beHorizontal;
+		  yourself
 ]
 
 { #category : #initialization }
 OBlHorizontalScrollbarElement >> defaultThumb [
+
 	^ BlElement new
-		height: 8;
-		constraintsDo: [ :c |
-			c horizontal matchParent.
-			c frame horizontal weight: 0.25 ];
-		background: Color gray
+		  height: 8;
+		  constraintsDo: [ :c |
+			  c horizontal matchParent.
+			  c frame horizontal weight: 0.25 ];
+		  background: Color gray;
+		  yourself
 ]
 
 { #category : #initialization }
 OBlHorizontalScrollbarElement >> defaultTrack [
-	<return: #BlElement>
-	
-	^ (BlElement new
-		background: (Color black alpha: 0.25);
-		constraintsDo: [ :c |
-			c vertical exact: 1.
-			c horizontal matchParent.
-			c frame vertical alignCenter ])
+
+	^ BlElement new
+		  background: (Color black alpha: 0.25);
+		  constraintsDo: [ :c |
+			  c vertical exact: 1.
+			  c horizontal matchParent.
+			  c frame vertical alignCenter ];
+		  yourself
 ]
 
 { #category : #initialization }
@@ -61,8 +67,8 @@ OBlHorizontalScrollbarElement >> scrollTo: aPoint [
 
 { #category : #'private - scrolling' }
 OBlHorizontalScrollbarElement >> updateScrollPosition [
+
 	| horizontalContentLength horizontalScrollOffset horizontalScrollExtent realThumbWeight thumbLeft |
-	
 	horizontalContentLength := scrollable computeHorizontalScrollRange.
 	
 	horizontalContentLength isZero
