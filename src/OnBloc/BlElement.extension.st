@@ -1,11 +1,6 @@
 Extension { #name : #BlElement }
 
 { #category : #'*OnBloc' }
-BlElement >> asStencil [
-	^ self
-]
-
-{ #category : #'*OnBloc' }
 BlElement >> openInOBlSpace [
 	"Add self to a new BlSpace and show it. Answer such space."
 	| sp |
