@@ -20,12 +20,12 @@ OBlInfiniteScrollbarHelper >> computeScrollExtent [
 	self isEmpty ifTrue: [ ^ 0 ]. 
 
 	smoothScrollbarEnabled ifFalse: [
-		(layout childPositionOf: startElement)
-		- (layout childPositionOf: endElement) abs + 1 ].
+		(layout childPositionOf: startElement) -
+		(layout childPositionOf: endElement) abs + 1 ].
 
 	anExtent :=
-		(orientation decoratedEnd: endElement)
-		- (orientation decoratedStart: startElement).
+		(orientation decoratedEnd: endElement) -
+		(orientation decoratedStart: startElement).
 
 	^ orientation totalSpace min: anExtent
 ]
@@ -35,7 +35,7 @@ OBlInfiniteScrollbarHelper >> computeScrollOffset [
 
 	| startPosition endPosition minPosition maxPosition itemsBefore laidOutArea itemRange avgSizePerRow |
 	self isEmpty ifTrue: [ ^ 0 ].
-	
+
 	startPosition := layout childPositionOf: startElement.
 	endPosition := layout childPositionOf: endElement.
 
@@ -49,8 +49,8 @@ OBlInfiniteScrollbarHelper >> computeScrollOffset [
 	smoothScrollbarEnabled ifFalse: [ ^ itemsBefore ].
 	
 	laidOutArea :=
-		((orientation decoratedEnd: endElement)
-		- (orientation decoratedStart: startElement)) abs.
+		((orientation decoratedEnd: endElement) -
+		(orientation decoratedStart: startElement)) abs.
 	itemRange := (startPosition - endPosition) abs + 1.
 	avgSizePerRow := (laidOutArea / itemRange) asFloat.
 	
@@ -66,12 +66,12 @@ OBlInfiniteScrollbarHelper >> computeScrollRange [
 	smoothScrollbarEnabled ifFalse: [ ^ state itemCount ].
 
 	laidOutArea :=
-		(orientation decoratedEnd: endElement)
-		- (orientation decoratedStart: startElement).
+		(orientation decoratedEnd: endElement) -
+		(orientation decoratedStart: startElement).
 	
 	laidOutRange :=
-		((layout childPositionOf: startElement)
-		- (layout childPositionOf: endElement)) abs + 1.
+		((layout childPositionOf: startElement) -
+		(layout childPositionOf: endElement)) abs + 1.
 
 	^ (laidOutArea / laidOutRange * state itemCount) asFloat
 ]

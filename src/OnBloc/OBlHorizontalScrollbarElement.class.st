@@ -70,15 +70,14 @@ OBlHorizontalScrollbarElement >> updateScrollPosition [
 
 	| horizontalContentLength horizontalScrollOffset horizontalScrollExtent realThumbWeight thumbLeft |
 	horizontalContentLength := scrollable computeHorizontalScrollRange.
-	
 	horizontalContentLength isZero ifTrue: [ ^ self ].
 	
 	horizontalScrollOffset := scrollable computeHorizontalScrollOffset.
 	horizontalScrollExtent := scrollable computeHorizontalScrollExtent.
 	
-	horizontalContentLength <= horizontalScrollExtent 
-		ifTrue: [ self visibility: BlVisibility hidden]
-		ifFalse: [ self visibility: BlVisibility visible].
+	self visibility: (horizontalContentLength <= horizontalScrollExtent 
+		ifTrue: [ BlVisibility hidden ]
+		ifFalse: [ BlVisibility visible ]).
 	
 	realThumbWeight := (horizontalScrollExtent / horizontalContentLength) asFloat.
 	thumbLeft := (horizontalScrollOffset / horizontalContentLength) asFloat.

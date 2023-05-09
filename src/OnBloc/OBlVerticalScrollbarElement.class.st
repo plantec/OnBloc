@@ -70,7 +70,6 @@ OBlVerticalScrollbarElement >> updateScrollPosition [
 
 	| verticalContentLength verticalScrollOffset verticalScrollExtent realThumbWeight thumbTop |
 	verticalContentLength := scrollable computeVerticalScrollRange.
-	
 	verticalContentLength isZero ifTrue: [ ^ self ].
 	
 	verticalScrollOffset := scrollable computeVerticalScrollOffset.

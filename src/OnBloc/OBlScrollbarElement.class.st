@@ -30,17 +30,14 @@ OBlScrollbarElement >> attachTo: aTOBlScrollable [
 OBlScrollbarElement >> computeScrollDeltaFrom: anOldDragPosition to: aNewDragPosition offset: aScrollOffset range: aScrollRange length: aScrollbarLength [
 
 	| aPercentage scrollingBy |
-	aScrollbarLength isZero
-		ifTrue: [ ^ 0 ].
+	aScrollbarLength isZero ifTrue: [ ^ 0 ].
 
-	(aNewDragPosition closeTo: anOldDragPosition epsilon: 0.5)
-		ifTrue: [ ^ 0 ].
+	(aNewDragPosition closeTo: anOldDragPosition epsilon: 0.5) ifTrue: [ ^ 0 ].
 
 	aPercentage := ((aNewDragPosition - anOldDragPosition) / aScrollbarLength) asFloat.
 	scrollingBy := aPercentage * aScrollRange.
 	
-	(scrollingBy closeTo: 0 epsilon: 0.5)
-		ifTrue: [ ^ 0 ].
+	(scrollingBy closeTo: 0 epsilon: 0.5) ifTrue: [ ^ 0 ].
 	
 	^ scrollingBy
 ]
