@@ -294,7 +294,6 @@ OBlInfiniteLayout >> childContainingItemElement: anElement [
 OBlInfiniteLayout >> childPositionOf: anElement [
 	"Returns the datasource position of the item represented by the given Element.
 	This does not contain any datasource changes that might have happened after the last layout"
-	<return: #Number>
 
 	^ anElement constraints infinite elementLayoutPosition
 ]
@@ -303,7 +302,6 @@ OBlInfiniteLayout >> childPositionOf: anElement [
 OBlInfiniteLayout >> childrenCount [
 	"Return the current number of child elements attached to the parent infinite element.
 	This does not include children that were temporarily detached and/or scrapped."
-	<return: #Number>
 
 	^ infiniteElement childrenCount
 ]
@@ -345,6 +343,7 @@ OBlInfiniteLayout >> computeVerticalScrollExtent [
 
 { #category : #'scrolling - thumb' }
 OBlInfiniteLayout >> computeVerticalScrollOffset [
+
 	^ 0
 ]
 
@@ -562,10 +561,17 @@ OBlInfiniteLayout >> infoRemoveHolder: anElementHolder [
 
 { #category : #initialization }
 OBlInfiniteLayout >> initialize [
+
 	super initialize.
 	
-	horizontalChildFinder := OBlInfiniteHorizontalChildBoundsBasedFinder new layout: self.
-	verticalChildFinder := OBlInfiniteVerticalChildBoundsBasedFinder new layout: self.
+	horizontalChildFinder :=
+		OBlInfiniteHorizontalChildBoundsBasedFinder new
+			layout: self;
+			yourself.
+	verticalChildFinder :=
+		OBlInfiniteVerticalChildBoundsBasedFinder new
+			layout: self;
+			yourself.
 	
 	autoMeasure := self defaultAutoMeasure.
 

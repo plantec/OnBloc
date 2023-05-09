@@ -9,17 +9,18 @@ Class {
 
 { #category : #accessing }
 OBlInfiniteChildBoundsBasedFinder >> childAt: anIndex [
-	<return: #BlElement>
 	
 	^ layout childAt: anIndex
 ]
 
 { #category : #accessing }
 OBlInfiniteChildBoundsBasedFinder >> layout [
+
 	^ layout
 ]
 
 { #category : #accessing }
 OBlInfiniteChildBoundsBasedFinder >> layout: anObject [
+
 	layout := anObject
 ]

@@ -6,35 +6,42 @@ Class {
 
 { #category : #initialization }
 OBlHorizontalScrollbarElement >> defaultPullHandler [
-	^ BlPullHandler new disallowOutOfBounds beHorizontal
+
+	^ BlPullHandler new
+		  disallowOutOfBounds;
+		  beHorizontal;
+		  yourself
 ]
 
 { #category : #initialization }
 OBlHorizontalScrollbarElement >> defaultThumb [
+
 	^ BlElement new
-		height: 8;
-		constraintsDo: [ :c |
-			c horizontal matchParent.
-			c frame horizontal weight: 0.25 ];
-		background: Color gray
+		  height: 8;
+		  constraintsDo: [ :c |
+			  c horizontal matchParent.
+			  c frame horizontal weight: 0.25 ];
+		  background: Color gray;
+		  yourself
 ]
 
 { #category : #initialization }
 OBlHorizontalScrollbarElement >> defaultTrack [
-	<return: #BlElement>
-	
-	^ (BlElement new
-		background: (Color black alpha: 0.25);
-		constraintsDo: [ :c |
-			c vertical exact: 1.
-			c horizontal matchParent.
-			c frame vertical alignCenter ])
+
+	^ BlElement new
+		  background: (Color black alpha: 0.25);
+		  constraintsDo: [ :c |
+			  c vertical exact: 1.
+			  c horizontal matchParent.
+			  c frame vertical alignCenter ];
+		  yourself
 ]
 
 { #category : #initialization }
 OBlHorizontalScrollbarElement >> initialize [
+
 	super initialize.
-	
+
 	self constraintsDo: [ :c |
 		c vertical fitContent.
 		c horizontal matchParent ]
@@ -42,8 +49,8 @@ OBlHorizontalScrollbarElement >> initialize [
 
 { #category : #'private - scrolling' }
 OBlHorizontalScrollbarElement >> scrollTo: aPoint [
+
 	| scrollingBy |
-	
 	scrollingBy := self
 		computeScrollDeltaFrom: dragPosition x
 		to: aPoint x
@@ -51,8 +58,7 @@ OBlHorizontalScrollbarElement >> scrollTo: aPoint [
 		range: scrollable computeHorizontalScrollRange
 		length: self width.
 
-	scrollingBy isZero
-		ifTrue: [ ^ self ].
+	scrollingBy isZero ifTrue: [ ^ self ].
 
 	scrollable scrollBy: scrollingBy @ 0.
 	
@@ -61,19 +67,17 @@ OBlHorizontalScrollbarElement >> scrollTo: aPoint [
 
 { #category : #'private - scrolling' }
 OBlHorizontalScrollbarElement >> updateScrollPosition [
+
 	| horizontalContentLength horizontalScrollOffset horizontalScrollExtent realThumbWeight thumbLeft |
-	
 	horizontalContentLength := scrollable computeHorizontalScrollRange.
-	
-	horizontalContentLength isZero
-		ifTrue: [ ^ self ].
+	horizontalContentLength isZero ifTrue: [ ^ self ].
 	
 	horizontalScrollOffset := scrollable computeHorizontalScrollOffset.
 	horizontalScrollExtent := scrollable computeHorizontalScrollExtent.
 	
-	horizontalContentLength <= horizontalScrollExtent 
-		ifTrue: [ self visibility: BlVisibility hidden]
-		ifFalse: [ self visibility: BlVisibility visible].
+	self visibility: (horizontalContentLength <= horizontalScrollExtent 
+		ifTrue: [ BlVisibility hidden ]
+		ifFalse: [ BlVisibility visible ]).
 	
 	realThumbWeight := (horizontalScrollExtent / horizontalContentLength) asFloat.
 	thumbLeft := (horizontalScrollOffset / horizontalContentLength) asFloat.

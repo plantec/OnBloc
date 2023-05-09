@@ -20,8 +20,7 @@ Class {
 OBlScrollbarElement >> attachTo: aTOBlScrollable [
 	"Attach me to a given scrollable element (any element that implements TOBlScrollable trait)"
 
-	scrollable
-		ifNotNil: [ self detachFrom: scrollable ].
+	scrollable ifNotNil: [ self detachFrom: scrollable ].
 
 	aTOBlScrollable addEventHandler: scrollHandler.
 	scrollable := aTOBlScrollable
@@ -29,38 +28,36 @@ OBlScrollbarElement >> attachTo: aTOBlScrollable [
 
 { #category : #'private - scrolling' }
 OBlScrollbarElement >> computeScrollDeltaFrom: anOldDragPosition to: aNewDragPosition offset: aScrollOffset range: aScrollRange length: aScrollbarLength [
+
 	| aPercentage scrollingBy |
+	aScrollbarLength isZero ifTrue: [ ^ 0 ].
 
-	aScrollbarLength isZero
-		ifTrue: [ ^ 0 ].
-
-	(aNewDragPosition closeTo: anOldDragPosition epsilon: 0.5)
-		ifTrue: [ ^ 0 ].
+	(aNewDragPosition closeTo: anOldDragPosition epsilon: 0.5) ifTrue: [ ^ 0 ].
 
 	aPercentage := ((aNewDragPosition - anOldDragPosition) / aScrollbarLength) asFloat.
 	scrollingBy := aPercentage * aScrollRange.
 	
-	(scrollingBy closeTo: 0 epsilon: 0.5)
-		ifTrue: [ ^ 0 ].
+	(scrollingBy closeTo: 0 epsilon: 0.5) ifTrue: [ ^ 0 ].
 	
 	^ scrollingBy
 ]
 
 { #category : #initialization }
 OBlScrollbarElement >> defaultPullHandler [
+
 	^ self subclassResponsibility
 ]
 
 { #category : #initialization }
 OBlScrollbarElement >> defaultThumb [
-	<return: #BlElement>
+	"Answer a `BlElement` that represents the default thumb."
 
 	^ self subclassResponsibility
 ]
 
 { #category : #initialization }
 OBlScrollbarElement >> defaultTrack [
-	<return: #BlElement>
+	"Answer a `BlElement` that represents the default track."
 	
 	^ self subclassResponsibility
 ]
@@ -69,9 +66,8 @@ OBlScrollbarElement >> defaultTrack [
 OBlScrollbarElement >> detach [
 	"Detach me from a scrollable element"
 
-	scrollable
-		ifNil: [ ^ self ].
-		
+	scrollable ifNil: [ ^ self ].
+
 	self detachFrom: scrollable
 ]
 
@@ -85,6 +81,7 @@ OBlScrollbarElement >> detachFrom: aTOBlScrollable [
 
 { #category : #initialization }
 OBlScrollbarElement >> initialize [
+
 	super initialize.
 	
 	self layout: BlFrameLayout new.
@@ -105,51 +102,52 @@ OBlScrollbarElement >> initialize [
 
 { #category : #'private - scrolling' }
 OBlScrollbarElement >> isAttachedToScrollable [
+
 	^ scrollable isNotNil
 ]
 
 { #category : #'hooks - scrolling' }
 OBlScrollbarElement >> onDragged: anEvent [
-	self isAttachedToScrollable
-		ifFalse: [ ^ self ].
 
-	dragPosition := dragPosition
-		ifNil: [ anEvent currentTarget position ].
+	self isAttachedToScrollable ifFalse: [ ^ self ].
+
+	dragPosition := dragPosition ifNil: [ anEvent currentTarget position ].
 
 	self scrollTo: anEvent newPosition
 ]
 
 { #category : #'hooks - scrolling' }
 OBlScrollbarElement >> onScrolled: aScrollable [
-	self isAttachedToScrollable
-		ifFalse: [ ^ self ].
+
+	self isAttachedToScrollable ifFalse: [ ^ self ].
 
 	self updateScrollPosition
 ]
 
 { #category : #'private - thumb' }
 OBlScrollbarElement >> registerThumb: anElement [
-	anElement addEventHandler: pullHandler.
-	anElement addEventHandler: pullStartHandler.
-	anElement addEventHandler: pullDragHandler.
-	anElement addEventHandler: pullEndHandler
+
+	anElement
+		addEventHandler: pullHandler;
+		addEventHandler: pullStartHandler;
+		addEventHandler: pullDragHandler;
+		addEventHandler: pullEndHandler
 ]
 
 { #category : #'private - scrolling' }
 OBlScrollbarElement >> scrollTo: aPoint [
+
 	self subclassResponsibility
 ]
 
 { #category : #'api - scrollbar' }
 OBlScrollbarElement >> thumb [
-	<return: #BlElement>
 
 	^ thumb
 ]
 
 { #category : #'api - scrollbar' }
 OBlScrollbarElement >> thumb: anElement [
-	<return: #BlElement>
 	
 	thumb
 		ifNotNil: [ :aCurrentThumb |
@@ -163,14 +161,12 @@ OBlScrollbarElement >> thumb: anElement [
 
 { #category : #'api - scrollbar' }
 OBlScrollbarElement >> track [
-	<return: #BlElement>
 
 	^ track
 ]
 
 { #category : #'api - scrollbar' }
 OBlScrollbarElement >> track: anElement [
-	<return: #BlElement>
 	
 	track
 		ifNotNil: [ :aCurrentTrack | self replaceChild: aCurrentTrack with: anElement as: #track ]
@@ -181,13 +177,16 @@ OBlScrollbarElement >> track: anElement [
 
 { #category : #'private - thumb' }
 OBlScrollbarElement >> unregisterThumb: anElement [
-	anElement removeEventHandler: pullHandler.
-	anElement removeEventHandler: pullStartHandler.
-	anElement removeEventHandler: pullDragHandler.
-	anElement removeEventHandler: pullEndHandler
+
+	anElement
+		removeEventHandler: pullHandler;
+		removeEventHandler: pullStartHandler;
+		removeEventHandler: pullDragHandler;
+		removeEventHandler: pullEndHandler
 ]
 
 { #category : #'private - scrolling' }
 OBlScrollbarElement >> updateScrollPosition [
+
 	self subclassResponsibility
 ]
