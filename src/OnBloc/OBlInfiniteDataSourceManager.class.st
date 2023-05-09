@@ -345,7 +345,7 @@ OBlInfiniteDataSourceManager >> onCommandProcessed: aCommand in: anInfiniteEleme
 
 { #category : #'data source updates' }
 OBlInfiniteDataSourceManager >> onItemRangeChanged: aPositionStart itemCount: anItemCount [
-	"Enques a new update pending command.
+	"Enqueues a new update pending command.
 	I am a part of public API and should be triggered by data source (directly or indirectly)
 	when items are changed/updated (item's value, content, or value was replaced in-place).
 	Return true if pending commands need to be processed, otherwise false."
