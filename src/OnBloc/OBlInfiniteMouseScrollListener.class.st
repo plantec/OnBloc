@@ -1,8 +1,23 @@
 Class {
 	#name : #OBlInfiniteMouseScrollListener,
 	#superclass : #BlBasicEventHandler,
+	#classVars : [
+		'ScrollingVelocity'
+	],
 	#category : #'OnBloc-Infinite-Basic'
 }
+
+{ #category : #accessing }
+OBlInfiniteMouseScrollListener class >> scrollingVelocity [
+
+	^ ScrollingVelocity ifNil: [ ScrollingVelocity := 40 ]
+]
+
+{ #category : #accessing }
+OBlInfiniteMouseScrollListener class >> scrollingVelocity: anInteger [
+
+	ScrollingVelocity := anInteger
+]
 
 { #category : #'mouse handlers' }
 OBlInfiniteMouseScrollListener >> canScrollDown: anInfiniteElement [
@@ -71,7 +86,7 @@ OBlInfiniteMouseScrollListener >> mouseWheelEvent: anEvent [
 		"we are horizontal => no vertical scroll"
 		ifFalse: [ 0 ].
 
-	anInfiniteElement smoothScrollBy: (dX @ dY) * 200.
+	anInfiniteElement smoothScrollBy: (dX @ dY) * self scrollingVelocity.
 	anEvent consumed: (dY isZero not)
 ]
 
@@ -80,6 +95,12 @@ OBlInfiniteMouseScrollListener >> printOn: aStream [
 	aStream 
 		nextPutAll: 'Event handler of ';
 		print: self eventClass.
+]
+
+{ #category : #accessing }
+OBlInfiniteMouseScrollListener >> scrollingVelocity [
+
+	^ self class scrollingVelocity
 ]
 
 { #category : #events }
