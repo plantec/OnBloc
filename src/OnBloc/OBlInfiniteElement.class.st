@@ -60,6 +60,19 @@ OBlInfiniteElement >> assertInLayoutOrScroll [
 ]
 
 { #category : #'private - assertions' }
+OBlInfiniteElement >> assertNotInLayout [
+	"Checks if InfiniteElement is in the middle of a layout 
+	and throws an assertion error if it is"
+	
+	Bloc debugModeEnabled
+		ifFalse: [ ^ self ].
+	
+	self
+		assert: [ self isComputingLayout not ]
+		description: [ 'InfiniteElement is computing a layout or scrolling while it should not' ]
+]
+
+{ #category : #'private - assertions' }
 OBlInfiniteElement >> assertNotInLayoutOrScroll [
 	"Checks if InfiniteElement is in the middle of a layout or scroll
 	and throws an assertion error if it is"
@@ -541,11 +554,11 @@ OBlInfiniteElement >> dispatchLayoutThirdStep [
 	trigger animations and do any necessary cleanup."
 
 	self state assertLayoutStep: OBlInfiniteLayoutStepFlags Animations.
-	
+
 	self eatRequestLayout.
 	self onEnterLayoutOrScroll.
 	self state beStepStart.
-		
+
 	layout removeAndRecycleScrap.
 	self state previousLayoutItemCount: self state itemCount.
 	dataSourceChangedAfterLayout := false.
@@ -553,9 +566,10 @@ OBlInfiniteElement >> dispatchLayoutThirdStep [
 	layout layoutCompleted.
 	self onExitLayoutOrScroll.
 	self resumeRequestLayout: false.
-	
-	(self didChildPositionsRangeChange: layoutPositionsRange)
-		ifTrue: [ self dispatchOnScrolled: 0@0 ].
+
+	((self didChildPositionsRangeChange: layoutPositionsRange) or: [
+		 self scrolledWhileFilling ]) ifTrue: [
+		self dispatchOnScrolled: 0 @ 0 ].
 	self recoverFocusFromState.
 	self resetFocusInfo
 ]
@@ -1569,6 +1583,12 @@ OBlInfiniteElement >> scrollVerticallyBy: aNumber [
 	<return: #Number>
 
 	^ self layout scrollVerticallyBy: aNumber
+]
+
+{ #category : #layout }
+OBlInfiniteElement >> scrolledWhileFilling [
+
+	^ self layout scrolledWhileFilling
 ]
 
 { #category : #'private - invalidation' }

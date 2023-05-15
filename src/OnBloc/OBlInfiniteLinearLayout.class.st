@@ -277,14 +277,6 @@ OBlInfiniteLinearLayout >> defaultStackFromEnd [
 	^ false
 ]
 
-{ #category : #dispatching }
-OBlInfiniteLinearLayout >> dispatchScrolledWhileFilling [
-
-	layoutState scrolledWhileFilling ifFalse: [ ^ self ].
-	infiniteElement dispatchEvent: OBlInfiniteScrolledWhileFilling new.
-	layoutState scrolledWhileFilling: false
-]
-
 { #category : #'layout - geometry' }
 OBlInfiniteLinearLayout >> extraLayoutSpace [
 	"Return the amount of extra space that should be laid out by InfiniteLayout.
@@ -725,7 +717,6 @@ OBlInfiniteLinearLayout >> layoutChildrenIn: aBlInfiniteRecycler state: aBlInfin
 	layoutState scrolledWhileFilling: false.
 	anOffsetSpace := self layoutChildrenFill: anExtraSpace.
 	anOffsetSpace := self layoutChildrenFixGaps: anOffsetSpace.
-	self dispatchScrolledWhileFilling.
 	"self layoutChildrenForPredictiveAnimations: anOffsetSpace."
 	
 	self state isPreLayout
@@ -1248,6 +1239,12 @@ OBlInfiniteLinearLayout >> scrollVerticallyBy: aNumber [
 		ifTrue: [ ^ 0 ].
 
 	^ self scrollBy: aNumber
+]
+
+{ #category : #scrolling }
+OBlInfiniteLinearLayout >> scrolledWhileFilling [
+
+	^ layoutState scrolledWhileFilling
 ]
 
 { #category : #testing }
