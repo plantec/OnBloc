@@ -199,9 +199,46 @@ OBlSpace class >> simulateDragOn: anElement by: aBlVector [
 	"we simulate a click with a sequence of low level mouse down/up events"
 	self
 		simulateEvents: {
-			BlMouseDownEvent primary position: aPosition.
-			BlMouseMoveEvent primary position: aPosition + aDelta.
-			BlMouseUpEvent primary position: aPosition + aDelta }
+			BlMouseDownEvent primary position: aPosition; yourself.
+			BlMouseMoveEvent primary position: aPosition + aDelta; delta: aDelta; yourself.
+			BlMouseUpEvent primary position: aPosition + aDelta; yourself }
+		on: anElement
+]
+
+{ #category : #'debug - simulation' }
+OBlSpace class >> simulateDragOn: anElement byAll: aSequenceOfBlVectors [
+	"Simulate a drag in the center of a given element by
+	performing mouse down, mouse move, and mouse up events."
+
+	| aPosition aDelta |
+	anElement topMostParent forceLayout.
+	aPosition := anElement bounds inSpace center.
+
+	self
+		simulateEvent:
+			(BlMouseDownEvent primary
+				position: aPosition;
+				yourself)
+		on: anElement.
+
+	aSequenceOfBlVectors do: [ :each |
+		aDelta := (anElement localBoundsToGlobal:
+			(BlBounds origin: 0.0@0.0 extent: each)) extent.
+		aPosition := aPosition + aDelta.
+		self
+			simulateEvent:
+				(BlMouseMoveEvent primary
+					position: aPosition "+ aDelta";
+					delta: aDelta;
+					yourself)
+			on: anElement ].
+
+	self
+		simulateEvent:
+			(BlMouseUpEvent primary
+				position: aPosition "+ aDelta";
+				delta: aDelta;
+				yourself)
 		on: anElement
 ]
 
