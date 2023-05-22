@@ -20,5 +20,7 @@ BaselineOfOnBloc >> baseline: spec [
 		spec package: 'OnBloc' with: [ 
 			spec repository: 'github://plantec/OnBloc/src'.
 			spec requires: #( #Bloc "#BlocPac" ) ].
-		spec package: 'OnBloc-Alexandrie']
+		spec package: 'OnBloc-Alexandrie'.
+		spec package: 'OnBloc-Tests' with: [ 
+			spec requires: #( OnBloc ) ] ]
 ]

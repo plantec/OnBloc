@@ -4,14 +4,12 @@ Class {
 	#instVars : [
 		'scrollable',
 		'thumb',
-		'minimumSize',
 		'dragPosition',
 		'pullHandler',
-		'pullStartHandler',
-		'pullEndHandler',
-		'pullDragHandler',
 		'track',
-		'scrollHandler'
+		'scrollHandler',
+		'thumbDragHandler',
+		'thumbDragStartHandler'
 	],
 	#category : #'OnBloc-Scrollable-Core'
 }
@@ -26,22 +24,6 @@ OBlScrollbarElement >> attachTo: aTOBlScrollable [
 	scrollable := aTOBlScrollable
 ]
 
-{ #category : #'private - scrolling' }
-OBlScrollbarElement >> computeScrollDeltaFrom: anOldDragPosition to: aNewDragPosition offset: aScrollOffset range: aScrollRange length: aScrollbarLength [
-
-	| aPercentage scrollingBy |
-	aScrollbarLength isZero ifTrue: [ ^ 0 ].
-
-	(aNewDragPosition closeTo: anOldDragPosition epsilon: 0.5) ifTrue: [ ^ 0 ].
-
-	aPercentage := ((aNewDragPosition - anOldDragPosition) / aScrollbarLength) asFloat.
-	scrollingBy := aPercentage * aScrollRange.
-	
-	(scrollingBy closeTo: 0 epsilon: 0.5) ifTrue: [ ^ 0 ].
-	
-	^ scrollingBy
-]
-
 { #category : #initialization }
 OBlScrollbarElement >> defaultPullHandler [
 
@@ -49,17 +31,15 @@ OBlScrollbarElement >> defaultPullHandler [
 ]
 
 { #category : #initialization }
-OBlScrollbarElement >> defaultThumb [
-	"Answer a `BlElement` that represents the default thumb."
+OBlScrollbarElement >> defaultThumbBackground [
 
-	^ self subclassResponsibility
+	^ Color gray
 ]
 
 { #category : #initialization }
-OBlScrollbarElement >> defaultTrack [
-	"Answer a `BlElement` that represents the default track."
-	
-	^ self subclassResponsibility
+OBlScrollbarElement >> defaultTrackBackground [
+
+	^ Color black alpha: 0.25
 ]
 
 { #category : #'api - scrollbar' }
@@ -86,18 +66,26 @@ OBlScrollbarElement >> initialize [
 	
 	self layout: BlFrameLayout new.
 
-	minimumSize := 0.05.
-
-	scrollHandler := BlEventHandler
-		on: BlElementScrolledEvent
-		do: [ :anEvent | self onScrolled: anEvent currentTarget ].
+	scrollHandler :=
+		BlEventHandler
+			on: BlElementScrolledEvent
+			do: [ :anEvent |
+				self isAttachedToScrollable
+					ifTrue: [ self updateThumbPosition ] ].
 	pullHandler := self defaultPullHandler.
-	pullStartHandler := BlEventHandler on: BlPullStartEvent do: [ dragPosition := nil ].
-	pullDragHandler := BlEventHandler on: BlPullEvent do: [ :anEvent | self onDragged: anEvent ].
-	pullEndHandler := BlEventHandler on: BlPullEndEvent do: [ dragPosition := nil ].
+	thumbDragStartHandler :=
+		BlEventHandler
+			on: BlPullStartEvent
+			do: [ :anEvent | dragPosition := anEvent currentTarget position ].
+	thumbDragHandler :=
+		BlEventHandler
+			on: BlPullEvent
+			do: [ :anEvent |
+				self isAttachedToScrollable ifTrue: [
+					 self onDraggedThumbBy: anEvent currentPosition ] ].
 
-	self track: self defaultTrack.
-	self thumb: self defaultThumb
+	self track: self newDefaultTrack.
+	self thumb: self newDefaultThumb
 ]
 
 { #category : #'private - scrolling' }
@@ -106,22 +94,24 @@ OBlScrollbarElement >> isAttachedToScrollable [
 	^ scrollable isNotNil
 ]
 
-{ #category : #'hooks - scrolling' }
-OBlScrollbarElement >> onDragged: anEvent [
+{ #category : #initialization }
+OBlScrollbarElement >> newDefaultThumb [
+	"Answer a `BlElement` that represents the default thumb."
 
-	self isAttachedToScrollable ifFalse: [ ^ self ].
-
-	dragPosition := dragPosition ifNil: [ anEvent currentTarget position ].
-
-	self scrollTo: anEvent newPosition
+	^ self subclassResponsibility
 ]
 
-{ #category : #'hooks - scrolling' }
-OBlScrollbarElement >> onScrolled: aScrollable [
+{ #category : #initialization }
+OBlScrollbarElement >> newDefaultTrack [
+	"Answer a `BlElement` that represents the default track."
+	
+	^ self subclassResponsibility
+]
 
-	self isAttachedToScrollable ifFalse: [ ^ self ].
+{ #category : #'private - scrolling' }
+OBlScrollbarElement >> onDraggedThumbBy: aPoint [
 
-	self updateScrollPosition
+	self subclassResponsibility
 ]
 
 { #category : #'private - thumb' }
@@ -129,15 +119,23 @@ OBlScrollbarElement >> registerThumb: anElement [
 
 	anElement
 		addEventHandler: pullHandler;
-		addEventHandler: pullStartHandler;
-		addEventHandler: pullDragHandler;
-		addEventHandler: pullEndHandler
+		addEventHandler: thumbDragStartHandler;
+		addEventHandler: thumbDragHandler
 ]
 
 { #category : #'private - scrolling' }
-OBlScrollbarElement >> scrollTo: aPoint [
+OBlScrollbarElement >> scrollableDeltaFromThumbDelta: thumbDelta range: scrollRange length: scrollbarLength [
 
-	self subclassResponsibility
+	| result |
+	scrollbarLength isZero ifTrue: [ ^ 0 ].
+
+	(thumbDelta closeTo: 0.0 epsilon: 0.5) ifTrue: [ ^ 0 ].
+
+	result := (thumbDelta * scrollRange / scrollbarLength) asFloat.
+	
+	(result closeTo: 0.0 epsilon: 0.5) ifTrue: [ ^ 0 ].
+	
+	^ result
 ]
 
 { #category : #'api - scrollbar' }
@@ -180,13 +178,12 @@ OBlScrollbarElement >> unregisterThumb: anElement [
 
 	anElement
 		removeEventHandler: pullHandler;
-		removeEventHandler: pullStartHandler;
-		removeEventHandler: pullDragHandler;
-		removeEventHandler: pullEndHandler
+		removeEventHandler: thumbDragStartHandler;
+		removeEventHandler: thumbDragHandler
 ]
 
 { #category : #'private - scrolling' }
-OBlScrollbarElement >> updateScrollPosition [
+OBlScrollbarElement >> updateThumbPosition [
 
 	self subclassResponsibility
 ]

@@ -14,30 +14,6 @@ OBlHorizontalScrollbarElement >> defaultPullHandler [
 ]
 
 { #category : #initialization }
-OBlHorizontalScrollbarElement >> defaultThumb [
-
-	^ BlElement new
-		  height: 8;
-		  constraintsDo: [ :c |
-			  c horizontal matchParent.
-			  c frame horizontal weight: 0.25 ];
-		  background: Color gray;
-		  yourself
-]
-
-{ #category : #initialization }
-OBlHorizontalScrollbarElement >> defaultTrack [
-
-	^ BlElement new
-		  background: (Color black alpha: 0.25);
-		  constraintsDo: [ :c |
-			  c vertical exact: 1.
-			  c horizontal matchParent.
-			  c frame vertical alignCenter ];
-		  yourself
-]
-
-{ #category : #initialization }
 OBlHorizontalScrollbarElement >> initialize [
 
 	super initialize.
@@ -47,44 +23,65 @@ OBlHorizontalScrollbarElement >> initialize [
 		c horizontal matchParent ]
 ]
 
-{ #category : #'private - scrolling' }
-OBlHorizontalScrollbarElement >> scrollTo: aPoint [
+{ #category : #initialization }
+OBlHorizontalScrollbarElement >> newDefaultThumb [
 
-	| scrollingBy |
-	scrollingBy := self
-		computeScrollDeltaFrom: dragPosition x
-		to: aPoint x
-		offset: scrollable computeHorizontalScrollOffset
+	^ BlElement new
+		  background: self defaultThumbBackground;
+		  constraintsDo: [ :c |
+			  c horizontal matchParent.
+			  c frame horizontal weight: 0.25 ];
+		  height: 8;
+		  yourself
+]
+
+{ #category : #initialization }
+OBlHorizontalScrollbarElement >> newDefaultTrack [
+
+	^ BlElement new
+		  background: self defaultTrackBackground;
+		  constraintsDo: [ :c |
+			  c vertical exact: 1.
+			  c horizontal matchParent.
+			  c frame vertical alignCenter ];
+		  yourself
+]
+
+{ #category : #'private - scrolling' }
+OBlHorizontalScrollbarElement >> onDraggedThumbBy: aPoint [
+
+	| scrollableDelta |
+	scrollableDelta := self
+		scrollableDeltaFromThumbDelta: aPoint x - dragPosition x
 		range: scrollable computeHorizontalScrollRange
 		length: self width.
 
-	scrollingBy isZero ifTrue: [ ^ self ].
+	scrollableDelta isZero ifTrue: [ ^ self ].
 
-	scrollable scrollBy: scrollingBy @ 0.
+	scrollable scrollBy: scrollableDelta negated @ 0.
 	
 	dragPosition := aPoint
 ]
 
 { #category : #'private - scrolling' }
-OBlHorizontalScrollbarElement >> updateScrollPosition [
+OBlHorizontalScrollbarElement >> updateThumbPosition [
 
-	| horizontalContentLength horizontalScrollOffset horizontalScrollExtent realThumbWeight thumbLeft |
-	horizontalContentLength := scrollable computeHorizontalScrollRange.
-	horizontalContentLength isZero ifTrue: [ ^ self ].
+	| contentLength scrollOffset scrollExtent thumbWeight thumbLeft |
+	contentLength := scrollable computeHorizontalScrollRange.
+	contentLength isZero ifTrue: [ ^ self ].
+	scrollOffset := scrollable computeHorizontalScrollOffset.
+	scrollExtent := scrollable computeHorizontalScrollExtent.
 	
-	horizontalScrollOffset := scrollable computeHorizontalScrollOffset.
-	horizontalScrollExtent := scrollable computeHorizontalScrollExtent.
-	
-	self visibility: (horizontalContentLength <= horizontalScrollExtent 
+	self visibility: (contentLength <= scrollExtent 
 		ifTrue: [ BlVisibility hidden ]
 		ifFalse: [ BlVisibility visible ]).
 	
-	realThumbWeight := (horizontalScrollExtent / horizontalContentLength) asFloat.
-	thumbLeft := (horizontalScrollOffset / horizontalContentLength) asFloat.
+	thumbWeight := (scrollExtent / contentLength) asFloat.
+	thumbLeft := (scrollOffset / contentLength) asFloat.
 	
 	thumb constraintsDo: [ :c | 
 		c horizontal matchParent.
 		c frame horizontal
 			alignLeftAt: thumbLeft;
-			weight: realThumbWeight ]
+			weight: thumbWeight ]
 ]

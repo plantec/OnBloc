@@ -20,6 +20,43 @@ OBlScrollableElement >> asScrollableElement [
 ]
 
 { #category : #'api - scrolling thumb' }
+OBlScrollableElement >> computeHorizontalScrollExtent [
+	"Compute the horizontal extent of the horizontal scrollbar's thumb within the horizontal range.
+	This value is used to compute the length of the thumb within the scrollbar's track.
+	The extent is expressed in arbitrary units that must be the same as the units used by
+	#computeHorizontalScrollRange and #computeHorizontalScrollOffset.
+	Default implementation returns 0.
+	
+	Override me in your scrollable element to support scroll bars"
+	
+	^ self width
+]
+
+{ #category : #'api - scrolling thumb' }
+OBlScrollableElement >> computeHorizontalScrollOffset [
+	"Compute the horizontal offset of the horizontal scrollbar's thumb within the horizontal range.
+	The offset is expressed in arbitrary units that must be the same as the units used by
+	#computeHorizontalScrollExtent and #computeHorizontalScrollRange.
+	Default implementation returns 0.
+	
+	Override me in your scrollable element to support scroll bars"
+	
+	^ scrollPosition x negated
+]
+
+{ #category : #'api - scrolling thumb' }
+OBlScrollableElement >> computeHorizontalScrollRange [
+	"Compute the horizontal range that the horizontal scrollbar represents.
+	The range is expressed in arbitrary units that must be the same as the units used by
+	#computeHorizontalScrollExtent and #computeHorizontalScrollOffset.
+	Default implementation returns 0.
+	
+	Override me in your scrollable element to support scroll bars"
+	
+	^ self scrolledElement width + self scrolledElement margin width + self padding width
+]
+
+{ #category : #'api - scrolling thumb' }
 OBlScrollableElement >> computeVerticalScrollExtent [
 	"Compute the vertical extent of the vertical scrollbar's thumb within the vertical range.
 	This value is used to compute the length of the thumb within the scrollbar's track.
@@ -28,7 +65,6 @@ OBlScrollableElement >> computeVerticalScrollExtent [
 	Default implementation returns 0.
 	
 	Override me in your scrollable element to support scroll bars"
-	<return: #Number>
 	
 	^ self height
 ]
@@ -41,7 +77,6 @@ OBlScrollableElement >> computeVerticalScrollOffset [
 	Default implementation returns 0.
 	
 	Override me in your scrollable element to support scroll bars"
-	<return: #Number>
 
 	^ scrollPosition y negated
 ]
@@ -54,7 +89,6 @@ OBlScrollableElement >> computeVerticalScrollRange [
 	Default implementation returns 0.
 	
 	Override me in your scrollable element to support scroll bars"
-	<return: #Number>
 
 	^ self scrolledElement height + self scrolledElement margin height + self padding height
 ]
@@ -280,12 +314,12 @@ OBlScrollableElement >> scrollFlinger [
 OBlScrollableElement >> scrollHorizontallyBy: aNumber [
 	"Scroll horizontally by aNumber and return the distance traveled.
 	The default implementation does nothing and returns 0."
+
 	<return: #Number>
 	| aContent |
-
 	aContent := self children first.
 	scrollPosition := scrollPosition + (aNumber asFloat @ 0.0).
-	aContent relocate: scrollPosition.
+	aContent position: scrollPosition.
 
 	self dispatchOnScrolled: aNumber @ 0.
 
