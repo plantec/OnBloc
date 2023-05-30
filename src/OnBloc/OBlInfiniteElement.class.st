@@ -327,7 +327,7 @@ OBlInfiniteElement >> dataSourcePositionOf: anElementHolder [
 				anElementHolder isBound not ] ] ])
 		ifTrue: [ ^ NoPosition ].
 		
-	^ self dataSourceManager applyPendingCommandsOnPosition: anElementHolder position
+	^ dataSourceManager applyPendingCommandsOnPosition: anElementHolder position
 ]
 
 { #category : #'children - geometry' }
@@ -1306,12 +1306,11 @@ OBlInfiniteElement >> overScrollMode: aBlOverScrollMode [
 { #category : #'deferred actions' }
 OBlInfiniteElement >> postChildrenUpdater [
 	"Post children update runnable to consume update operations"
-	self postOnAnimation: childrenUpdateRunnable
-]
-
-{ #category : #'deferred actions' }
-OBlInfiniteElement >> postOnAnimation: aRunnableAction [
-	self enqueueTask: aRunnableAction
+	
+	" Allow re-lauching of the same task"
+	childrenUpdateRunnable setNew.
+	" enqueue the children update task "
+	self enqueueTask: childrenUpdateRunnable
 ]
 
 { #category : #'deferred actions' }
