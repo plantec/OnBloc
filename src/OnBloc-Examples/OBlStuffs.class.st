@@ -52,3 +52,51 @@ OBlStuffs class >> example_fitContentLimited [
 	parent padding: (BlInsets left: 20 right: 20).
 	parent openInOBlSpace 
 ]
+
+{ #category : #'as yet unclassified' }
+OBlStuffs class >> example_flowLayoutAndScrolledElement [
+
+	| pane scrollableElement vBar scrollPane |
+	pane := ToPane vertical.
+	pane 
+		background: Color paleBlue;
+		layout: BlFlowLayout horizontal;
+		vFitContent;
+		hMatchParent.
+
+	250 timesRepeat: [ 
+		pane addChild: (BlElement new
+			background: Color random;
+			yourself).].
+		
+	scrollableElement :=
+	OBlScrollableElement new
+			constraintsDo: [ :c |
+				c horizontal matchParent.
+				c vertical matchParent ];
+			addChild: pane;
+			yourself.
+	
+	vBar :=
+		OBlVerticalScrollbarElement new
+			constraintsDo: [ :c |
+				c ignoreByLayout.
+				c ignored horizontal alignRight ];
+			attachTo: scrollableElement;
+			yourself.
+			
+			
+	scrollPane :=
+		BlElement new
+			addChild: scrollableElement;
+			addChild: vBar;
+			margin: (BlInsets all: 5);
+			constraintsDo: [ :c |
+				c horizontal matchParent.
+				c vertical matchParent ];
+			yourself.
+
+	
+	scrollPane openInOBlSpace 
+
+]
