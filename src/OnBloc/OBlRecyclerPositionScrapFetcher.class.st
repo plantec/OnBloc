@@ -4,10 +4,6 @@ Class {
 	#category : #'OnBloc-Infinite-Recycler'
 }
 
-{ #category : #'element fetching' }
-OBlRecyclerPositionScrapFetcher >> childRemoved: anElement in: anInfiniteElement [
-]
-
 { #category : #initialization }
 OBlRecyclerPositionScrapFetcher >> defaultNext [
 	^ OBlRecyclerDataSourceFetcher uniqueInstance

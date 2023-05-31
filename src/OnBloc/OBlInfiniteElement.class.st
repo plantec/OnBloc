@@ -181,8 +181,7 @@ OBlInfiniteElement >> clearOldPositions [
 		unfilteredChildrenDo: [ :anElement | 
 			| anElementHolder |
 			anElementHolder := self elementHolderOf: anElement.
-			anElementHolder shouldIgnore ifFalse: [ 
-				anElementHolder clearOldPosition ] ]
+			anElementHolder shouldIgnore ifFalse: [ anElementHolder clearOldPosition ] ]
 		in: self.
 
 	recycler clearOldPositions
@@ -843,6 +842,7 @@ OBlInfiniteElement >> initializeEventHandlers [
 
 { #category : #initialization }
 OBlInfiniteElement >> initializeRecycler [
+
 	recycler := self defaultRecycler
 ]
 
@@ -880,6 +880,7 @@ OBlInfiniteElement >> isComputingLayout [
 
 { #category : #testing }
 OBlInfiniteElement >> isDataSourceChangedAfterLayout [
+
 	^ dataSourceChangedAfterLayout
 ]
 

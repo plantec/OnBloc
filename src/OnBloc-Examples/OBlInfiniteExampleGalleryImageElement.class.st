@@ -38,27 +38,6 @@ OBlInfiniteExampleGalleryImageElement >> defaultWidth [
 	^ 500
 ]
 
-{ #category : #drawing }
-OBlInfiniteExampleGalleryImageElement >> drawOnSpartaCanvas: aCanvas [
-	| aScale |
-	super drawOnSpartaCanvas: aCanvas.
-	
-	form
-		ifNil: [ ^ self ].
-
-	bitmap ifNil: [ bitmap := aCanvas bitmap fromForm: form ].
-	
-	aScale := (self extent / form extent) asFloatPoint.
-
-	aCanvas transform
-		by: [ :t | t scaleBy: aScale ]
-		during: [
-			aCanvas fill
-				path: (0@0 extent: form extent);
-				paint: bitmap;
-				draw ]
-]
-
 { #category : #accessing }
 OBlInfiniteExampleGalleryImageElement >> form: aForm [
 	
