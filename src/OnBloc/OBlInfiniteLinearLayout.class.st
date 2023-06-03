@@ -268,7 +268,8 @@ OBlInfiniteLinearLayout >> defaultSmoothScrollbarEnabled [
 
 { #category : #initialization }
 OBlInfiniteLinearLayout >> defaultSmoothScroller [
-	^ BlInfiniteLinearSmoothScroller new
+
+	^ OBlInfiniteLinearSmoothScroller new
 ]
 
 { #category : #initialization }
