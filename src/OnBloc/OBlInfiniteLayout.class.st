@@ -139,16 +139,6 @@ OBlInfiniteLayout >> attachChild: anElement at: anIndex [
 	infiniteElement childrenManager attachChild: anElement at: anIndex in: infiniteElement
 ]
 
-{ #category : #accessing }
-OBlInfiniteLayout >> autoMeasure [
-	^ autoMeasure
-]
-
-{ #category : #accessing }
-OBlInfiniteLayout >> autoMeasure: aBoolean [
-	autoMeasure := aBoolean
-]
-
 { #category : #geometry }
 OBlInfiniteLayout >> baseline [
 	"Returns offset of the Infinite elements's text baseline from the its top boundary.

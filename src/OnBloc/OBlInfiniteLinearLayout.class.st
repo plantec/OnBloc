@@ -237,7 +237,7 @@ OBlInfiniteLinearLayout >> defaultAnchorInfo [
 { #category : #initialization }
 OBlInfiniteLinearLayout >> defaultAutoMeasure [
 
-	^ true
+	^ false
 ]
 
 { #category : #initialization }

@@ -17,8 +17,7 @@ Class {
 	#superclass : #OBlInfiniteDataSourceEvent,
 	#instVars : [
 		'position',
-		'itemCount',
-		'payload'
+		'itemCount'
 	],
 	#category : #'OnBloc-Infinite-Events'
 }
@@ -32,16 +31,6 @@ OBlInfiniteDataSourceItemRangeChanged class >> position: aPosition itemCount: an
 		yourself
 ]
 
-{ #category : #'instance creation' }
-OBlInfiniteDataSourceItemRangeChanged class >> position: aPosition itemCount: anItemCount payload: anObject [
-
-	^ self new
-		position: aPosition;
-		itemCount: anItemCount;
-		payload: anObject;
-		yourself
-]
-
 { #category : #accessing }
 OBlInfiniteDataSourceItemRangeChanged >> itemCount [
 	^ itemCount
@@ -50,17 +39,6 @@ OBlInfiniteDataSourceItemRangeChanged >> itemCount [
 { #category : #accessing }
 OBlInfiniteDataSourceItemRangeChanged >> itemCount: anObject [
 	itemCount := anObject
-]
-
-{ #category : #accessing }
-OBlInfiniteDataSourceItemRangeChanged >> payload [
-	<return: #Object>
-	^ payload
-]
-
-{ #category : #accessing }
-OBlInfiniteDataSourceItemRangeChanged >> payload: anObject [
-	payload := anObject
 ]
 
 { #category : #accessing }

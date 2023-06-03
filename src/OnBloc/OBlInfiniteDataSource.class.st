@@ -113,19 +113,6 @@ OBlInfiniteDataSource >> notifyChanged [
 ]
 
 { #category : #'event firing' }
-OBlInfiniteDataSource >> notifyItemMoved: aFromPosition to: aToPosition [
-	"Notify any registered event handlers that the item reflected at aFromPosition
-	has been moved to aToPosition.
-	This is a structural change event. Representations of other existing items in the
-	data set are still considered up to date and will not be rebound, though their
-	positions may be altered"
-
-	self notifyWithEvent: (OBlInfiniteDataSourceItemRangeMoved
-		from: aFromPosition
-		to: aToPosition)
-]
-
-{ #category : #'event firing' }
 OBlInfiniteDataSource >> notifyItems: anInterval event: anEvent [
 	"Notify any registered event handlers that the itemCount items starting at aPosition should receive a given event"
 	
@@ -223,14 +210,4 @@ OBlInfiniteDataSource >> onElementDetached: anElementHolder [
 	Becoming detached is not necessarily a permanent condition;
 	the consumer of the DataSource's elements may choose to cache elements offscreen while they
 	are not visible, attaching and detaching them as appropriate"
-]
-
-{ #category : #hooks }
-OBlInfiniteDataSource >> onElementRecycled: anElementHolder [
-	"Sent when an element created by this datasource has been recycled.
-	An element is recycled when an InfiniteLayout decides that it no longer
-	needs to be attached to InfiniteElement. This can be because it has
-	fallen out of visibility or a set of cached elements represented by elements still
-	attached to the parent InfiniteElement. If an item element has large or expensive data
-	bound to it such as large bitmaps, this may be a good place to release those resources"
 ]

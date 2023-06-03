@@ -57,7 +57,7 @@ OBlInfiniteDataSourceManager >> applyPendingCommandsOnPosition: aPosition [
 
 { #category : #helper }
 OBlInfiniteDataSourceManager >> canFindInPreLayout: aPosition [
-
+self halt.
 	postponedCommands withIndexDo: [ :command :index | 
 		command isMove
 			ifTrue: [ 
@@ -128,7 +128,7 @@ OBlInfiniteDataSourceManager >> consumeCommandsInOnePassIn: anInfiniteElement [
 
 { #category : #'commands processing' }
 OBlInfiniteDataSourceManager >> consumePostponedCommandsIn: anInfiniteElement [
-	
+
 	postponedCommands do: [ :command |
 		self dispatchCommand: command to: anInfiniteElement].
 
@@ -430,7 +430,7 @@ OBlInfiniteDataSourceManager >> onItemRangeRemoved: aPositionStart itemCount: an
 
 { #category : #private }
 OBlInfiniteDataSourceManager >> postponeAndUpdateElementHolders: aCommand on: anInfiniteElement [
-	
+
 	postponedCommands add: aCommand.
 	aCommand updateElementHoldersIn: anInfiniteElement.
 ]
