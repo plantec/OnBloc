@@ -132,9 +132,17 @@ OBlSpace class >> locationOutside: anElement [
 OBlSpace class >> simulateClickOn: anElement [
 	"Simulate a click event in the middle of a given element by
 	performing mouse down and mouse up events in a sequence"
-	<return: #Point>
+
+	^ self simulateClickOn: anElement button: BlMouseButton primary
+]
+
+{ #category : #'debug - simulation' }
+OBlSpace class >> simulateClickOn: anElement button: aButton [
+	"Simulate a click event in the middle of a given element by
+	performing mouse down and mouse up events in a sequence."
+
 	| aPosition |
-	
+
 	"we never know if an element was already layered out"
 	anElement topMostParent forceLayout.
 	aPosition := anElement bounds inSpace center.
@@ -142,8 +150,8 @@ OBlSpace class >> simulateClickOn: anElement [
 	"we simulate a click with a sequence of low level mouse down/up events"
 	self
 		simulateEvents: {
-			BlMouseDownEvent primary position: aPosition.
-			BlMouseUpEvent primary position: aPosition }
+			(BlMouseDownEvent button: aButton) position: aPosition; yourself.
+			(BlMouseUpEvent button: aButton) position: aPosition; yourself }
 		on: anElement.
 		
 	^ aPosition
@@ -423,21 +431,8 @@ OBlSpace class >> simulateMouseWheelOn: anElement by: aBlVector [
 OBlSpace class >> simulateSecondaryClickOn: anElement [
 	"Simulate a secondary click event in the middle of a given element by
 	performing mouse down and mouse up events in a sequence"
-	<return: #Point>
-	| aPosition |
 	
-	"we never know if an element was already layered out"
-	anElement topMostParent forceLayout.
-	aPosition := anElement bounds inSpace center.
-	
-	"we simulate a secondary click with a sequence of low level mouse down/up events"
-	self
-		simulateEvents: {
-			BlMouseDownEvent secondary position: aPosition.
-			BlMouseUpEvent secondary position: aPosition }
-		on: anElement.
-		
-	^ aPosition
+	^ self simulateClickOn: anElement button: BlMouseButton secondary
 ]
 
 { #category : #'class initialization' }
