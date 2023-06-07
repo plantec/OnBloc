@@ -13,17 +13,6 @@ BlElement >> openInOBlSpace [
 ]
 
 { #category : #'*OnBloc' }
-BlElement >> openInSpace [
-	"Add self to a new BlSpace and show it. Answer such space."
-	| sp |
-	sp := OBlSpace new.
-	sp root addChild: self.
-	sp show.
-	^ sp
-
-]
-
-{ #category : #'*OnBloc' }
 BlElement >> theme [
 	^ self userData
 		at: #OBlTheme
