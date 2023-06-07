@@ -1297,6 +1297,7 @@ OBlInfiniteElement >> overScrollMode: aBlOverScrollMode [
 OBlInfiniteElement >> postChildrenUpdater [
 	"Post children update runnable to consume update operations"
 	
+	childrenUpdateRunnable isQueued ifTrue: [ ^ self ].
 	" Allow re-lauching of the same task"
 	childrenUpdateRunnable setNew.
 	" enqueue the children update task "
