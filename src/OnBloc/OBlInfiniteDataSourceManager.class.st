@@ -41,10 +41,11 @@ Class {
 
 { #category : #'commands processing' }
 OBlInfiniteDataSourceManager >> applyPendingCommandsOnPosition: aPosition [
-	"Virually perform every pending command to determine how provided
-	position will change.
-	Return new position if all commands would be actually performed"
-	<return: #Number>
+	"
+	When the position of a an ElementHolder is required.
+	Virually perform every pending command to determine how provided
+	position will change.	Return new position if all commands would be actually performed"
+
 	| position |
 
 	position := aPosition.
@@ -81,30 +82,20 @@ OBlInfiniteDataSourceManager >> computePositionOffset: aPosition [
 
 { #category : #helper }
 OBlInfiniteDataSourceManager >> computePositionOffset: aPosition firstPostponedItem: firstPostponedItem [
-	|position|
+	" Sent when scrolling the infinite "
+
+	| position |
 	position := aPosition.
-	
+
 	firstPostponedItem to: postponedCommands size - 1 do: [ :index |
 		| command |
 		command := postponedCommands at: index.
-		command isMove
-			ifTrue: [ command positionStart = position
-				ifTrue: [ position := command itemCount ]
-				ifFalse: [ 
-					command positionStart < position
-						ifTrue: [ position := position - 1 ].
-					command itemCount <= position
-						ifTrue: [ position := position + 1 ] ] ]
-			ifFalse: [
-				command positionStart <= position ifTrue: [
-					command isRemove
-						ifTrue: [ 
-							position < (command positionStart + command itemCount)
-								ifTrue: [ ^ 0 ].
-							position := position - command itemCount ]
-						ifFalse: [
-							command isAdd
-								ifTrue: [ position := position + command itemCount ] ] ] ] ].
+		command positionStart <= position ifTrue: [
+			command isRemove
+				ifTrue: [
+					position < (command positionStart + command itemCount) ifTrue: [ ^ 0 ].
+					position := position - command itemCount ]
+				ifFalse: [ command isAdd ifTrue: [ position := position + command itemCount ] ] ] ].
 	^ position
 ]
 
@@ -438,7 +429,8 @@ OBlInfiniteDataSourceManager >> postponeAndUpdateElementHolders: aCommand on: an
 { #category : #'commands processing' }
 OBlInfiniteDataSourceManager >> preProcessCommandsIn: anInfiniteElement [
 
-	"commandsReorderer reorderCommands: pendingCommands."
+	"In case of scrolling, only for item change (no add-remove-move). Check
+	if any of the visible items is affected and if not, just ignore the change."
 	pendingCommands do: [ :command |
 		command applyIn: anInfiniteElement.
 		self onCommandProcessed: command in: anInfiniteElement].

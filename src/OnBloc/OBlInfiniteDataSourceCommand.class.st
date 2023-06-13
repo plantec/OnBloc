@@ -24,11 +24,18 @@ Class {
 
 { #category : #commands }
 OBlInfiniteDataSourceCommand >> applyIn: anInfiniteElement [
+
+
+	"In case of scrolling, only for item change (no add-remove-move). Check
+	if any of the visible items is affected and if not, just ignore the change."
 	type apply: self in: anInfiniteElement
 ]
 
 { #category : #commands }
 OBlInfiniteDataSourceCommand >> applyOnPosition: aPosition [
+	"When the position of an ElementHolder is required.
+	Determine how provided position will change. Return the position after command is processed"
+
 	^ type apply: self onPosition: aPosition
 ]
 
