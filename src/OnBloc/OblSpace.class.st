@@ -1761,13 +1761,13 @@ OBlSpace >> printOn: aStream [
 OBlSpace >> processMouseDown: anEvent inside: anElement on: aLayer [
 
 	| evt |
-	evt := anEvent clone.
+	evt := anEvent.
 	evt currentTarget: anElement.
 	aLayer childrenDo: [ :child | 
 		(anElement isNil or: [ (child == anElement or: [ anElement hasParent: child ]) not ]) 
 			ifTrue: [ 
 				child dispatchEvent: (BlSpaceMouseDownOutsideEvent new
-						 event: evt;
+						 originalEvent: evt;
 						 yourself) ] ]
 ]
 
