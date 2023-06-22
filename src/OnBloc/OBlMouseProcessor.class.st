@@ -63,6 +63,13 @@ OBlMouseProcessor >> dblClickDelay [
 	^ self class dblClickDelay
 ]
 
+{ #category : #'event firing' }
+OBlMouseProcessor >> dispatchEvent: anEvent target: aTarget [
+
+	" enter/leave events are dispatched to a known target "
+	super dispatchEvent: anEvent target: aTarget
+]
+
 { #category : #accessing }
 OBlMouseProcessor >> enteredTargets [
 	<return: #Collection of: #BlElement>
@@ -188,6 +195,13 @@ OBlMouseProcessor >> fireAsMouseOutEvent: aMouseEvent targets: aCollection [
 { #category : #'event firing' }
 OBlMouseProcessor >> fireAsMouseOverEvent: aMouseEvent [
 	self fireEvent: aMouseEvent asMouseOverEvent 
+]
+
+{ #category : #'event firing' }
+OBlMouseProcessor >> fireEvent: anEvent [
+
+	" for events other than entre/leave "
+	^ super fireEvent: anEvent
 ]
 
 { #category : #'event processing' }
