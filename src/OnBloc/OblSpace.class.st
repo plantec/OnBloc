@@ -1156,6 +1156,7 @@ OBlSpace >> findMouseDownEventTarget: anEvent [
 		(found notNil and: [ found ~~ eachChild ]) ifTrue: [
 			self processMouseDownOutsideFrom: anEvent inside: found on: self popupLayer.
 			^ found ] ].
+
 	self processMouseDownOutsideFrom: anEvent inside: nil on: self popupLayer.
 	^ nil
 ]
@@ -1767,9 +1768,12 @@ OBlSpace >> processMouseDownOutsideFrom: anEvent inside: anElement on: aLayer [
 	| evt |
 	evt := anEvent clone.
 	evt currentTarget: anElement.
+	aLayer fireEvent: (BlSpaceMouseDownOutsideEvent new
+						 originalEvent: evt;
+						 yourself).
 	aLayer childrenDo: [ :child | 
 		(anElement isNil or: [ (anElement hasInParentChain: child) not ]) 
-			ifTrue: [ 
+			ifTrue: [
 				child fireEvent: (BlSpaceMouseDownOutsideEvent new
 						 originalEvent: evt;
 						 yourself) ] ]
