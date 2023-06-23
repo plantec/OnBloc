@@ -509,8 +509,7 @@ OBlMouseProcessor >> processMouseEnterLeaveEvent: aMouseEvent [
 	currentEnteredTargets := self fillTargetHierarchy: aMouseEvent target.
 	
 	"fire mouseout to the previous overed target"
-	lastOverTarget isNotNil
-		ifTrue: [ self fireAsMouseOutEvent: aMouseEvent ].
+	lastOverTarget ifNotNil: [ self fireAsMouseOutEvent: aMouseEvent ].
 	
 	"fire mouse leave events"
 	newLeavedTargets := lastEnteredTargets reject: [ :anElement | (currentEnteredTargets includes: anElement) ].
