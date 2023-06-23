@@ -1154,9 +1154,9 @@ OBlSpace >> findMouseDownEventTarget: anEvent [
 		| found |
 		found := eachChild findMouseEventTargetAt: anEvent position.
 		(found notNil and: [ found ~~ eachChild ]) ifTrue: [
-			self processMouseDown: anEvent inside: found on: self popupLayer.
+			self processMouseDownOutsideFrom: anEvent inside: found on: self popupLayer.
 			^ found ] ].
-	self processMouseDown: anEvent inside: nil on: self popupLayer.
+	self processMouseDownOutsideFrom: anEvent inside: nil on: self popupLayer.
 	^ nil
 ]
 
@@ -1758,15 +1758,19 @@ OBlSpace >> printOn: aStream [
 ]
 
 { #category : #'event handling' }
-OBlSpace >> processMouseDown: anEvent inside: anElement on: aLayer [
+OBlSpace >> processMouseDownOutsideFrom: anEvent inside: anElement on: aLayer [
 
+	" I'm used to manage popup closing in case of a mouse down outside the popup window.
+	I send a mouse down outside event to all children of a layer if: 
+	- anElement isNil or 
+	- an element is not in the parent chain of any the layer children "
 	| evt |
-	evt := anEvent.
+	evt := anEvent clone.
 	evt currentTarget: anElement.
 	aLayer childrenDo: [ :child | 
-		(anElement isNil or: [ (child == anElement or: [ anElement hasParent: child ]) not ]) 
+		(anElement isNil or: [ (anElement hasInParentChain: child) not ]) 
 			ifTrue: [ 
-				child dispatchEvent: (BlSpaceMouseDownOutsideEvent new
+				child fireEvent: (BlSpaceMouseDownOutsideEvent new
 						 originalEvent: evt;
 						 yourself) ] ]
 ]
