@@ -1143,25 +1143,6 @@ OBlSpace >> extractUnstyled: aSetOfElements [
 ]
 
 { #category : #'event handling' }
-OBlSpace >> findMouseDownEventTarget: anEvent [
-
-	"Return the deepest child element among all my children or myself that may be a target for mouse event at provided location.
-	The coordinate point is given in space coordinates.
-	I may return nil if no such child is found and if I can not be event target either"
-
-	<return: #BlElement or: nil>
-	self children sortedByElevation reversed do: [ :eachChild | 
-		| found |
-		found := eachChild findMouseEventTargetAt: anEvent position.
-		(found notNil and: [ found ~~ eachChild ]) ifTrue: [
-			self processMouseDownOutsideFrom: anEvent inside: found on: self popupLayer.
-			^ found ] ].
-
-	self processMouseDownOutsideFrom: anEvent inside: nil on: self popupLayer.
-	^ nil
-]
-
-{ #category : #'event handling' }
 OBlSpace >> findMouseEventTargetAt: aPoint [
 
 	"Return the deepest child element among all my children or myself that may be a target for mouse event at provided location.
@@ -1174,6 +1155,25 @@ OBlSpace >> findMouseEventTargetAt: aPoint [
 		found := eachChild findMouseEventTargetAt: aPoint.
 		(found notNil and: [ found ~~ eachChild ]) ifTrue: [
 			^ found ] ].
+	^ nil
+]
+
+{ #category : #'event handling' }
+OBlSpace >> findMousePickTargetFromEvent: anEvent [
+
+	"Return the deepest child element among all my children or myself that may be a target for mouse event at provided location.
+	The coordinate point is given in space coordinates.
+	I may return nil if no such child is found and if I can not be event target either"
+
+	<return: #BlElement or: nil>
+	self children sortedByElevation reversed do: [ :eachChild | 
+		| found |
+		found := eachChild findMouseEventTargetAt: anEvent position.
+		(found notNil and: [ found ~~ eachChild ]) ifTrue: [
+			self processMouseOutsideFrom: anEvent inside: found on: self popupLayer.
+			^ found ] ].
+
+	self processMouseOutsideFrom: anEvent inside: nil on: self popupLayer.
 	^ nil
 ]
 
@@ -1759,24 +1759,20 @@ OBlSpace >> printOn: aStream [
 ]
 
 { #category : #'event handling' }
-OBlSpace >> processMouseDownOutsideFrom: anEvent inside: anElement on: aLayer [
+OBlSpace >> processMouseOutsideFrom: anEvent inside: anElement on: aLayer [
 
-	" I'm used to manage popup closing in case of a mouse down outside the popup window.
-	I send a mouse down outside event to all children of a layer if: 
+	" I'm used to manage popup closing in case of a mouse up/down outside the popup window.
+	I send a mouse up/down outside event to all children of a layer if: 
 	- anElement isNil or 
 	- an element is not in the parent chain of any the layer children "
 	| evt |
 	evt := anEvent clone.
 	evt currentTarget: anElement.
-	aLayer fireEvent: (BlSpaceMouseDownOutsideEvent new
-						 originalEvent: evt;
-						 yourself).
+	aLayer fireEvent: evt asMouseOutsideEvent.
 	aLayer childrenDo: [ :child | 
 		(anElement isNil or: [ (anElement hasInParentChain: child) not ]) 
 			ifTrue: [
-				child fireEvent: (BlSpaceMouseDownOutsideEvent new
-						 originalEvent: evt;
-						 yourself) ] ]
+				child fireEvent: evt asMouseOutsideEvent ] ]
 ]
 
 { #category : #pulse }

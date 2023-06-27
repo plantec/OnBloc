@@ -247,7 +247,7 @@ OBlMouseProcessor >> handleMouseDown: aMouseDownEvent [
 	"First we need to register a pressed button"
 	self pressedButtons add: aMouseDownEvent button.
 
-	aTargetElement := self processMouseDownPicking: aMouseDownEvent.
+	aTargetElement := self processMouseEventPicking: aMouseDownEvent.
 	aMouseDownEvent target: aTargetElement.
 
 	self fireEvent: aMouseDownEvent.
@@ -329,9 +329,7 @@ OBlMouseProcessor >> handleMouseUp: aMouseUpEvent [
 	self pressedButtons remove: aMouseUpEvent button.
 
 	
-	(aMouseUpEvent secondaryButtonPressed and: [previousMouseDownEvent notNil]) 
-		ifTrue: [ aTargetElement := previousMouseDownEvent target].
-	aTargetElement ifNil: [aTargetElement := self processPicking: aMouseUpEvent].
+	aTargetElement := self processMouseEventPicking: aMouseUpEvent.
 	aMouseUpEvent target: aTargetElement.
 
 	"depending on whether drag and drop is in process handle mouse up either
@@ -483,21 +481,6 @@ OBlMouseProcessor >> processDragMove: aMouseMoveEvent [
 	lastOverTarget := aMouseMoveEvent target
 ]
 
-{ #category : #'event processing' }
-OBlMouseProcessor >> processMouseDownPicking: aMouseEvent [
-
-	<return: #BlElement>
-	| aTargetElement |
-	
-	self checkLastOverTarget.
-
-	"if the last over target contains the point we can start picking from it"
-	aTargetElement := self space findMouseDownEventTarget: aMouseEvent.
-	"we have to ensure that aTarget is not nil"
-	aTargetElement ifNil: [ aTargetElement := self space root ].
-	^ aTargetElement
-]
-
 { #category : #'mouse move' }
 OBlMouseProcessor >> processMouseEnterLeaveEvent: aMouseEvent [
 	| newLeavedTargets newEnteredTargets currentEnteredTargets |
@@ -526,6 +509,21 @@ OBlMouseProcessor >> processMouseEnterLeaveEvent: aMouseEvent [
 
 	lastOverTarget := aMouseEvent target.
 	lastEnteredTargets := currentEnteredTargets
+]
+
+{ #category : #'event processing' }
+OBlMouseProcessor >> processMouseEventPicking: aMouseEvent [
+
+	<return: #BlElement>
+	| aTargetElement |
+	
+	self checkLastOverTarget.
+
+	"if the last over target contains the point we can start picking from it"
+	aTargetElement := aMouseEvent findTargetInSpace: self space.
+	"we have to ensure that aTarget is not nil"
+	aTargetElement ifNil: [ aTargetElement := self space root ].
+	^ aTargetElement
 ]
 
 { #category : #'mouse move' }
