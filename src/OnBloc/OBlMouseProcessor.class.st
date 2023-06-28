@@ -11,8 +11,8 @@ Class {
 		'dragStartMask',
 		'pressedButtons',
 		'dragState',
-		'previousMouseDownEvent',
-		'lastMouseMoveEvent'
+		'lastMouseMoveEvent',
+		'lastMouseDownEvent'
 	],
 	#category : #'OnBloc-Space - Events'
 }
@@ -26,9 +26,9 @@ OBlMouseProcessor class >> dblClickDelay [
 { #category : #'event testing' }
 OBlMouseProcessor >> canBeClickEvent: aMouseUpEvent [
 
-	^ dndInProgress not
-		and: [ (previousMouseDownEvent isNotNil and: [ previousMouseDownEvent primaryButtonPressed ])
-				and: [ aMouseUpEvent target = previousMouseDownEvent target  ] ]
+	^ dndInProgress not and: [
+		  lastMouseDownEvent isNotNil and: [
+			  aMouseUpEvent target = lastMouseDownEvent target ] ]
 ]
 
 { #category : #'event testing' }
@@ -46,9 +46,9 @@ OBlMouseProcessor >> canStartDrag: aMouseMoveEvent [
 	<return: #Boolean>
 
 	^ (pressedButtons includes: BlMouseButton primary)
-		and: [ previousMouseDownEvent isNotNil
-			and: [ previousMouseDownEvent primaryButtonPressed
-				and: [ (aMouseMoveEvent position - previousMouseDownEvent position) r > self startDragThreshold ] ] ]
+		and: [ lastMouseDownEvent isNotNil
+			and: [ lastMouseDownEvent primaryButtonPressed
+				and: [ (aMouseMoveEvent position - lastMouseDownEvent position) r > self startDragThreshold ] ] ]
 ]
 
 { #category : #'event processing' }
@@ -242,8 +242,8 @@ OBlMouseProcessor >> generateEvents [
 	(lastOverTarget notNil and: [ lastOverTarget space ~~ self space ])
 		ifTrue: [ lastOverTarget := nil ].
 
-	(self isMouseEventValid: previousMouseDownEvent) ifFalse: [
-		previousMouseDownEvent := nil ].
+	(self isMouseEventValid: lastMouseDownEvent) ifFalse: [
+		lastMouseDownEvent := nil ].
 
 	(self isMouseEventValid: lastClickEvent) ifFalse: [
 		lastClickEvent := nil ]
@@ -276,7 +276,7 @@ OBlMouseProcessor >> handleMouseDown: aMouseDownEvent [
 	self updateCursorFrom: aTargetElement.
 
 	"store last mouse down event"
-	previousMouseDownEvent := aMouseDownEvent
+	lastMouseDownEvent := aMouseDownEvent
 ]
 
 { #category : #'mouse entered / left' }
@@ -328,7 +328,7 @@ OBlMouseProcessor >> handleMouseMove: aMouseMoveEvent [
 		"we are dragging, handle it as drag move"
 		ifTrue: [ self processDragMove: aMouseMoveEvent ]
 		ifFalse: [ shouldTryDragStart
-			ifTrue: [ (self tryDragStart: previousMouseDownEvent)
+			ifTrue: [ (self tryDragStart: lastMouseDownEvent)
 				"we sent drag start, have to send first drag move"
 				ifTrue: [ self processDragMove: aMouseMoveEvent ]
 				"drag start was not handled, process as basic mouse move"
@@ -349,6 +349,7 @@ OBlMouseProcessor >> handleMouseUp: aMouseUpEvent [
 	"we need to unregister a button"
 	self pressedButtons remove: aMouseUpEvent button.
 	
+	"Note that the element that receives mouseup can be different from the element that received mousedown (lastMouseDownEvent)"
 	aTargetElement := self findMouseTargetFromEvent: aMouseUpEvent.
 	aMouseUpEvent target: aTargetElement.
 
@@ -407,6 +408,13 @@ OBlMouseProcessor >> lastClickEvent [
 ]
 
 { #category : #accessing }
+OBlMouseProcessor >> lastMouseDownEvent [
+	<return: #BlElement or: nil>
+
+	^ lastMouseDownEvent
+]
+
+{ #category : #accessing }
 OBlMouseProcessor >> lastMouseMoveEvent [
 
 	^ lastMouseMoveEvent
@@ -430,7 +438,7 @@ OBlMouseProcessor >> onSpaceClosed [
 	dndInProgress := nil.
 	dragStartMask := 0.
 	pressedButtons := Set new.
-	previousMouseDownEvent := nil
+	lastMouseDownEvent := nil
 ]
 
 { #category : #'event processing' }
@@ -458,13 +466,6 @@ OBlMouseProcessor >> pressedButtons [
 	<return: #Collection of: #BlMouseButton>
 
 	^ pressedButtons
-]
-
-{ #category : #accessing }
-OBlMouseProcessor >> previousMouseDownEvent [
-	<return: #BlElement or: nil>
-
-	^ previousMouseDownEvent
 ]
 
 { #category : #'mouse drag' }
@@ -563,18 +564,19 @@ OBlMouseProcessor >> processMouseUp: aMouseUpEvent [
 	self updateCursorFrom: aMouseUpEvent target.
 
 	(self canBeClickEvent: aMouseUpEvent)
-		ifTrue: [  
+		ifTrue: [
 			(self canBeDblClickEvent: aMouseUpEvent)
-				ifTrue: [ 
-					self fireEvent: aMouseUpEvent asDoubleClickEvent ]
-				ifFalse: [ 
-					| aClickEvent | 
+				ifTrue: [ self fireEvent: aMouseUpEvent asDoubleClickEvent ]
+				ifFalse: [
+					| aClickEvent |
 					aClickEvent := aMouseUpEvent asClickEvent.
 					self fireEvent: aClickEvent.
 					lastClickEvent := aClickEvent copy ] ]
-		ifFalse: [ 
-			(previousMouseDownEvent notNil and: [ previousMouseDownEvent secondaryButtonPressed not]) ifTrue: [ 
-				self fireEvent:	(previousMouseDownEvent asClickCandidateEvent mouseUpEvent: aMouseUpEvent) ] ]
+		ifFalse: [
+			lastMouseDownEvent ifNotNil: [
+				self fireEvent: (lastMouseDownEvent asClickCandidateEvent
+						 mouseUpEvent: aMouseUpEvent;
+						 yourself) ] ]
 ]
 
 { #category : #accessing }
