@@ -84,6 +84,15 @@ OBlMouseProcessor >> fillTargetHierarchy: aTarget [
 		aTarget allParentsDo: [ :aParentElement | aStream nextPut: aParentElement  ] ]
 ]
 
+{ #category : #'mouse picking' }
+OBlMouseProcessor >> findMouseTargetFromEvent: aMouseEvent [
+
+	" return the element at event position "
+	self checkLastOverTarget.
+	" double dispatch because the finding differs according to the mouse event type "
+	^ aMouseEvent findTargetInSpace: self space.
+]
+
 { #category : #'event firing' }
 OBlMouseProcessor >> fireAsDragEndEvent: anEvent [
 
@@ -183,6 +192,7 @@ OBlMouseProcessor >> fireAsMouseLeaveEvent: anEvent targets: aCollection [
 
 { #category : #'event firing' }
 OBlMouseProcessor >> fireAsMouseOutEvent: aMouseEvent [
+
 	self fireEvent: (aMouseEvent asMouseOutEvent target: lastOverTarget)
 ]
 
@@ -206,27 +216,37 @@ OBlMouseProcessor >> fireEvent: anEvent [
 
 { #category : #'event processing' }
 OBlMouseProcessor >> generateEvents [
-	((lastEnteredTargets, { lastOverTarget }) reject: [ :eachElement | eachElement isNil or: [ eachElement space == self space ] ]) asSet
+
+	(lastEnteredTargets , { lastOverTarget } reject: [ :eachElement |
+		 eachElement isNil or: [ eachElement space == self space ] ]) asSet
 		ifNotEmpty: [ :removedEnteredTargets |
 			| aMouseEvent |
-			
 			aMouseEvent := BlMouseEvent new
-				button: (pressedButtons ifEmpty: [ nil ] ifNotEmpty: [ pressedButtons anyOne ]);
-				position: 0@0;
-				screenPosition: 0@0.
-			
-			self fireAsMouseLeaveEvent: aMouseEvent targets: removedEnteredTargets.
-			self fireAsMouseOutEvent: aMouseEvent targets: removedEnteredTargets ].
-	
-	lastEnteredTargets := lastEnteredTargets select: [ :eachElement | eachElement isAttachedToSceneGraph ].
+				               button:
+					               (pressedButtons
+						                ifEmpty: [ nil ]
+						                ifNotEmpty: [ pressedButtons anyOne ]);
+				               position: 0 @ 0;
+				               screenPosition: 0 @ 0.
+
+			self
+				fireAsMouseLeaveEvent: aMouseEvent
+				targets: removedEnteredTargets.
+			self
+				fireAsMouseOutEvent: aMouseEvent
+				targets: removedEnteredTargets ].
+
+	lastEnteredTargets := lastEnteredTargets select: [ :eachElement |
+		                      eachElement isAttachedToSceneGraph ].
+
 	(lastOverTarget notNil and: [ lastOverTarget space ~~ self space ])
 		ifTrue: [ lastOverTarget := nil ].
-	
-	(self isMouseEventValid: previousMouseDownEvent)
-		ifFalse: [ previousMouseDownEvent := nil ].
 
-	(self isMouseEventValid: lastClickEvent)
-		ifFalse: [ lastClickEvent := nil ]
+	(self isMouseEventValid: previousMouseDownEvent) ifFalse: [
+		previousMouseDownEvent := nil ].
+
+	(self isMouseEventValid: lastClickEvent) ifFalse: [
+		lastClickEvent := nil ]
 ]
 
 { #category : #'mouse move' }
@@ -234,7 +254,7 @@ OBlMouseProcessor >> handleLastMouseMove [
 
 	| target |
 	lastMouseMoveEvent ifNil: [ ^ self ].
-	target := self processPicking: lastMouseMoveEvent.	
+	target := self findMouseTargetFromEvent: lastMouseMoveEvent.	
 	lastMouseMoveEvent target: target.
 	lastMouseMoveEvent button: (pressedButtons ifEmpty: [ nil ] ifNotEmpty: [ pressedButtons anyOne ]).
 	self processMouseMove: lastMouseMoveEvent.
@@ -247,7 +267,7 @@ OBlMouseProcessor >> handleMouseDown: aMouseDownEvent [
 	"First we need to register a pressed button"
 	self pressedButtons add: aMouseDownEvent button.
 
-	aTargetElement := self processMouseEventPicking: aMouseDownEvent.
+	aTargetElement := self findMouseTargetFromEvent: aMouseDownEvent.
 	aMouseDownEvent target: aTargetElement.
 
 	self fireEvent: aMouseDownEvent.
@@ -265,24 +285,25 @@ OBlMouseProcessor >> handleMouseEntered: aSpaceMouseEnterEvent [
 
 { #category : #'mouse entered / left' }
 OBlMouseProcessor >> handleMouseLeft: aSpaceMouseLeaveEvent [
+
 	lastEnteredTargets do: [ :eachEnteredTarget |
 		| anEvent |
-		
 		anEvent := self isDragging
-			ifTrue: [ BlDragLeaveEvent new
-				startButtons: dragStartMask;
-				gestureSource: currentDragTarget ]
-			ifFalse: [ BlMouseLeaveEvent new ].
+			           ifTrue: [
+				           BlDragLeaveEvent new
+					           startButtons: dragStartMask;
+					           gestureSource: currentDragTarget ]
+			           ifFalse: [ BlMouseLeaveEvent new ].
 
 		anEvent
-			position: 0@0;
+			position: 0 @ 0;
 			target: eachEnteredTarget;
 			canBePropagated: false;
 			timestamp: self space time now.
-		
+
 		self dispatchEvent: anEvent target: eachEnteredTarget ].
-	
-	lastEnteredTargets := #().
+
+	lastEnteredTargets := #(  ).
 	lastOverTarget := nil
 ]
 
@@ -291,7 +312,7 @@ OBlMouseProcessor >> handleMouseMove: aMouseMoveEvent [
 	| aTargetElement shouldTryDragStart |
 	"picking and mouse move"
 	
-	aTargetElement := self processPicking: aMouseMoveEvent.
+	aTargetElement := self findMouseTargetFromEvent: aMouseMoveEvent.
 	self
 		assert: [ aTargetElement isAttachedToSceneGraph ]
 		description: [ 'Target element must be attached to the scene graph' ].
@@ -327,9 +348,8 @@ OBlMouseProcessor >> handleMouseUp: aMouseUpEvent [
 
 	"we need to unregister a button"
 	self pressedButtons remove: aMouseUpEvent button.
-
 	
-	aTargetElement := self processMouseEventPicking: aMouseUpEvent.
+	aTargetElement := self findMouseTargetFromEvent: aMouseUpEvent.
 	aMouseUpEvent target: aTargetElement.
 
 	"depending on whether drag and drop is in process handle mouse up either
@@ -401,7 +421,8 @@ OBlMouseProcessor >> lastOverTarget [
 
 { #category : #'initialize-release' }
 OBlMouseProcessor >> onSpaceClosed [
-	lastEnteredTargets := #().
+
+	lastEnteredTargets := #(  ).
 	lastOverTarget := nil.
 	lastClickEvent := nil.
 	currentDragTarget := nil.
@@ -421,7 +442,7 @@ OBlMouseProcessor >> postProcess: aMouseEvent [
 OBlMouseProcessor >> preProcess: aMouseEvent [
 	| aTarget |
 	
-	aTarget := self processPicking: aMouseEvent.
+	aTarget := self findMouseTargetFromEvent: aMouseEvent.
 
 	aMouseEvent target: aTarget.
 
@@ -483,47 +504,33 @@ OBlMouseProcessor >> processDragMove: aMouseMoveEvent [
 
 { #category : #'mouse move' }
 OBlMouseProcessor >> processMouseEnterLeaveEvent: aMouseEvent [
-	| newLeavedTargets newEnteredTargets currentEnteredTargets |
 
+	| newLeavedTargets newEnteredTargets currentEnteredTargets |
 	"mouse is moved over the same element, no need to process enter/leave events"
-	lastOverTarget = aMouseEvent target
-		ifTrue: [ ^ self ].
+	lastOverTarget = aMouseEvent target ifTrue: [ ^ self ].
 
 	currentEnteredTargets := self fillTargetHierarchy: aMouseEvent target.
-	
+
 	"fire mouseout to the previous overed target"
 	lastOverTarget ifNotNil: [ self fireAsMouseOutEvent: aMouseEvent ].
-	
+
 	"fire mouse leave events"
-	newLeavedTargets := lastEnteredTargets reject: [ :anElement | (currentEnteredTargets includes: anElement) ].
+	newLeavedTargets := lastEnteredTargets reject: [ :anElement |
+		                    currentEnteredTargets includes: anElement ].
 	newLeavedTargets := newLeavedTargets select: #isAttachedToSceneGraph.
 
 	self fireAsMouseLeaveEvent: aMouseEvent targets: newLeavedTargets.
-	
+
 	"fire mouse event to the current target"
 	self fireAsMouseOverEvent: aMouseEvent.
-	
+
 	"fire enter events"
-	newEnteredTargets := currentEnteredTargets reject: [ :anElement | lastEnteredTargets includes: anElement ].
+	newEnteredTargets := currentEnteredTargets reject: [ :anElement |
+		                     lastEnteredTargets includes: anElement ].
 	self fireAsEnterEvent: aMouseEvent targets: newEnteredTargets.
 
 	lastOverTarget := aMouseEvent target.
 	lastEnteredTargets := currentEnteredTargets
-]
-
-{ #category : #'event processing' }
-OBlMouseProcessor >> processMouseEventPicking: aMouseEvent [
-
-	<return: #BlElement>
-	| aTargetElement |
-	
-	self checkLastOverTarget.
-
-	"if the last over target contains the point we can start picking from it"
-	aTargetElement := aMouseEvent findTargetInSpace: self space.
-	"we have to ensure that aTarget is not nil"
-	aTargetElement ifNil: [ aTargetElement := self space root ].
-	^ aTargetElement
 ]
 
 { #category : #'mouse move' }
@@ -570,18 +577,6 @@ OBlMouseProcessor >> processMouseUp: aMouseUpEvent [
 				self fireEvent:	(previousMouseDownEvent asClickCandidateEvent mouseUpEvent: aMouseUpEvent) ] ]
 ]
 
-{ #category : #'event processing' }
-OBlMouseProcessor >> processPicking: aMouseEvent [
-
-	<return: #BlElement>
-	| aTargetElement |
-	self checkLastOverTarget.
-	"Start picking from root to ensure checking all space layers"
-	aTargetElement := self space findMouseEventTargetAt: aMouseEvent position.
-	"we have to ensure that aTarget is not nil"
-	^ aTargetElement ifNil: [ aTargetElement := self space root ]
-]
-
 { #category : #accessing }
 OBlMouseProcessor >> startDragThreshold [
 	^ 4
@@ -589,20 +584,22 @@ OBlMouseProcessor >> startDragThreshold [
 
 { #category : #'mouse drag' }
 OBlMouseProcessor >> subprocessDragEnterExitEvent: aMouseEvent [
+
 	| newEnteredTargets newExitedTargets currentEnteredTargets |
 
-	self 
-		assert: [ currentDragTarget isNotNil ]
-		description: [ 'Can not process drag mouse event as enter / exit when there is no dragged element' ].
-	
+	self assert: [ currentDragTarget isNotNil ] description: [
+		'Can not process drag mouse event as enter / exit when there is no dragged element' ].
+
 	currentEnteredTargets := self fillTargetHierarchy: aMouseEvent target.
-	
-	lastOverTarget = aMouseEvent target ifFalse:[
-		newExitedTargets := lastEnteredTargets reject: [ :anElement | currentEnteredTargets includes: anElement ].
-		newEnteredTargets := currentEnteredTargets reject: [ :anElement | lastEnteredTargets includes: anElement ].
+
+	lastOverTarget = aMouseEvent target ifFalse: [
+		newExitedTargets := lastEnteredTargets reject: [ :anElement |
+			                    currentEnteredTargets includes: anElement ].
+		newEnteredTargets := currentEnteredTargets reject: [ :anElement |
+			                     lastEnteredTargets includes: anElement ].
 		self fireAsDragLeaveEvent: aMouseEvent targets: newExitedTargets.
 		self fireAsDragEnterEvent: aMouseEvent targets: newEnteredTargets ].
-	
+
 	"store last entered targets"
 	lastEnteredTargets := currentEnteredTargets
 ]
