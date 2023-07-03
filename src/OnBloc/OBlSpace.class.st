@@ -1166,15 +1166,18 @@ OBlSpace >> findMousePickTargetFromEvent: anEvent [
 	I may return nil if no such child is found and if I can not be event target either"
 
 	<return: #BlElement or: nil>
-	self children sortedByElevation reversed do: [ :eachChild | 
-		| found |
-		found := eachChild findMouseEventTargetAt: anEvent position.
-		(found notNil and: [ found ~~ eachChild ]) ifTrue: [
-			self processMouseOutsideFrom: anEvent inside: found on: self popupLayer.
-			^ found ] ].
-
-	self processMouseOutsideFrom: anEvent inside: nil on: self popupLayer.
-	^ nil
+	| layers |
+	layers := self layerHolder children sortedByElevation reversed.
+	layers do: [ :layer |
+		(layer findMouseEventTargetAt: anEvent position) ifNotNil: [ :found |
+			" test the layer because if the result is the layer then it means that no element has been found "
+			found ~~ layer ifTrue: [ 
+				" ok, dispatch outside event through all the space elements "
+				self processMouseOutsideFrom: anEvent pickedIn: found.
+				^ found ] ] ].
+	" no element found at all: all elements receive a outside event"
+	self layerHolder dispatchMousePickedOutside: anEvent asMouseOutsideEvent.
+	^ self layerHolder
 ]
 
 { #category : #'focus managing' }
@@ -1309,6 +1312,12 @@ OBlSpace >> hasHostSpace [
 	<return: #Boolean>
 
 	^ self hostSpace isNotNil
+]
+
+{ #category : #testing }
+OBlSpace >> hasInParentChain: anElement [
+
+	^ anElement = self
 ]
 
 { #category : #testing }
@@ -1759,20 +1768,24 @@ OBlSpace >> printOn: aStream [
 ]
 
 { #category : #'event handling' }
-OBlSpace >> processMouseOutsideFrom: anEvent inside: anElement on: aLayer [
+OBlSpace >> processMouseOutsideFrom: anEvent pickedIn: aPickedElement [
+	" As an example, I'm used, to manage popup closing in case of a 
+	mouse up/down outside the popup window.
+	I send a mouse up/down outside event to element outside aPickedElement "
 
-	" I'm used to manage popup closing in case of a mouse up/down outside the popup window.
-	I send a mouse up/down outside event to all children of a layer if: 
-	- anElement isNil or 
-	- an element is not in the parent chain of any the layer children "
-	| evt |
+	| evt filter |
+	
+	" add a filter to stop the dispatch at le pickedElement level so that pickedElement 
+	and its children do not receive the mouse outside event "
+	filter := BlEventHandler on: BlMousePickOutsideEvent do: [  ]. 
+	aPickedElement addEventFilter: filter.
+	
+	" clone and initialize the original mouse up/down event "
 	evt := anEvent clone.
-	evt currentTarget: anElement.
-	aLayer fireEvent: evt asMouseOutsideEvent.
-	aLayer childrenDo: [ :child | 
-		(anElement isNil or: [ (anElement hasInParentChain: child) not ]) 
-			ifTrue: [
-				child fireEvent: evt asMouseOutsideEvent ] ]
+	evt target: aPickedElement.
+	evt currentTarget: aPickedElement.
+	" dispatch the mouse outside event to all alements of the scene graph "
+	self layerHolder dispatchMousePickedOutside: evt asMouseOutsideEvent
 ]
 
 { #category : #pulse }
