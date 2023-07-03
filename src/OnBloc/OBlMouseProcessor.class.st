@@ -572,11 +572,6 @@ OBlMouseProcessor >> processMouseUp: aMouseUpEvent [
 					aClickEvent := aMouseUpEvent asClickEvent.
 					self fireEvent: aClickEvent.
 					lastClickEvent := aClickEvent copy ] ]
-		ifFalse: [
-			lastMouseDownEvent ifNotNil: [
-				self fireEvent: (lastMouseDownEvent asClickCandidateEvent
-						 mouseUpEvent: aMouseUpEvent;
-						 yourself) ] ]
 ]
 
 { #category : #accessing }
